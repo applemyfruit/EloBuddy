@@ -54,16 +54,16 @@ namespace TKogMaw
         private static void OnLoaded(EventArgs args)
         {
             Bootstrap.Init(null);
-            Q = new Spell.Skillshot(SpellSlot.Q, (int) 900f, SkillShotType.Linear, (int) 0.25f, (int) 1650f, (int) 60f)
+            Q = new Spell.Skillshot(SpellSlot.Q, (int) 900f, SkillShotType.Linear, (int) 250f, (int) 1650f, (int) 60f)
             {
                 AllowedCollisionCount = 0
             };
             W = new Spell.Active(SpellSlot.W);
-            E = new Spell.Skillshot(SpellSlot.E, (int) 1260f, SkillShotType.Linear, (int) 0.50f, (int) 1400f, (int) 120f)
+            E = new Spell.Skillshot(SpellSlot.E, (int) 1260f, SkillShotType.Linear, (int) 500f, (int) 1400f, (int) 120f)
             {
                 AllowedCollisionCount = int.MaxValue
             };
-            R = new Spell.Skillshot(SpellSlot.R, 20000, SkillShotType.Circular, (int) 1.2f, int.MaxValue,
+            R = new Spell.Skillshot(SpellSlot.R, 20000, SkillShotType.Circular, (int) 1200f, 9999999,
                 (int) 120f)
             {
                 AllowedCollisionCount = int.MaxValue
@@ -129,7 +129,7 @@ namespace TKogMaw
                     }
                 }
             }
-            if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.LaneClear)
+            if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Harass)
             {
                 var rTarget = TargetSelector.GetTarget(GetRRange, DamageType.Magical);
                 if (GetRStacks() < KogMenu["rlimit"].Cast<Slider>().CurrentValue && rTarget.IsValidTarget(GetRRange) && R.GetPrediction(rTarget).HitChance >= HitChance.High &&
@@ -168,7 +168,18 @@ namespace TKogMaw
         private static void Harass()
         {
             var rTarget = TargetSelector.GetTarget(GetRRange, DamageType.Magical);
-            if (R.IsReady() && rTarget.IsValidTarget(R.Range) && R.GetPrediction(rTarget).HitChance >= HitChance.High) { R.Cast(rTarget); return; }
+            if (R.IsReady() && rTarget.IsValidTarget(R.Range) && R.GetPrediction(rTarget).HitChance >= HitChance.High)
+            {
+                R.Cast(rTarget);
+            }
+            if (W.IsReady())
+            {
+                var wTarget = TargetSelector.GetTarget(GetWRange, DamageType.Physical);
+                if (wTarget != null && Me.Distance(wTarget) < GetWRange*0.9)
+                {
+                    W.Cast();
+                }
+            }
         }
 
         private static void ModeSwitch()
@@ -202,9 +213,8 @@ namespace TKogMaw
                     if (Prediction.Health.GetPrediction(enemy, R.CastDelay*1000) <
                         Me.CalculateDamageOnUnit(enemy, DamageType.Magical, GetRDamage)*2)
                     {
-                        Chat.Print("Cast R to KS on " + enemy.ChampionName + " who's " + enemy.Distance(Me) +
-                                   " away and who's predicted hp is " +
-                                   Prediction.Health.GetPrediction(enemy, R.CastDelay*1000));
+                                   Prediction.Health.GetPrediction(enemy, R.CastDelay*1000);
+                        if (enemy != null)
                         R.Cast(enemy);
                     }
                 }
@@ -228,7 +238,7 @@ namespace TKogMaw
                 if (KogMenu["egap"].Cast<CheckBox>().CurrentValue)
                 {
                     var eTarget = TargetSelector.GetTarget(E.Range, DamageType.Magical);
-                    if (Me.Distance(eTarget) > GetWRange && E.IsReady() && eTarget.IsValidTarget(E.Range) && E.GetPrediction(eTarget).HitChance >= HitChance.High)
+                    if (eTarget.IsValidTarget(E.Range) && Me.Distance(eTarget) > GetWRange && E.IsReady() && E.GetPrediction(eTarget).HitChance >= HitChance.High)
                     {
                         E.Cast(eTarget);
                     }
@@ -236,7 +246,7 @@ namespace TKogMaw
             }
 
             var wTarget = TargetSelector.GetTarget(GetWRange, DamageType.Physical);
-            if (Me.Distance(wTarget)<GetWRange*0.9)
+            if (wTarget != null && Me.Distance(wTarget)<GetWRange*0.9)
             {
                 W.Cast();
             }
