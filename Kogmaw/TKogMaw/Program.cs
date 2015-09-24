@@ -81,6 +81,7 @@ namespace TKogMaw
             
             KogMenu.Add("ksr", new CheckBox("R to KS"));
             KogMenu.Add("kse", new CheckBox("E to KS"));
+            KogMenu.Add("egap", new CheckBox("E if target is out of W range"));
 
             KogMenu.AddSeparator();
             KogMenu.Add("drawr", new CheckBox("Draw R"));
@@ -111,7 +112,7 @@ namespace TKogMaw
                 var rTarget = TargetSelector.GetTarget(GetRRange, DamageType.Magical);
                 if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Combo)
                 {
-                    if (qTarget.IsValidTarget(Q.Range) && Q.GetPrediction(qTarget).HitChance >= HitChance.High &&
+                    if (qTarget.IsValidTarget(Q.Range) && Q.GetPrediction(qTarget).HitChance >= HitChance.Medium &&
                         Q.IsReady())
                     {
                         Q.Cast(qTarget);
@@ -176,11 +177,13 @@ namespace TKogMaw
             {
                 KogMenu["mode"].Cast<CheckBox>().DisplayName = "Current Mode: AD";
                 KogMenu["kse"].Cast<CheckBox>().IsVisible = false;
+                KogMenu["egap"].Cast<CheckBox>().IsVisible = true;
             }
             else
             {
                 KogMenu["mode"].Cast<CheckBox>().DisplayName = "Current Mode: AP";
                 KogMenu["kse"].Cast<CheckBox>().IsVisible = true;
+                KogMenu["egap"].Cast<CheckBox>().IsVisible = false;
             }
         }
 
@@ -222,6 +225,14 @@ namespace TKogMaw
             }
             else
             {
+                if (KogMenu["egap"].Cast<CheckBox>().CurrentValue)
+                {
+                    var eTarget = TargetSelector.GetTarget(E.Range, DamageType.Magical);
+                    if (Me.Distance(eTarget) > GetWRange && E.IsReady() && eTarget.IsValidTarget(E.Range) && E.GetPrediction(eTarget).HitChance >= HitChance.High)
+                    {
+                        E.Cast(eTarget);
+                    }
+                }
             }
 
             var wTarget = TargetSelector.GetTarget(GetWRange, DamageType.Physical);
