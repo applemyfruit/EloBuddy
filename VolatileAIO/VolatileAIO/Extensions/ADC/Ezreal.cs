@@ -240,6 +240,16 @@ namespace VolatileAIO.Extensions.ADC
                 else
                     new CastManager().CastSkillShot(W, DamageType.Magical);
             }
+            if (useE)
+            {
+                foreach (var enemy in EntityManager.Heroes.Enemies)
+                {
+                    if (Player.Distance(enemy)>Player.AttackRange && enemy.Distance(Player.Position.Extend(Game.CursorPos, E.Range).To3DWorld())>Player.AttackRange && enemy.Health<Player.GetAutoAttackDamage(enemy)*2)
+                    {
+                        E.Cast(Player.Position.Extend(Game.CursorPos, E.Range).To3DWorld());
+                    }
+                }
+            }
         }
     }
 }
