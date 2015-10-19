@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using EloBuddy;
 using VolatileAIO.Extensions.ADC;
+using VolatileAIO.Extensions.Support;
 
 namespace VolatileAIO.Organs.Brain
 {
@@ -16,6 +17,10 @@ namespace VolatileAIO.Organs.Brain
                 {
                     case "ezreal":
                         new Ezreal();
+                        _loaded = true;
+                        break;
+                    case "blitzcrank":
+                        new Blitzcrank();
                         _loaded = true;
                         break;
                     default:

@@ -1,6 +1,7 @@
 ﻿using System;
 using EloBuddy;
 using EloBuddy.SDK;
+using EloBuddy.SDK.Menu.Values;
 using SharpDX;
 using Color = System.Drawing.Color;
 
@@ -31,9 +32,9 @@ namespace VolatileAIO.Organs.Brain
 
             if (!_initialized) return;
             const int width = 103;
-            const int height = 8;
-            const int xOffset = 10;
-            const int yOffset = 20;
+            const int height = 9;
+            const int xOffset = -11;
+            const int yOffset = 17;
             foreach (var enemy in EntityManager.Heroes.Enemies)
             {
                 if (!enemy.IsHPBarRendered) continue;
@@ -63,7 +64,7 @@ namespace VolatileAIO.Organs.Brain
                         Drawing.DrawLine(pos1 + i, yPos, pos1 + i, yPos + height, 1, System.Drawing.Color.Cyan);
                     else if (_w.IsReady() && i < (drawQ + drawW) * differenceInHp)
                         Drawing.DrawLine(pos1 + i, yPos, pos1 + i, yPos + height, 1, System.Drawing.Color.Orange);
-                    else if (_e.IsReady() && i < (drawQ + drawW + drawE) * differenceInHp)
+                    else if (_e.IsReady() && i < (drawQ  + drawW + drawE) * differenceInHp)
                         Drawing.DrawLine(pos1 + i, yPos, pos1 + i, yPos + height, 1, System.Drawing.Color.Yellow);
                     else if (_r.IsReady() && i < (drawQ + drawW + drawE + drawR) * differenceInHp)
                         Drawing.DrawLine(pos1 + i, yPos, pos1 + i, yPos + height, 1, System.Drawing.Color.YellowGreen);

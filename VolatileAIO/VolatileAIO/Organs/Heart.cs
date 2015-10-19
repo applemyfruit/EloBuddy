@@ -18,7 +18,7 @@ namespace VolatileAIO.Organs
         protected Heart()
         {
             Game.OnUpdate += OnUpdateDeathChecker;
-            Drawing.OnDraw += OnDrawDeathChecker;
+            Drawing.OnEndScene += OnDrawDeathChecker;
             Interrupter.OnInterruptableSpell += OnInterruptableSpell;
             Orbwalker.OnPostAttack += OrbwalkerOnOnPostAttack;
             Orbwalker.OnPreAttack += OrbwalkerOnOnPreAttack;

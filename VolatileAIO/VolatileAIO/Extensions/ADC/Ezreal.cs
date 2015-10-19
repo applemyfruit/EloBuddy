@@ -138,7 +138,7 @@ namespace VolatileAIO.Extensions.ADC
             {
                 foreach (var enemy in EntityManager.Heroes.Enemies.Where(e => e.IsValidTarget(Q.Range)))
                 {
-                    if (enemy.IsEnemy && enemy.IsValid && !enemy.IsDead)
+                    if (enemy.IsEnemy && enemy.IsValidTarget(SpellMenu["qmaxrange"].Cast<Slider>().CurrentValue) && !enemy.IsDead)
                     {
                         if (W.IsReady())
                         {
@@ -164,11 +164,10 @@ namespace VolatileAIO.Extensions.ADC
 
                         if ((Q.GetPrediction(enemy).HitChance == HitChance.Immobile &&
                              SpellMenu["qonimmo"].Cast<CheckBox>().CurrentValue) ||
-                            (Q.GetPrediction(enemy).HitChance == HitChance.High &&
+                            (Q.GetPrediction(enemy).HitChance == HitChance.Dashing &&
                              SpellMenu["qonvery"].Cast<CheckBox>().CurrentValue))
                         {
-                            CastSpellLogic(true, false, false, enemy);
-                            if (VolatileMenu["debug"].Cast<CheckBox>().CurrentValue) Chat.Print("AUTOQ");
+                            Q.Cast(enemy.Position);
                         }
                     }
                 }
@@ -177,7 +176,7 @@ namespace VolatileAIO.Extensions.ADC
             {
                 foreach (var enemy in EntityManager.Heroes.Enemies.Where(e => e.IsValidTarget(W.Range)))
                 {
-                    if (enemy.IsEnemy && enemy.IsValid && !enemy.IsDead)
+                    if (enemy.IsEnemy && enemy.IsValidTarget(SpellMenu["wmaxrange"].Cast<Slider>().CurrentValue) && !enemy.IsDead)
                     {
                         if (Prediction.Health.GetPrediction(enemy, W.CastDelay) <
                             Player.CalculateDamageOnUnit(enemy, DamageType.Magical,
@@ -236,12 +235,12 @@ namespace VolatileAIO.Extensions.ADC
             if ((Item.HasItem(3070) || Item.HasItem(3004)) && Q.IsReady() && TickManager.NoLag(1) &&
                 !Player.IsRecalling())
             {
-                if (InFountain(Player))
+                if (InFountain(Player) && SpellMenu["qstack1"].Cast<CheckBox>().CurrentValue)
                 {
                     Q.Cast(Player);
                     if (VolatileMenu["debug"].Cast<CheckBox>().CurrentValue) Chat.Print("STACKQ: FOUNTAIN");
                 }
-                else if (Player.Mana > 0.95*Player.MaxMana)
+                else if (Player.Mana > 0.95*Player.MaxMana && SpellMenu["qstack2"].Cast<CheckBox>().CurrentValue)
                 {
                     if (TargetSelector.GetTarget(Q.Range, DamageType.Physical) != null)
                     {
@@ -269,8 +268,7 @@ namespace VolatileAIO.Extensions.ADC
             }
         }
 
-        private static void CastSpellLogic(bool useQ = false, bool useW = false, bool useE = false,
-            Obj_AI_Base target = null)
+        private static void CastSpellLogic(bool useQ = false, bool useW = false, bool useE = false, Obj_AI_Base target = null)
         {
             if (useQ)
             {
