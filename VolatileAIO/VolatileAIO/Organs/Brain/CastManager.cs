@@ -20,7 +20,9 @@ namespace VolatileAIO.Organs.Brain
                     var target = new TargetManager().Target(spell, damageType);
                     if (target == null) return;
                     if (target.IsValidTarget(spell.Range) && spell.GetPrediction(target).HitChance >= hitChance)
-                        spell.Cast(target);
+                    {
+                        spell.Cast(spell.GetPrediction(target).CastPosition);
+                    }
                 }
             }
         }

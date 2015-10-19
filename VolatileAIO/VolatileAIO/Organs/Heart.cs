@@ -3,6 +3,7 @@ using EloBuddy;
 using EloBuddy.SDK;
 using EloBuddy.SDK.Events;
 using EloBuddy.SDK.Menu;
+using EloBuddy.SDK.Menu.Values;
 using SharpDX;
 using VolatileAIO.Organs.Brain;
 
@@ -12,7 +13,7 @@ namespace VolatileAIO.Organs
     {
         protected static readonly AIHeroClient Player = ObjectManager.Player;
         public static Menu VolatileMenu;
-
+        
 
         protected Heart()
         {
@@ -61,6 +62,9 @@ namespace VolatileAIO.Organs
             VolatileMenu.AddSeparator();
             VolatileMenu.AddGroupLabel("Supported Champions:");
             VolatileMenu.AddLabel("Ezreal");
+            VolatileMenu.AddSeparator();
+            VolatileMenu.AddLabel("Developer Options:");
+            VolatileMenu.Add("debug", new CheckBox("Debug", false));
             var itemMenu = VolatileMenu.AddSubMenu("Activator", "itemmenu");
             new ExtensionLoader();
         }
@@ -129,7 +133,7 @@ namespace VolatileAIO.Organs
 
         private void OnGapcloser(AIHeroClient sender, Gapcloser.GapcloserEventArgs e)
         {
-            Volatile_AntiGapcloser(sender, e);
+                Volatile_AntiGapcloser(sender, e);
         }
 
         private void OnInterruptableSpell(Obj_AI_Base sender, Interrupter.InterruptableSpellEventArgs e)

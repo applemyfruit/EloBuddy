@@ -15,16 +15,16 @@ namespace VolatileAIO.Organs.Brain
                 switch (spell.Slot)
                 {
                     case SpellSlot.Q:
-                        ManaQ = spell.SData.ManaCostArray[spell.Level - 1];
+                        if (spell.Level > 0) ManaQ = spell.SData.ManaCostArray[spell.Level - 1];
                         break;
                     case SpellSlot.W:
-                        ManaW = spell.SData.ManaCostArray[spell.Level - 1];
+                        if (spell.Level > 0) ManaW = spell.SData.ManaCostArray[spell.Level - 1];
                         break;
                     case SpellSlot.E:
-                        ManaE = spell.SData.ManaCostArray[spell.Level - 1];
+                        if (spell.Level > 0) ManaE = spell.SData.ManaCostArray[spell.Level - 1];
                         break;
                     case SpellSlot.R:
-                        ManaR = spell.SData.ManaCostArray[spell.Level - 1];
+                        if (spell.Level > 0) ManaR = spell.SData.ManaCostArray[spell.Level - 1];
                         break;
                 }
             }

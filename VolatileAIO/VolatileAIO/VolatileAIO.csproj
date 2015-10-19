@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Organs\Brain\CastManager.cs" />
+    <Compile Include="Organs\Brain\DrawManager.cs" />
     <Compile Include="Organs\Brain\ManaManager.cs" />
     <Compile Include="Organs\Brain\TargetManager.cs" />
     <Compile Include="Organs\Brain\TickManager.cs" />
