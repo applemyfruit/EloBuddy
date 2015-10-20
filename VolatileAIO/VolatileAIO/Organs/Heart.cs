@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using EloBuddy;
 using EloBuddy.SDK;
 using EloBuddy.SDK.Events;
@@ -13,7 +14,6 @@ namespace VolatileAIO.Organs
     {
         protected static readonly AIHeroClient Player = ObjectManager.Player;
         public static Menu VolatileMenu;
-        
 
         protected Heart()
         {
@@ -26,7 +26,7 @@ namespace VolatileAIO.Organs
             GameObject.OnCreate += GameObjectOnOnCreate;
             GameObject.OnDelete += GameObjectOnOnDelete;
             Game.OnWndProc += Game_OnWndProc;
-            AIHeroClient.OnDamage += AIHeroClientOnDamage;
+            AttackableUnit.OnDamage += OnDamage;
             Obj_AI_Base.OnProcessSpellCast += OnProcessSpellCast;
             Obj_AI_Base.OnBuffGain += OnBuffGain;
             Obj_AI_Base.OnBuffLose += OnBuffLose;
@@ -67,8 +67,11 @@ namespace VolatileAIO.Organs
             VolatileMenu.AddSeparator();
             VolatileMenu.AddLabel("Developer Options:");
             VolatileMenu.Add("debug", new CheckBox("Debug", false));
-            var itemMenu = VolatileMenu.AddSubMenu("Activator", "itemmenu");
             new ExtensionLoader();
+            foreach (var enemy in EntityManager.Heroes.Enemies)
+            {
+                CastManager.Champions.Add(new CastManager.DifferencePChamp(enemy.Name));
+            }
         }
 
         private void OnUpdateDeathChecker(EventArgs args)
@@ -77,7 +80,7 @@ namespace VolatileAIO.Organs
             Volatile_OnHeartBeat(args);
         }
 
-        protected virtual void OnDrawDeathChecker(EventArgs args)
+        private void OnDrawDeathChecker(EventArgs args)
         {
             if (Player.IsDead) return;
             Volative_OnDraw(args);
@@ -98,9 +101,9 @@ namespace VolatileAIO.Organs
             //for addons
         }
 
-        private void AIHeroClientOnDamage(AttackableUnit sender, AttackableUnitDamageEventArgs args)
+        private void OnDamage(AttackableUnit sender, AttackableUnitDamageEventArgs args)
         {
-            //for addons
+            Volatile_OnDamage(sender,args);
         }
 
         private void OnStopCast(Obj_AI_Base sender, SpellbookStopCastEventArgs args)
@@ -110,7 +113,7 @@ namespace VolatileAIO.Organs
 
         private void OnCastSpell(Spellbook sender, SpellbookCastSpellEventArgs args)
         {
-            //for addons
+            OnSpellCast(sender, args);
         }
 
         private void OnUpdateChargeableSpell(Spellbook sender, SpellbookUpdateChargeableSpellEventArgs args)
@@ -196,6 +199,16 @@ namespace VolatileAIO.Organs
                 fountainRange = 1102500; //1050 * 1050
             }
             return hero.IsVisible && hero.Distance(vec3, true) < fountainRange;
+        }
+
+        protected virtual void OnSpellCast(Spellbook sender, SpellbookCastSpellEventArgs args)
+        {
+            //
+        }
+
+        protected virtual void Volatile_OnDamage(AttackableUnit sender, AttackableUnitDamageEventArgs args)
+        {
+            //
         }
     }
 }

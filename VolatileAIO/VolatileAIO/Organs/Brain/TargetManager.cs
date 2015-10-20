@@ -37,6 +37,12 @@ namespace VolatileAIO.Organs.Brain
             if (ChosenTarget != null && ChosenTarget.Distance(Player) < spell.Range*1.2) return ChosenTarget;
             return TargetSelector.GetTarget(spell.Range, damageType);
         }
+
+        public AIHeroClient Target(int range, DamageType damageType)
+        {
+            if (ChosenTarget != null && ChosenTarget.Distance(Player) < range * 1.2) return ChosenTarget;
+            return TargetSelector.GetTarget(range, damageType);
+        }
     }
 
 }
