@@ -58,13 +58,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\Jungle\Evelynn.cs" />
     <Compile Include="Organs\Brain\CastManager.cs" />
+    <Compile Include="Organs\Brain\DrawManager.cs" />
     <Compile Include="Organs\Brain\ManaManager.cs" />
     <Compile Include="Organs\Brain\TargetManager.cs" />
     <Compile Include="Organs\Brain\TickManager.cs" />
     <Compile Include="Organs\Brain\ExtensionLoader.cs" />
     <Compile Include="Extensions\ADC\Ezreal.cs" />
     <Compile Include="Organs\Heart.cs" />
+    <Compile Include="Organs\_Test\SpellData.cs" />
+    <Compile Include="Organs\_Test\SpellDatabase.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
