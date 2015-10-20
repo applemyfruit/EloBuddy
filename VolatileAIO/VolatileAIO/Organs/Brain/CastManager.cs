@@ -82,38 +82,35 @@ namespace VolatileAIO.Organs.Brain
         protected override void Volatile_OnDamage(AttackableUnit sender, AttackableUnitDamageEventArgs args)
         {
             if (!sender.IsMe) return;
-            lock (_lastSpells)
+            _lastSpells.RemoveAll(p => Environment.TickCount - p.tick > 2000);
+
+            if (args.Source.NetworkId == Player.NetworkId &&
+                EntityManager.Heroes.Enemies.Exists(p => p.NetworkId == args.Target.NetworkId))
             {
-                lock (Champions)
+                if (_lastSpells.Count == 0) return;
+                var sremove = new LastSpells("", 0, 0, "");
+                foreach (var spell in _lastSpells)
                 {
-                    _lastSpells.RemoveAll(p => Environment.TickCount - p.tick > 2000);
 
-                    if (args.Source.NetworkId == Player.NetworkId &&
-                        EntityManager.Heroes.Enemies.Exists(p => p.NetworkId == args.Target.NetworkId))
+                    if (VolatileMenu["debug"].Cast<CheckBox>().CurrentValue)
+                        Chat.Print(spell.name +
+                                   " & args dmg: " + args.Damage + " & preddmg: " + spell.dmg);
+
+                    if (spell.target == args.Target.Name)
                     {
-                        if (_lastSpells.Count == 0) return;
-                        foreach (var spell in _lastSpells)
+                        if (Champions.Exists(p => p.Name == spell.target))
                         {
-
-                            if (VolatileMenu["debug"].Cast<CheckBox>().CurrentValue)
-                                Chat.Print(spell.name +
-                                           " & args dmg: " + args.Damage + " & preddmg: " + spell.dmg);
-
-                            if (spell.target == args.Target.Name)
-                            {
-                                if (Champions.Exists(p => p.Name == spell.target))
-                                {
-                                    Champions.Find(p => p.Name == spell.target)
-                                        .Differences.Add(Math.Abs(spell.dmg - args.Damage));
-                                    hitCount++;
-                                    _lastSpells.Remove(spell);
-                                }
-                            }
+                            Champions.Find(p => p.Name == spell.target)
+                                .Differences.Add(Math.Abs(spell.dmg - args.Damage));
+                            hitCount++;
+                            sremove = spell;
                         }
                     }
                 }
+                _lastSpells.Remove(sremove);
             }
         }
+
 
         protected override void Volatile_OnPostAttack(AttackableUnit target, EventArgs args)
         {
