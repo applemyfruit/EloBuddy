@@ -59,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\Jungle\Evelynn.cs" />
+    <Compile Include="Extensions\Support\Blitzcrank.cs" />
     <Compile Include="Organs\Brain\CastManager.cs" />
     <Compile Include="Organs\Brain\DrawManager.cs" />
     <Compile Include="Organs\Brain\ManaManager.cs" />
@@ -75,9 +76,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Extensions\Support\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
