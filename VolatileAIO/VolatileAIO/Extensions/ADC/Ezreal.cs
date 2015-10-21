@@ -9,6 +9,7 @@ using EloBuddy.SDK.Menu.Values;
 using SharpDX;
 using VolatileAIO.Organs;
 using VolatileAIO.Organs.Brain;
+using VolatileAIO.Organs._Test;
 
 namespace VolatileAIO.Extensions.ADC
 {
@@ -19,7 +20,6 @@ namespace VolatileAIO.Extensions.ADC
 
         public static ManaManager ManaManager = new ManaManager();
         public static DrawManager DrawManager = new DrawManager();
-
         public static Spell.Skillshot Q;
         public static Spell.Skillshot W;
         public static Spell.Skillshot E;
@@ -75,19 +75,23 @@ namespace VolatileAIO.Extensions.ADC
 
         public static void InitializeSpells()
         {
-            Q = new Spell.Skillshot(SpellSlot.Q, 1190, SkillShotType.Linear, (int) 250f, (int) 2000f, (int) 60f)
+            var qdata = SpellDatabase.Spells.Find(s => string.Equals(s.ChampionName, Player.ChampionName, StringComparison.CurrentCultureIgnoreCase) && s.Slot == SpellSlot.Q);
+            var wdata = SpellDatabase.Spells.Find(s => string.Equals(s.ChampionName, Player.ChampionName, StringComparison.CurrentCultureIgnoreCase) && s.Slot == SpellSlot.W);
+            var rdata = SpellDatabase.Spells.Find(s => string.Equals(s.ChampionName, Player.ChampionName, StringComparison.CurrentCultureIgnoreCase) && s.Slot == SpellSlot.R);
+
+            Q = new Spell.Skillshot(SpellSlot.Q, (uint)qdata.Range, qdata.Type, qdata.Delay, qdata.MissileSpeed, qdata.Radius)
             {
                 AllowedCollisionCount = 0
             };
-            W = new Spell.Skillshot(SpellSlot.W, 1050, SkillShotType.Linear, (int) 250f, (int) 1600f, (int) 80f)
+            W = new Spell.Skillshot(SpellSlot.W, (uint)wdata.Range, wdata.Type, wdata.Delay, wdata.MissileSpeed, wdata.Radius)
             {
                 AllowedCollisionCount = int.MaxValue
             };
-            E = new Spell.Skillshot(SpellSlot.E, 475, SkillShotType.Circular, (int) 250f, (int) 1600f, (int) 80f)
+            E = new Spell.Skillshot(SpellSlot.E, 475, SkillShotType.Circular, 250, 1600, 80)
             {
                 AllowedCollisionCount = int.MaxValue
             };
-            R = new Spell.Skillshot(SpellSlot.R, 3000, SkillShotType.Linear, (int) 1000f, (int) 2000f, (int) 160f)
+            R = new Spell.Skillshot(SpellSlot.R, (uint)rdata.Range, rdata.Type, rdata.Delay, rdata.MissileSpeed, rdata.Radius)
             {
                 AllowedCollisionCount = int.MaxValue
             };
@@ -261,16 +265,16 @@ namespace VolatileAIO.Extensions.ADC
             if (useQ)
             {
                 if (target != null)
-                    new CastManager().CastSkillShot(Q, DamageType.Physical, HitChance.Medium, target);
+                    CastManager.Cast.Line.SingleTarget(Q, DamageType.Physical, SpellMenu["qmaxrange"].Cast<Slider>().CurrentValue, HitChance.Medium, target);
                 else
-                    new CastManager().CastSkillShot(Q, DamageType.Physical);
+                    CastManager.Cast.Line.SingleTarget(Q, DamageType.Physical, SpellMenu["qmaxrange"].Cast<Slider>().CurrentValue);
             }
             if (useW)
             {
                 if (target != null)
-                    new CastManager().CastSkillShot(W, DamageType.Magical, HitChance.Medium, target);
+                    CastManager.Cast.Line.SingleTarget(W, DamageType.Magical, SpellMenu["wmaxrange"].Cast<Slider>().CurrentValue, HitChance.Medium, target);
                 else
-                    new CastManager().CastSkillShot(W, DamageType.Magical);
+                    CastManager.Cast.Line.SingleTarget(W, DamageType.Magical, SpellMenu["wmaxrange"].Cast<Slider>().CurrentValue);
             }
             if (useE && E.IsReady() && TickManager.NoLag(3))
             {
@@ -278,7 +282,7 @@ namespace VolatileAIO.Extensions.ADC
                 {
                     if (Player.Distance(enemy) > Player.AttackRange &&
                         enemy.Distance(Player.Position.Extend(Game.CursorPos, E.Range).To3DWorld()) < Player.AttackRange &&
-                        enemy.Health < Player.GetAutoAttackDamage(enemy)*2)
+                        enemy.Health < (Player.GetAutoAttackDamage(enemy)*2) + Player.GetSpellDamage(enemy, SpellSlot.E))
                     {
                         E.Cast(Player.Position.Extend(Game.CursorPos, E.Range).To3DWorld());
                     }

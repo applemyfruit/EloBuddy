@@ -44,6 +44,7 @@ namespace VolatileAIO.Organs
         private void StartHeartBeat()
         {
             Bootstrap.Init(null);
+            Hacks.RenderWatermark = false;
             Chat.Print(
                 "Starting <font color = \"#740000\">Volatile AIO</font> <font color = \"#B87F7F\">Heart.cs</font>");
 

@@ -12,7 +12,7 @@ namespace VolatileAIO.Organs.Brain
 {
     class CastManager : Heart
     {
-        private bool _isAutoAttacking = false;
+        private static bool _isAutoAttacking = false;
         public static int hitCount = 0;
         public static int castCount = 0;
 
@@ -48,30 +48,41 @@ namespace VolatileAIO.Organs.Brain
 
         public static List<LastSpells> _lastSpells = new List<LastSpells>();
 
-
-        public void CastSkillShot(Spell.Skillshot spell, DamageType damageType, HitChance hitChance = HitChance.Medium, Obj_AI_Base targetHero = null)
+        internal class Cast
         {
-            if ((spell.Slot == SpellSlot.Q && TickManager.NoLag(1)) || (spell.Slot == SpellSlot.W && TickManager.NoLag(2)) ||
-                (spell.Slot == SpellSlot.E && TickManager.NoLag(3)) || (spell.Slot == SpellSlot.R && TickManager.NoLag(4)))
+            internal class Line
             {
-                if (spell.IsReady() && !_isAutoAttacking)
+                internal static void SingleTarget(Spell.Skillshot spell, DamageType damageType,
+                    int range=0, HitChance hitChance = HitChance.Medium, Obj_AI_Base targetHero = null)
                 {
-                    var target = new TargetManager().Target(spell, damageType);
-                    if (target == null) return;
-                    if (target.IsValidTarget(spell.Range) && spell.GetPrediction(target).HitChance >= hitChance)
+                    if ((spell.Slot == SpellSlot.Q && TickManager.NoLag(1)) ||
+                        (spell.Slot == SpellSlot.W && TickManager.NoLag(2)) ||
+                        (spell.Slot == SpellSlot.E && TickManager.NoLag(3)) ||
+                        (spell.Slot == SpellSlot.R && TickManager.NoLag(4)))
                     {
-                        spell.Cast(spell.GetPrediction(target).CastPosition);
-                       
-                        lock (_lastSpells)
+                        if (spell.IsReady() && !_isAutoAttacking)
                         {
-                            _lastSpells.RemoveAll(p => Environment.TickCount - p.tick > 2000);
-                            if (!_lastSpells.Exists(p => p.name == spell.Name) && spell.Slot == SpellSlot.Q)
+                            var target = range!=0 ? TargetManager.Target(range, damageType) : TargetManager.Target(spell, damageType);
+
+                            if (target == null) return;
+                            if (target.IsValidTarget(spell.Range) && spell.GetPrediction(target).HitChance >= hitChance)
                             {
-                                if (VolatileMenu["debug"].Cast<CheckBox>().CurrentValue)
-                                    Chat.Print("Cast Q: dmgPredict=" + Player.GetSpellDamage(target, spell.Slot) + " & target=" +
-                                               target.Name);
-                                _lastSpells.Add(new LastSpells(spell.Name, Environment.TickCount, Player.GetSpellDamage(target, spell.Slot), target.Name));
-                                castCount++;
+                                spell.Cast(spell.GetPrediction(target).CastPosition);
+
+                                lock (_lastSpells)
+                                {
+                                    _lastSpells.RemoveAll(p => Environment.TickCount - p.tick > 2000);
+                                    if (!_lastSpells.Exists(p => p.name == spell.Name) && spell.Slot == SpellSlot.Q)
+                                    {
+                                        if (VolatileMenu["debug"].Cast<CheckBox>().CurrentValue)
+                                            Chat.Print("Cast Q: dmgPredict=" + Player.GetSpellDamage(target, spell.Slot) +
+                                                       " & target=" +
+                                                       target.Name);
+                                        _lastSpells.Add(new LastSpells(spell.Name, Environment.TickCount,
+                                            Player.GetSpellDamage(target, spell.Slot), target.Name));
+                                        castCount++;
+                                    }
+                                }
                             }
                         }
                     }

@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using EloBuddy;
 using EloBuddy.SDK;
+using EloBuddy.SDK.Enumerations;
 
 namespace VolatileAIO.Organs.Brain
 {
@@ -21,7 +22,7 @@ namespace VolatileAIO.Organs.Brain
             }
             ChosenTarget =
                 EntityManager.Heroes.Enemies
-                    .FindAll(hero => hero.IsValidTarget() && hero.Distance(Game.CursorPos, true) < 40000) // 200 * 200
+                    .FindAll(hero => hero.IsValidTarget() && hero.Distance(Game.CursorPos, true) < 40000)
                     .OrderBy(h => h.Distance(Game.CursorPos, true)).FirstOrDefault();
             if (ChosenTarget != null)
             {
@@ -32,14 +33,16 @@ namespace VolatileAIO.Organs.Brain
                 Chat.Print("Reset target");
         }
 
-        public AIHeroClient Target(Spell.SpellBase spell, DamageType damageType)
+        public static AIHeroClient Target(Spell.SpellBase spell, DamageType damageType)
         {
+            TargetSelector.ActiveMode = TargetSelectorMode.Auto;
             if (ChosenTarget != null && ChosenTarget.Distance(Player) < spell.Range*1.2) return ChosenTarget;
             return TargetSelector.GetTarget(spell.Range, damageType);
         }
 
-        public AIHeroClient Target(int range, DamageType damageType)
+        public static AIHeroClient Target(int range, DamageType damageType)
         {
+            TargetSelector.ActiveMode = TargetSelectorMode.Auto;
             if (ChosenTarget != null && ChosenTarget.Distance(Player) < range * 1.2) return ChosenTarget;
             return TargetSelector.GetTarget(range, damageType);
         }

@@ -25,7 +25,7 @@ namespace VolatileAIO.Organs.Brain
         protected override void Volative_OnDraw(EventArgs args)
         {
             if (!_initialized) return;
-            var target = new TargetManager().Target(1000, DamageType.Physical);
+            var target = TargetManager.Target(1000, DamageType.Physical);
             if (target != null)
             {
                 Drawing.DrawCircle(target.Position, 100, Color.Red);
@@ -86,6 +86,7 @@ namespace VolatileAIO.Organs.Brain
                         CastManager.castCount > 0
                             ? (((float) CastManager.hitCount/CastManager.castCount)*100).ToString("00.00")
                             : "n/a"));
+                Drawing.DrawText(w, (float) h + 60, Color.Red, String.Format("Ticks p/s: {0}", Game.TicksPerSecond));
                 h /= 4;
                 w /= 2;
                 for (int index = 0; index < CastManager.Champions.Count; index++)
