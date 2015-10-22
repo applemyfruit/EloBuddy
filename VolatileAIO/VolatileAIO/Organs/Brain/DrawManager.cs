@@ -75,16 +75,16 @@ namespace VolatileAIO.Organs.Brain
                 var w = Drawing.Width - 200;
                 var h = (Drawing.Height/3)*1.5;
                 float hitchance = 0;
-                if (CastManager.castCount != 0 && CastManager.hitCount != 0)
-                    hitchance = (CastManager.hitCount/CastManager.castCount)*100;
+                if (CastManager.CastCount != 0 && CastManager.HitCount != 0)
+                    hitchance = (CastManager.HitCount/CastManager.CastCount)*100;
                 Drawing.DrawText(w, (float) h, System.Drawing.Color.Red,
-                    String.Format("Casted Spell.Q Count: {0}", CastManager.castCount));
+                    String.Format("Casted Spell.Q Count: {0}", CastManager.CastCount));
                 Drawing.DrawText(w, (float) h + 20, System.Drawing.Color.Red,
-                    String.Format("Hit Spell.Q Count: {0}", CastManager.hitCount));
+                    String.Format("Hit Spell.Q Count: {0}", CastManager.HitCount));
                 Drawing.DrawText(w, (float) h + 40, System.Drawing.Color.Red,
                     String.Format("Hitchance (%): {0}%",
-                        CastManager.castCount > 0
-                            ? (((float) CastManager.hitCount/CastManager.castCount)*100).ToString("00.00")
+                        CastManager.CastCount > 0
+                            ? (((float) CastManager.HitCount/CastManager.CastCount)*100).ToString("00.00")
                             : "n/a"));
                 Drawing.DrawText(w, (float) h + 60, Color.Red, String.Format("Ticks p/s: {0}", Game.TicksPerSecond));
                 h /= 4;
