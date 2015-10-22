@@ -16,6 +16,7 @@ namespace VolatileAIO.Organs.Brain
 
         private readonly Dictionary<string, State> _extensionState = new Dictionary<string, State>()
         {
+            {"annie", State.BeingDeveloped },
             {"blitzcrank", State.PartDeveloped },
             {"cassiopeia", State.BeingDeveloped },
             {"evelynn", State.PartDeveloped },
@@ -44,20 +45,24 @@ namespace VolatileAIO.Organs.Brain
             if (_extensionState.ContainsKey(ObjectManager.Player.ChampionName.ToLower())) WelcomeChat();
             switch (ObjectManager.Player.ChampionName.ToLower())
             {
-                case "cassiopeia":
-                    new Cassiopeia();
-                    _loaded = true;
-                    break;
-                case "ezreal":
-                    new Ezreal();
+                case "annie":
+                    new Annie();
                     _loaded = true;
                     break;
                 case "blitzcrank":
                     new Blitzcrank();
                     _loaded = true;
                     break;
+                case "cassiopeia":
+                    new Cassiopeia();
+                    _loaded = true;
+                    break;
                 case "evelynn":
                     new Evelynn();
+                    _loaded = true;
+                    break;
+                case "ezreal":
+                    new Ezreal();
                     _loaded = true;
                     break;
                 default:
