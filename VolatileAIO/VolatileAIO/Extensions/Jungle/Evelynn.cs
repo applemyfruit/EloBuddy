@@ -115,9 +115,7 @@ namespace VolatileAIO.Extensions.Jungle
                                 Player.CalculateDamageOnUnit(enemy, DamageType.Magical,
                                     Player.GetSpellDamage(Player, SpellSlot.R)))
                             {
-                                if (enemy.CountEnemiesInRange(R.Width) >=
-                                    SpellMenu["rslider"].Cast<Slider>().CurrentValue)
-                                    CastManager.Cast.Circle.WujuStyle(R, DamageType.Magical, 0, 1, HitChance.Medium, enemy);
+                                    CastManager.Cast.Circle.WujuStyle(R, DamageType.Magical, 0, SpellMenu["rslider"].Cast<Slider>().CurrentValue, HitChance.Medium, enemy);
                             }
                         }
                 }
