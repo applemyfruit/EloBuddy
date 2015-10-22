@@ -265,16 +265,16 @@ namespace VolatileAIO.Extensions.ADC
             if (useQ)
             {
                 if (target != null)
-                    CastManager.Cast.Line.SingleTarget(Q, DamageType.Physical, SpellMenu["qmaxrange"].Cast<Slider>().CurrentValue, HitChance.Medium, target);
+                    CastManager.Cast.Line.SingleTargetHero(Q, DamageType.Physical, SpellMenu["qmaxrange"].Cast<Slider>().CurrentValue, HitChance.Medium, target);
                 else
-                    CastManager.Cast.Line.SingleTarget(Q, DamageType.Physical, SpellMenu["qmaxrange"].Cast<Slider>().CurrentValue);
+                    CastManager.Cast.Line.SingleTargetHero(Q, DamageType.Physical, SpellMenu["qmaxrange"].Cast<Slider>().CurrentValue);
             }
             if (useW)
             {
                 if (target != null)
-                    CastManager.Cast.Line.SingleTarget(W, DamageType.Magical, SpellMenu["wmaxrange"].Cast<Slider>().CurrentValue, HitChance.Medium, target);
+                    CastManager.Cast.Line.SingleTargetHero(W, DamageType.Magical, SpellMenu["wmaxrange"].Cast<Slider>().CurrentValue, HitChance.Medium, target);
                 else
-                    CastManager.Cast.Line.SingleTarget(W, DamageType.Magical, SpellMenu["wmaxrange"].Cast<Slider>().CurrentValue);
+                    CastManager.Cast.Line.SingleTargetHero(W, DamageType.Magical, SpellMenu["wmaxrange"].Cast<Slider>().CurrentValue);
             }
             if (useE && E.IsReady() && TickManager.NoLag(3))
             {

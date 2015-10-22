@@ -46,7 +46,7 @@ namespace VolatileAIO.Organs
             Bootstrap.Init(null);
             Hacks.RenderWatermark = false;
             Chat.Print(
-                "Starting <font color = \"#740000\">Volatile AIO</font> <font color = \"#B87F7F\">Heart.cs</font>");
+                "Starting <font color = \"#740000\">Volatile AIO</font> <font color = \"#B87F7F\">Heart.cs</font>:");
 
             VolatileMenu = MainMenu.AddMenu(Player.ChampionName, "volatilemenu", "Volatile " + Player.ChampionName);
 
