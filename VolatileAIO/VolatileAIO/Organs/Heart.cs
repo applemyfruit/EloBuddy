@@ -15,6 +15,9 @@ namespace VolatileAIO.Organs
         protected static readonly AIHeroClient Player = ObjectManager.Player;
         public static Menu VolatileMenu;
 
+        public static ManaManager ManaManager = new ManaManager();
+        public static DrawManager DrawManager = new DrawManager();
+
         protected Heart()
         {
             Game.OnUpdate += OnUpdateDeathChecker;

@@ -17,9 +17,6 @@ namespace VolatileAIO.Extensions.ADC
     {
         #region Spell and Menu Declaration
 
-
-        public static ManaManager ManaManager = new ManaManager();
-        public static DrawManager DrawManager = new DrawManager();
         public static Spell.Skillshot Q;
         public static Spell.Skillshot W;
         public static Spell.Skillshot E;
@@ -259,8 +256,17 @@ namespace VolatileAIO.Extensions.ADC
             }
         }
 
+        protected override void Volatile_OnPostAttack(AttackableUnit target, EventArgs args)
+        {
+            if (!W.IsReady() || !SpellMenu["wtopush"].Cast<CheckBox>().CurrentValue || !target.IsStructure()) return;
+            foreach (var ally in EntityManager.Heroes.Allies.Where(ally => !ally.IsMe && ally.IsAlly && ally.Distance(Player.Position) < W.Range))
+            {
+                W.Cast(ally);
+            }
+        }
+
         private static void CastSpellLogic(bool useQ = false, bool useW = false, bool useE = false,
-            Obj_AI_Base target = null)
+            AIHeroClient target = null)
         {
             if (useQ)
             {

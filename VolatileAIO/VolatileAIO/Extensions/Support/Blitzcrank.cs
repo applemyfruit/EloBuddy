@@ -19,18 +19,15 @@ namespace VolatileAIO.Extensions.Support
         public static Spell.Active W;
         public static Spell.Active E;
         public static Spell.Active R;
-        
-        private readonly DrawManager _drawManager = new DrawManager();
 
         public Blitzcrank()
         {
             InitializeMenu();
             InitializeSpells();
-            _drawManager.UpdateValues(Q, W, E, R);
-            Chat.Print("PSA: Blitz is not fully developed");
+            DrawManager.UpdateValues(Q, W, E, R);
         }
          
-        private void InitializeMenu()
+        private static void InitializeMenu()
         {
 
         }
@@ -52,18 +49,15 @@ namespace VolatileAIO.Extensions.Support
             if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Combo) Combo();
         }
 
-        private void AutoCast()
+        private static void AutoCast()
         {
-            foreach (var enemy in EntityManager.Heroes.Enemies.Where(e=>e.IsValidTarget(Q.Range)))
+            foreach (var enemy in EntityManager.Heroes.Enemies.Where(e=>e.IsValidTarget(Q.Range)).Where(enemy => TargetSelector.GetPriority(enemy) > 3))
             {
-                if (TargetSelector.GetPriority(enemy) > 3)
-                {
-                    CastManager.Cast.Line.SingleTargetHero(Q, DamageType.Magical, (int)Q.Range, HitChance.High, enemy);
-                }
+                CastManager.Cast.Line.SingleTargetHero(Q, DamageType.Magical, (int)Q.Range, HitChance.High, enemy);
             }
         }
 
-        private void Combo()
+        private static void Combo()
         {
             CastManager.Cast.Line.SingleTargetHero(Q, DamageType.Magical);
             if (E.IsReady() && TickManager.NoLag(3))

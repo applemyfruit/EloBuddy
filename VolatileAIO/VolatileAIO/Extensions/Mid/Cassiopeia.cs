@@ -9,8 +9,6 @@ namespace VolatileAIO.Extensions.Mid
 {
     internal class Cassiopeia : Heart
     {
-        public static ManaManager ManaManager = new ManaManager();
-        public static DrawManager DrawManager = new DrawManager();
         public static Spell.Skillshot Q;
         public static Spell.Skillshot W;
         public static Spell.Targeted E;
@@ -46,7 +44,7 @@ namespace VolatileAIO.Extensions.Mid
             }
         }
 
-        private void Combo()
+        private static void Combo()
         {
             CastManager.Cast.Circle.WujuStyle(Q, DamageType.Magical);
             CastManager.Cast.Circle.WujuStyle(W, DamageType.Magical, 0, 2);

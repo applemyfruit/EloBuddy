@@ -19,7 +19,6 @@ namespace VolatileAIO.Extensions.Jungle
             if (Player.IsDead) return;
             AutoCastSpells();
             ManaManager.SetMana();
-            DrawManager.UpdateValues(Q, W, E, R);
             if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Combo)
             {
                 Combo();
@@ -118,7 +117,7 @@ namespace VolatileAIO.Extensions.Jungle
                             {
                                 if (enemy.CountEnemiesInRange(R.Width) >=
                                     SpellMenu["rslider"].Cast<Slider>().CurrentValue)
-                                    R.Cast(enemy);
+                                    CastManager.Cast.Circle.WujuStyle(R, DamageType.Magical, 0, 1, HitChance.Medium, enemy);
                             }
                         }
                 }
@@ -129,9 +128,6 @@ namespace VolatileAIO.Extensions.Jungle
 
         public static int Mode;
         public static bool IsAutoAttacking;
-
-        public static ManaManager ManaManager = new ManaManager();
-        public static DrawManager DrawManager = new DrawManager();
 
         public static Spell.Active Q;
         public static Spell.Active W;
@@ -148,6 +144,7 @@ namespace VolatileAIO.Extensions.Jungle
         {
             InitializeSpells();
             InitializeMenu();
+            DrawManager.UpdateValues(Q, W, E, R);
         }
 
         private static void InitializeMenu()
