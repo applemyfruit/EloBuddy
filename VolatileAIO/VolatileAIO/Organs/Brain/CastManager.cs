@@ -55,7 +55,7 @@ namespace VolatileAIO.Organs.Brain
             internal class Line
             {
                 internal static void SingleTargetHero(Spell.Skillshot spell, DamageType damageType,
-                    int range = 0, HitChance hitChance = HitChance.Medium, Obj_AI_Base targetHero = null)
+                    int range = 0, HitChance hitChance = HitChance.Medium, AIHeroClient targetHero = null)
                 {
                     if ((spell.Slot != SpellSlot.Q || !TickManager.NoLag(1)) &&
                         (spell.Slot != SpellSlot.W || !TickManager.NoLag(2)) &&
@@ -64,9 +64,12 @@ namespace VolatileAIO.Organs.Brain
 
                     if (!spell.IsReady() || _isAutoAttacking) return;
 
-                    var target = range != 0
-                        ? TargetManager.Target(range, damageType)
-                        : TargetManager.Target(spell, damageType);
+                    AIHeroClient target;
+                    if (targetHero == null)
+                        target = range != 0
+                            ? TargetManager.Target(range, damageType)
+                            : TargetManager.Target(spell, damageType);
+                    else target = targetHero;
 
                     if (target == null) return;
 
@@ -92,7 +95,7 @@ namespace VolatileAIO.Organs.Brain
 
             internal class Circle
             {
-                internal static void Farm(Spell.Skillshot spell)
+                internal static void Farm(Spell.Skillshot spell, int minHit = 1)
                 {
                     if ((spell.Slot != SpellSlot.Q || !TickManager.NoLag(1)) &&
                         (spell.Slot != SpellSlot.W || !TickManager.NoLag(2)) &&
@@ -118,11 +121,12 @@ namespace VolatileAIO.Organs.Brain
                             biggestWaveInRange = wave;
                         }
                     }
+                    if (biggestWaveInRange.Count>=minHit)
                     spell.Cast(GetMinionWaveVector(biggestWaveInRange).To3D());
                 }
 
                 internal static void WujuStyle(Spell.Skillshot spell, DamageType damageType,
-                    int range = 0, int minHit = 1, HitChance hitChance = HitChance.Medium, Obj_AI_Base targetHero = null)
+                    int range = 0, int minHit = 1, HitChance hitChance = HitChance.Medium, AIHeroClient targetHero = null)
                 {
                     //Credits to WujuSan for the original algorithm, now optimized by turkey for better hitchance
                     if ((spell.Slot != SpellSlot.Q || !TickManager.NoLag(1)) &&
@@ -133,9 +137,12 @@ namespace VolatileAIO.Organs.Brain
 
                     if (!spell.IsReady() || _isAutoAttacking) return;
 
-                    var target = range != 0
-                        ? TargetManager.Target(range, damageType)
-                        : TargetManager.Target(spell, damageType);
+                    AIHeroClient target;
+                    if (targetHero == null)
+                        target = range != 0
+                            ? TargetManager.Target(range, damageType)
+                            : TargetManager.Target(spell, damageType);
+                    else target = targetHero;
 
                     if (target == null) return;
 
