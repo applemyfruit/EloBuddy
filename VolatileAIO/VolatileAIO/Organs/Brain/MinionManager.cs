@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EloBuddy;
 using EloBuddy.SDK;
-using EloBuddy.SDK.Enumerations;
 using SharpDX;
-using VolatileAIO.Organs.Brain.LeagueSharp.Common;
 
 namespace VolatileAIO.Organs.Brain
 {
