@@ -64,14 +64,17 @@
     <Compile Include="Extensions\Support\Blitzcrank.cs" />
     <Compile Include="Organs\Brain\CastManager.cs" />
     <Compile Include="Organs\Brain\DrawManager.cs" />
+    <Compile Include="Organs\Brain\Initialize.cs" />
     <Compile Include="Organs\Brain\ManaManager.cs" />
+    <Compile Include="Organs\Brain\MEC.cs" />
+    <Compile Include="Organs\Brain\MinionManager.cs" />
     <Compile Include="Organs\Brain\TargetManager.cs" />
     <Compile Include="Organs\Brain\TickManager.cs" />
     <Compile Include="Organs\Brain\ExtensionLoader.cs" />
     <Compile Include="Extensions\ADC\Ezreal.cs" />
     <Compile Include="Organs\Heart.cs" />
-    <Compile Include="Organs\_Test\SpellData.cs" />
-    <Compile Include="Organs\_Test\SpellDatabase.cs" />
+    <Compile Include="Organs\Brain\Data\SpellData.cs" />
+    <Compile Include="Organs\Brain\Data\SpellDatabase.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

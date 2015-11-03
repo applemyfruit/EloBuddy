@@ -550,6 +550,24 @@ namespace VolatileAIO.Organs._Test
                 new SpellData
                 {
                     ChampionName = "Cassiopeia",
+                    SpellName = "CassiopeiaMiasma",
+                    Slot = SpellSlot.W,
+                    Type = SkillShotType.Circular,
+                    Delay = 500,
+                    Range = 850,
+                    Radius = 150,
+                    MissileSpeed = int.MaxValue,
+                    FixedRange = false,
+                    AddHitbox = true,
+                    DangerValue = 2,
+                    IsDangerous = false,
+                    MissileSpellName = "CassiopeiaMiasma"
+                });
+
+            Spells.Add(
+                new SpellData
+                {
+                    ChampionName = "Cassiopeia",
                     SpellName = "CassiopeiaPetrifyingGaze",
                     Slot = SpellSlot.R,
                     Type = SkillShotType.Cone,

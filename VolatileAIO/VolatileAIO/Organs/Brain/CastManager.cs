@@ -91,6 +91,28 @@ namespace VolatileAIO.Organs.Brain
                         CastCount++;
                     }
                 }
+
+                internal static void Farm(Spell.Skillshot spell, int minHit = 1)
+                {
+                    if ((spell.Slot != SpellSlot.Q || !TickManager.NoLag(1)) &&
+                        (spell.Slot != SpellSlot.W || !TickManager.NoLag(2)) &&
+                        (spell.Slot != SpellSlot.E || !TickManager.NoLag(3)) &&
+                        (spell.Slot != SpellSlot.R || !TickManager.NoLag(4)))
+                        return;
+                    if (!spell.IsReady() || _isAutoAttacking) return;
+
+                    var minions =
+                        MinionManager.GetMinions(Player.ServerPosition, spell.Range + spell.Radius)
+                            .Select(
+                                minion =>
+                                    Prediction.Position.PredictUnitPosition(minion,
+                                        (int)(spell.CastDelay + (Player.Distance(minion) / spell.Speed))))
+                            .ToList();
+
+                    if (MinionManager.GetBestLineFarmLocation(minions, spell.Width, spell.Range).MinionsHit>=minHit)
+                        spell.Cast(
+                            MinionManager.GetBestLineFarmLocation(minions, spell.Width, spell.Range).Position.To3D());
+                }
             }
 
             internal class Circle
@@ -102,27 +124,19 @@ namespace VolatileAIO.Organs.Brain
                         (spell.Slot != SpellSlot.E || !TickManager.NoLag(3)) &&
                         (spell.Slot != SpellSlot.R || !TickManager.NoLag(4))) return;
                     if (!spell.IsReady() || _isAutoAttacking) return;
-                    var minionWaves = GetMinionWaves();
-                    foreach (
-                        var wave in
-                            minionWaves.Where(
-                                vector =>
-                                    Player.Distance(GetMinionWaveVector(vector)) >
-                                    (spell.Range + spell.Radius)).ToList()
-                        )
-                    {
-                        minionWaves.Remove(wave);
-                    }
-                    var biggestWaveInRange = new List<Obj_AI_Minion>();
-                    foreach (var wave in minionWaves)
-                    {
-                        if (wave.Count > biggestWaveInRange.Count)
-                        {
-                            biggestWaveInRange = wave;
-                        }
-                    }
-                    if (biggestWaveInRange.Count>=minHit)
-                    spell.Cast(GetMinionWaveVector(biggestWaveInRange).To3D());
+
+                    var minions =
+                        MinionManager.GetMinions(Player.ServerPosition, spell.Range + spell.Radius)
+                            .Select(
+                                minion =>
+                                    Prediction.Position.PredictUnitPosition(minion,
+                                        (int) (spell.CastDelay + (Player.Distance(minion)/spell.Speed))))
+                            .ToList();
+
+                    if (MinionManager.GetBestCircularFarmLocation(minions, spell.Width, spell.Range).MinionsHit >=
+                        minHit)
+                        spell.Cast(
+                            MinionManager.GetBestCircularFarmLocation(minions, spell.Width, spell.Range).Position.To3D());
                 }
 
                 internal static void WujuStyle(Spell.Skillshot spell, DamageType damageType,
@@ -197,46 +211,7 @@ namespace VolatileAIO.Organs.Brain
         {
             _isAutoAttacking = true;
         }
-
-        public static Vector2 GetMinionWaveVector(List<Obj_AI_Minion> minionWave)
-        {
-            var wavepos = new Vector2();
-            wavepos = minionWave.Aggregate(wavepos, (current, minion) => current + minion.ServerPosition.To2D());
-            wavepos /= minionWave.Count;
-            return wavepos;
-        }
-
-        public static List<List<Obj_AI_Minion>> GetMinionWaves()
-        {
-            var waves = new List<List<Obj_AI_Minion>>();
-            var creeps =
-                EntityManager.MinionsAndMonsters.EnemyMinions.Where(m => m.ServerPosition.IsOnScreen()).ToList();
-            while (creeps.Count > 0)
-            {
-                var waveunchecked = new List<Obj_AI_Minion>();
-                var wavechecked = new List<Obj_AI_Minion>();
-                var creep = creeps[0];
-                waveunchecked.Add(creep);
-                creeps.Remove(creep);
-                while (waveunchecked.Count > 0)
-                {
-                    foreach (var minion in creeps.Where(
-                        m => m.Distance(waveunchecked.ElementAt(0)) < 200)
-                        .ToList()
-                        .Where(minion => !wavechecked.Contains(minion)))
-                    {
-                        waveunchecked.Add(minion);
-                        creeps.Remove(minion);
-                    }
-                    wavechecked.Add(waveunchecked.FirstOrDefault());
-                    waveunchecked.RemoveAt(0);
-                }
-                waves.Add(wavechecked);
-            }
-            ;
-            return waves;
-        }
-
+       
         private static int CountSpellHits(Vector2 castPosition, Spell.Skillshot spell)
         {
             return GetEnemiesPosition(spell).Count(enemyPos => castPosition.Distance(enemyPos) <= spell.Radius);

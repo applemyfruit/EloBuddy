@@ -22,13 +22,14 @@ namespace VolatileAIO.Extensions.Mid
 
         private static void InitializeSpells()
         {
-            var qdata = SpellDatabase.Spells.Find(s => string.Equals(s.ChampionName, Player.ChampionName, StringComparison.CurrentCultureIgnoreCase) && s.Slot == SpellSlot.Q);
-            var wdata = SpellDatabase.Spells.Find(s => string.Equals(s.ChampionName, Player.ChampionName, StringComparison.CurrentCultureIgnoreCase) && s.Slot == SpellSlot.Q);
-            var rdata = SpellDatabase.Spells.Find(s => string.Equals(s.ChampionName, Player.ChampionName, StringComparison.CurrentCultureIgnoreCase) && s.Slot == SpellSlot.R);
-            Q = new Spell.Skillshot(SpellSlot.Q, (uint)qdata.Range, qdata.Type, qdata.Delay, qdata.MissileSpeed, qdata.Radius);
-            W = new Spell.Skillshot(SpellSlot.W, (uint)wdata.Range, wdata.Type, wdata.Delay, wdata.MissileSpeed, wdata.Radius);
-            E = new Spell.Targeted(SpellSlot.E, 550);
-            R = new Spell.Skillshot(SpellSlot.R, (uint)rdata.Range, rdata.Type, rdata.Delay, rdata.MissileSpeed, rdata.Radius);
+            var spells = new Initialize().Spells(Initialize.Type.Skillshot, Initialize.Type.Skillshot, Initialize.Type.Targeted, Initialize.Type.Skillshot);
+            Q = (Spell.Skillshot)spells[0];
+            W = (Spell.Skillshot)spells[1];
+            E = (Spell.Targeted)spells[2];
+            R = (Spell.Skillshot)spells[3];
+            Q.AllowedCollisionCount = int.MaxValue;
+            W.AllowedCollisionCount = int.MaxValue;
+            R.AllowedCollisionCount = int.MaxValue;
         }
 
         protected override void Volatile_OnHeartBeat(EventArgs args)

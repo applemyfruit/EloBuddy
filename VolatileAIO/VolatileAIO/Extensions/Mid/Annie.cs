@@ -5,6 +5,7 @@ using System.Linq;
 using EloBuddy;
 using EloBuddy.SDK;
 using EloBuddy.SDK.Constants;
+using EloBuddy.SDK.Enumerations;
 using EloBuddy.SDK.Events;
 using EloBuddy.SDK.Menu;
 using EloBuddy.SDK.Menu.Values;
@@ -104,10 +105,10 @@ namespace VolatileAIO.Extensions.Mid
             MiscMenu.Add("estack", new CheckBox("Stack Passive E", false));
             MiscMenu.Add("wstack", new CheckBox("Stack Passive W ", false));
             MiscMenu.Add("useexhaust", new CheckBox("Use Exhaust"));
-            foreach (var source in ObjectManager.Get<AIHeroClient>().Where(a => a.IsAlly))
+            foreach (var enemy in EntityManager.Heroes.Enemies)
             {
-                MiscMenu.Add(source.ChampionName + "exhaust",
-                    new CheckBox("Exhaust " + source.ChampionName, false));
+                MiscMenu.Add(enemy.ChampionName + "exhaust",
+                    new CheckBox("Exhaust " + enemy.ChampionName, false));
             }
             MiscMenu.AddSeparator();
             MiscMenu.Add("zhonias", new CheckBox("Use Zhonia"));
@@ -134,58 +135,116 @@ namespace VolatileAIO.Extensions.Mid
                 {
                     sender.DisplayName = skinid[changeArgs.NewValue];
                 };
+            Interrupter.OnInterruptableSpell += OnInterruptableSpell;
+            Orbwalker.OnPreAttack += OrbwalkerOnOnPreAttack;
+            GameObject.OnCreate += GameObjectOnOnCreate;
+            Obj_AI_Base.OnProcessSpellCast += OnProcessSpellCast;
         }
 
         public static void InitializeSpells()
         {
-            var qdata =
-                SpellDatabase.Spells.Find(
-                    s =>
-                        string.Equals(s.ChampionName, Player.ChampionName, StringComparison.CurrentCultureIgnoreCase) &&
-                        s.Slot == SpellSlot.Q);
-            var wdata =
-                SpellDatabase.Spells.Find(
-                    s =>
-                        string.Equals(s.ChampionName, Player.ChampionName, StringComparison.CurrentCultureIgnoreCase) &&
-                        s.Slot == SpellSlot.W);
-            var rdata =
-                SpellDatabase.Spells.Find(
-                    s =>
-                        string.Equals(s.ChampionName, Player.ChampionName, StringComparison.CurrentCultureIgnoreCase) &&
-                        s.Slot == SpellSlot.R);
+            Zhonia = new Item((int)ItemId.Zhonyas_Hourglass);
+            if (HasSpell("summonerdot"))
+                Ignite = new Spell.Targeted(ObjectManager.Player.GetSpellSlotFromName("summonerdot"), 600);
+            Exhaust = new Spell.Targeted(ObjectManager.Player.GetSpellSlotFromName("summonerexhaust"), 650);
+            var FlashSlot = Player.GetSpellSlotFromName("summonerflash");
+            Flash = new Spell.Skillshot(FlashSlot, 32767, SkillShotType.Linear);
+            AbilitySequence = new[] { 1, 2, 1, 2, 3, 4, 1, 1, 1, 2, 4, 2, 2, 3, 3, 4, 3, 3 };
 
-            Q = new Spell.Targeted(SpellSlot.Q, (uint)qdata.Range);
-
-            W = new Spell.Skillshot(SpellSlot.W, (uint)wdata.Range, wdata.Type, wdata.Delay, wdata.MissileSpeed,
-                wdata.Radius)
-            {
-                AllowedCollisionCount = int.MaxValue
-            };
-            E = new Spell.Active(SpellSlot.E);
-            R = new Spell.Skillshot(SpellSlot.R, (uint)rdata.Range, rdata.Type, rdata.Delay, rdata.MissileSpeed,
-                rdata.Radius)
-            {
-                AllowedCollisionCount = int.MaxValue
-            };
+            var spells = new Initialize().Spells(Initialize.Type.Targeted, Initialize.Type.Skillshot, Initialize.Type.Active, Initialize.Type.Skillshot);
+            Q = (Spell.Targeted)spells[0];
+            W = (Spell.Skillshot)spells[1];
+            E = (Spell.Active)spells[2];
+            R = (Spell.Skillshot)spells[3];
+            W.AllowedCollisionCount = int.MaxValue;
+            R.AllowedCollisionCount = int.MaxValue;
         }
 
         protected override void Volatile_OnHeartBeat(EventArgs args)
         {
             TickManager.Tick();
             if (Player.IsDead) return;
-            AutoCastSpells();
+            LevelUpSpells();
+            MoveTibbers();
+            SkinChange();
+            Pyrostack();
             Zhonya();
             ManaManager.SetMana();
-            if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Combo)
+            switch (Orbwalker.ActiveModesFlags)
             {
-                Combo();
+                case Orbwalker.ActiveModes.Combo:
+                    Combo();
+                    break;
+                case Orbwalker.ActiveModes.LastHit:
+                    LastHitB();
+                    break;
+                case Orbwalker.ActiveModes.Flee:
+                    Flee();
+                    break;
+                default:
+                    if (ComboMenu["flashr"].Cast<KeyBind>().CurrentValue
+                        || ComboMenu["flasher"].Cast<KeyBind>().CurrentValue)
+                    {
+                        TibbersFlash();
+                    }
+                    break;
             }
-            else if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Flee)
+            if (ComboMenu["useignite"].Cast<CheckBox>().CurrentValue &&
+                Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo))
             {
-                Flee();
+                foreach (
+                    var source in
+                        ObjectManager.Get<AIHeroClient>()
+                            .Where(
+                                a =>
+                                    a.IsEnemy && a.IsValidTarget(Ignite.Range) &&
+                                    a.Health < 50 + 20*Player.Level - (a.HPRegenRate/5*3)))
+                {
+                    Ignite.Cast(source);
+                    return;
+                }
+            }
+            if (MiscMenu["useexhaust"].Cast<CheckBox>().CurrentValue &&
+                (!ComboMenu["comboOnlyExhaust"].Cast<CheckBox>().CurrentValue ||
+                 Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo)))
+            {
+                foreach (
+                    var enemy in
+                        ObjectManager.Get<AIHeroClient>()
+                            .Where(a => a.IsEnemy && a.IsValidTarget(Exhaust.Range))
+                            .Where(enemy => MiscMenu[enemy.ChampionName + "exhaust"].Cast<CheckBox>().CurrentValue))
+                {
+                    if (enemy.IsFacing(Player))
+                    {
+                        if (!(Player.HealthPercent < 50)) continue;
+                        Exhaust.Cast(enemy);
+                        return;
+                    }
+                    if (!(enemy.HealthPercent < 50)) continue;
+                    Exhaust.Cast(enemy);
+                    return;
+                }
             }
         }
-        protected void OnInterruptableSpell(Obj_AI_Base sender, Interrupter.InterruptableSpellEventArgs e)
+
+        private static void Pyrostack()
+        {
+            var stacke = MiscMenu["estack"].Cast<CheckBox>().CurrentValue;
+            var stackw = MiscMenu["wstack"].Cast<CheckBox>().CurrentValue;
+
+            if (Player.HasBuff("pyromania_particle"))
+                return;
+            if (stacke && E.IsReady())
+            {
+                E.Cast();
+            }
+
+            if (stackw && W.IsReady())
+            {
+                W.Cast(MousePos);
+            }
+        }
+        private static void OnInterruptableSpell(Obj_AI_Base sender, Interrupter.InterruptableSpellEventArgs e)
         {
             var qintTarget = TargetSelector.GetTarget(Q.Range, DamageType.Magical);
             if (Player.HasBuff("pyromania_particle"))
@@ -262,8 +321,7 @@ namespace VolatileAIO.Extensions.Mid
                 }
             }
         }
-        private void OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
-
+        private static void OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
             if (MiscMenu["eaa"].Cast<CheckBox>().CurrentValue &&
                 sender.IsEnemy
@@ -271,6 +329,48 @@ namespace VolatileAIO.Extensions.Mid
                 && args.Target.IsMe)
             {
                 E.Cast();
+            }
+        }
+        public enum AttackSpell
+        {
+            Q,
+            W
+        };
+        public static float Qcalc(Obj_AI_Base target)
+        {
+            return Player.CalculateDamageOnUnit(target, DamageType.Magical,
+                (new float[] { 0, 80, 115, 150, 185, 220 }[Q.Level] +
+                 (0.80f * Player.FlatMagicDamageMod)));
+        }
+
+        public static Obj_AI_Base MinionLh(GameObjectType type, AttackSpell spell)
+        {
+            return ObjectManager.Get<Obj_AI_Base>().OrderBy(a => a.Health).FirstOrDefault(a => a.IsEnemy
+                                                                                               && a.Type == type
+                                                                                               &&
+                                                                                               a.Distance(Player) <=
+                                                                                               Q.Range
+                                                                                               && !a.IsDead
+                                                                                               && !a.IsInvulnerable
+                                                                                               &&
+                                                                                               a.IsValidTarget(
+                                                                                                   Q.Range)
+                                                                                               &&
+                                                                                               a.Health <= Qcalc(a));
+        }
+
+        public static void LastHitB()
+        {
+            var QCHECK = LastHit["LHQ"].Cast<CheckBox>().CurrentValue;
+            var QREADY = Q.IsReady();
+            if (!QCHECK || !QREADY)
+            {
+                return;
+            }
+            var minion = (Obj_AI_Minion)MinionLh(GameObjectType.obj_AI_Minion, AttackSpell.Q);
+            if (minion != null)
+            {
+                Q.Cast(minion);
             }
         }
         private static void Zhonya()
@@ -299,8 +399,6 @@ namespace VolatileAIO.Extensions.Mid
             {
                 Combo();
             }
-
-            var predrpos = R.GetPrediction(target);
             var predwpos = W.GetPrediction(target);
             if (ComboMenu["flashr"].Cast<KeyBind>().CurrentValue)
             {
@@ -308,7 +406,7 @@ namespace VolatileAIO.Extensions.Mid
                     if (target.IsValidTarget(R.Range + 425))
                     {
                         Flash.Cast((Vector3)xpos);
-                        R.Cast(predrpos.CastPosition);
+                        CastManager.Cast.Circle.WujuStyle(R, DamageType.Magical);
                         W.Cast(predwpos.CastPosition);
                     }
             }
@@ -323,13 +421,13 @@ namespace VolatileAIO.Extensions.Mid
                     if (target.IsValidTarget(R.Range + 425))
                     {
                         Flash.Cast((Vector3)xpos);
-                        R.Cast(predrpos.CastPosition);
+                        CastManager.Cast.Circle.WujuStyle(R, DamageType.Magical);
                         W.Cast(predwpos.CastPosition);
                     }
             }
         }
 
-        private static void Obj_AI_Base_OnCreate(GameObject sender, EventArgs args)
+        private static void GameObjectOnOnCreate(GameObject sender, EventArgs args)
         {
             if (sender.Name == "tibbers")
             {
@@ -382,9 +480,7 @@ namespace VolatileAIO.Extensions.Mid
             if (ComboMenu["usecombor"].Cast<CheckBox>().CurrentValue)
                 if (R.IsReady())
                 {
-                    var predR = R.GetPrediction(target).CastPosition;
-                    if (target.CountEnemiesInRange(R.Width) >= ComboMenu["rslider"].Cast<Slider>().CurrentValue)
-                        R.Cast(predR);
+                    CastManager.Cast.Circle.WujuStyle(R, DamageType.Magical, 0, ComboMenu["rslider"].Cast<Slider>().CurrentValue, HitChance.Medium, target);
                 }
             if (ComboMenu["usecomboe"].Cast<CheckBox>().CurrentValue)
                 if (E.IsReady())

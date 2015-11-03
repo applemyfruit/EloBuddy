@@ -34,12 +34,11 @@ namespace VolatileAIO.Extensions.Support
 
         public static void InitializeSpells()
         {
-            var qdata = SpellDatabase.Spells.Find(s => string.Equals(s.ChampionName, Player.ChampionName, StringComparison.CurrentCultureIgnoreCase) && s.Slot == SpellSlot.Q);
-
-            Q = new Spell.Skillshot(SpellSlot.Q, (uint)qdata.Range, qdata.Type, qdata.Delay, qdata.MissileSpeed, qdata.Radius);
-            W = new Spell.Active(SpellSlot.W, 150);
-            E = new Spell.Active(SpellSlot.E, 150);
-            R = new Spell.Active(SpellSlot.R, 550);
+            var spells = new Initialize().Spells(Initialize.Type.Skillshot, Initialize.Type.Active, Initialize.Type.Active, Initialize.Type.Active);
+            Q = (Spell.Skillshot)spells[0];
+            W = (Spell.Active)spells[1];
+            E = (Spell.Active)spells[2];
+            R = (Spell.Active)spells[3];
         }
 
         protected override void Volatile_OnHeartBeat(EventArgs args)

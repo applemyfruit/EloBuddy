@@ -171,13 +171,12 @@ namespace VolatileAIO.Extensions.Jungle
 
         public static void InitializeSpells()
         {
-            Q = new Spell.Active(SpellSlot.Q, 475);
-            W = new Spell.Active(SpellSlot.W);
-            E = new Spell.Targeted(SpellSlot.E, 225);
-            R = new Spell.Skillshot(SpellSlot.R, 900, SkillShotType.Circular, 250, 1200, 150)
-            {
-                AllowedCollisionCount = int.MaxValue
-            };
+            var spells = new Initialize().Spells(Initialize.Type.Active, Initialize.Type.Active, Initialize.Type.Targeted, Initialize.Type.Skillshot);
+            Q = (Spell.Active)spells[0];
+            W = (Spell.Active)spells[1];
+            E = (Spell.Targeted)spells[2];
+            R = (Spell.Skillshot)spells[3];
+            R.AllowedCollisionCount = int.MaxValue;
         }
 
         #endregion
