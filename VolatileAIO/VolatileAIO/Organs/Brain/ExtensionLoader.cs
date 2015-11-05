@@ -14,20 +14,20 @@ namespace VolatileAIO.Organs.Brain
     {
         private static bool _loaded;
 
-        private readonly Dictionary<string, State> _extensionState = new Dictionary<string, State>()
+        public static readonly Dictionary<string, State> ExtensionState = new Dictionary<string, State>()
         {
-            {"annie", State.BeingDeveloped },
-            {"blitzcrank", State.PartDeveloped },
-            {"cassiopeia", State.BeingDeveloped },
-            {"evelynn", State.PartDeveloped },
-            {"ezreal", State.PartDeveloped }
+            {"Annie", State.BeingOptimized },
+            {"Blitzcrank", State.PartDeveloped },
+            {"Cassiopeia", State.PartDeveloped },
+            {"Evelynn", State.PartDeveloped },
+            {"Ezreal", State.BeingOptimized }
         };
 
-        enum State
+        public enum State
         {
             Outdated = 0,
-            BeingDeveloped = 1,
-            PartDeveloped = 2,
+            PartDeveloped = 1,
+            BeingOptimized = 2,
             FullyDeveloped = 3,
         }
 
@@ -35,14 +35,14 @@ namespace VolatileAIO.Organs.Brain
         {
             Chat.Print("<font color = \"#00FF00\">Succesfully loaded Extension: </font><font color = \"#FFFF00\">" + ObjectManager.Player.ChampionName + "</font>");
             State state;
-            _extensionState.TryGetValue(ObjectManager.Player.ChampionName.ToLower(), out state);
+            ExtensionState.TryGetValue(ObjectManager.Player.ChampionName, out state);
             if ((int)state<4) Chat.Print("<font color = \"#FFCC00\">Please note:</font> <font color = \"#FFFF00\">" + ObjectManager.Player.ChampionName + "</font><font color = \"#FFCC00\"> is </font>!<font color = \"#800000\">" + Enum.GetName(state.GetType(),state)+"</font>!");
         }
 
         public ExtensionLoader()
         {
             if (_loaded) return;
-            if (_extensionState.ContainsKey(ObjectManager.Player.ChampionName.ToLower())) WelcomeChat();
+            if (ExtensionState.ContainsKey(ObjectManager.Player.ChampionName)) WelcomeChat();
             switch (ObjectManager.Player.ChampionName.ToLower())
             {
                 case "annie":

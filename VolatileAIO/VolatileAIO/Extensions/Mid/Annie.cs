@@ -166,7 +166,6 @@ namespace VolatileAIO.Extensions.Mid
             if (Player.IsDead) return;
             LevelUpSpells();
             MoveTibbers();
-            SkinChange();
             Pyrostack();
             Zhonya();
             ManaManager.SetMana();
@@ -488,44 +487,6 @@ namespace VolatileAIO.Extensions.Mid
                     if (Player.CountEnemiesInRange(Q.Range) >= 1)
                         E.Cast();
                 }
-        }
-        private static
-            void SkinChange()
-        {
-            var style = SkinMenu["skinid"].DisplayName;
-            switch (style)
-            {
-                case "Default":
-                    Player.SetSkinId(0);
-                    break;
-                case "Goth":
-                    Player.SetSkinId(1);
-                    break;
-                case "Red Riding":
-                    Player.SetSkinId(2);
-                    break;
-                case "Annie in Wonderland":
-                    Player.SetSkinId(3);
-                    break;
-                case "Prom Queen":
-                    Player.SetSkinId(4);
-                    break;
-                case "Frostfire":
-                    Player.SetSkinId(5);
-                    break;
-                case "Franken Tibbers":
-                    Player.SetSkinId(6);
-                    break;
-                case "Reverse":
-                    Player.SetSkinId(7);
-                    break;
-                case "Panda":
-                    Player.SetSkinId(8);
-                    break;
-                case "Sweetheart":
-                    Player.SetSkinId(9);
-                    break;
-            }
         }
     }
 }

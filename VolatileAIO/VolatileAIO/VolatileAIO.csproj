@@ -68,6 +68,7 @@
     <Compile Include="Organs\Brain\ManaManager.cs" />
     <Compile Include="Organs\Brain\MEC.cs" />
     <Compile Include="Organs\Brain\MinionManager.cs" />
+    <Compile Include="Organs\Brain\SkinManager.cs" />
     <Compile Include="Organs\Brain\TargetManager.cs" />
     <Compile Include="Organs\Brain\TickManager.cs" />
     <Compile Include="Organs\Brain\ExtensionLoader.cs" />
@@ -82,6 +83,11 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Organs\Brain\Data\SkinInfo.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

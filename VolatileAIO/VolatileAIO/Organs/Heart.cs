@@ -14,6 +14,7 @@ namespace VolatileAIO.Organs
     {
         protected static readonly AIHeroClient Player = ObjectManager.Player;
         public static Menu VolatileMenu;
+        protected static Menu _hackMenu;
 
         public static ManaManager ManaManager = new ManaManager();
         public static DrawManager DrawManager = new DrawManager();
@@ -65,9 +66,10 @@ namespace VolatileAIO.Organs
             VolatileMenu.AddLabel("I hope you'll like it.");
             VolatileMenu.AddSeparator();
             VolatileMenu.AddGroupLabel("Supported Champions:");
-            VolatileMenu.AddLabel("Ezreal");
-            VolatileMenu.AddLabel("Blitzcrank");
-            VolatileMenu.AddLabel("Evelynn");
+            foreach (var champion in ExtensionLoader.ExtensionState)
+            {
+                VolatileMenu.AddLabel(champion.Key + " Status: " + champion.Value);
+            }
             VolatileMenu.AddSeparator();
             VolatileMenu.AddLabel("Developer Options:");
             VolatileMenu.Add("debug", new CheckBox("Debug", false));
@@ -76,6 +78,7 @@ namespace VolatileAIO.Organs
             {
                 CastManager.Champions.Add(new CastManager.DifferencePChamp(enemy.Name));
             }
+            SkinManager.Initialize();
         }
 
         private void OnUpdateDeathChecker(EventArgs args)
