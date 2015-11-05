@@ -60,12 +60,12 @@ namespace VolatileAIO.Organs.Brain
 
         public static void Initialize()
         {
-            _hackMenu = VolatileMenu.AddSubMenu("Hacks", "hacks", "Volatile Hacks");
             _hackMenu.AddGroupLabel("Volatile Skinchanger");
             _hackMenu.Add("models", new Slider("Model - ", 0, 0, 0)).OnValueChange += SkinManager_OnModelSliderChange;
             _hackMenu.Add("skins", new Slider("Skin - Classic", 0, 0, 0)).OnValueChange += SkinManager_OnSkinSliderChange;
             _hackMenu.Add("resetModel", new CheckBox("Reset Model", false)).OnValueChange += SkinManager_OnResetModel;
             _hackMenu.Add("resetSkin", new CheckBox("Reset Skin", false)).OnValueChange += SkinManager_OnResetSkin;
+            _hackMenu.AddSeparator();
 
             using (var infoStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("VolatileAIO.Organs.Brain.Data.SkinInfo.xml"))
                 if (infoStream != null)

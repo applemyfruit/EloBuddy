@@ -18,11 +18,13 @@ namespace VolatileAIO.Organs
 
         public static ManaManager ManaManager = new ManaManager();
         public static DrawManager DrawManager = new DrawManager();
+        public static RecallTracker RecallTracker;
 
         protected Heart()
         {
             Game.OnUpdate += OnUpdateDeathChecker;
             Drawing.OnEndScene += OnDrawDeathChecker;
+            Drawing.OnDraw += Drawing_OnDraw;
             Interrupter.OnInterruptableSpell += OnInterruptableSpell;
             Orbwalker.OnPostAttack += OrbwalkerOnOnPostAttack;
             Orbwalker.OnPreAttack += OrbwalkerOnOnPreAttack;
@@ -31,7 +33,7 @@ namespace VolatileAIO.Organs
             GameObject.OnDelete += GameObjectOnOnDelete;
             Game.OnWndProc += Game_OnWndProc;
             AttackableUnit.OnDamage += OnDamage;
-            Obj_AI_Base.OnTeleport += Obj_AI_Base_OnTeleport;
+            Teleport.OnTeleport += Teleport_OnTeleport;
             Obj_AI_Base.OnProcessSpellCast += OnProcessSpellCast;
             Obj_AI_Base.OnBuffGain += OnBuffGain;
             Obj_AI_Base.OnBuffLose += OnBuffLose;
@@ -75,11 +77,9 @@ namespace VolatileAIO.Organs
             VolatileMenu.AddLabel("Developer Options:");
             VolatileMenu.Add("debug", new CheckBox("Debug", false));
             new ExtensionLoader();
-            foreach (var enemy in EntityManager.Heroes.Enemies)
-            {
-                CastManager.Champions.Add(new CastManager.DifferencePChamp(enemy.Name));
-            }
+            _hackMenu = VolatileMenu.AddSubMenu("Hacks", "hacks", "Volatile Hacks");
             SkinManager.Initialize();
+            RecallTracker = new RecallTracker();
         }
 
         #region privatevoid
@@ -93,9 +93,13 @@ namespace VolatileAIO.Organs
         private void OnDrawDeathChecker(EventArgs args)
         {
             if (Player.IsDead) return;
+            Volative_OnDrawEnd(args);
+        }
+        
+        private void Drawing_OnDraw(EventArgs args)
+        {
             Volative_OnDraw(args);
         }
-
         private void OrbwalkerOnOnPostAttack(AttackableUnit target, EventArgs args)
         {
             Volatile_OnPostAttack(target, args);
@@ -159,7 +163,14 @@ namespace VolatileAIO.Organs
         private void Game_OnWndProc(WndEventArgs args)
         {
             Volatile_OnWndProc(args);
-            if ((args.Msg == (uint) WindowMessages.LeftButtonDown)) TargetManager.SetChosenTarget(args);
+            if ((args.Msg == (uint) WindowMessages.LeftButtonDown))
+            {
+                TargetManager.SetChosenTarget(args);
+                if (VolatileMenu["debug"].Cast<CheckBox>().CurrentValue)
+                {
+                    Chat.Print(Game.CursorPos2D.X+","+Game.CursorPos2D.Y);
+                }
+            }
         }
 
         private void OrbwalkerOnOnPreAttack(AttackableUnit target, Orbwalker.PreAttackArgs args)
@@ -167,7 +178,7 @@ namespace VolatileAIO.Organs
             Volatile_OnPreAttack(target, args);
         }
 
-        private void Obj_AI_Base_OnTeleport(Obj_AI_Base sender, GameObjectTeleportEventArgs args)
+        private void Teleport_OnTeleport(Obj_AI_Base sender, Teleport.TeleportEventArgs args)
         {
             Volatile_OnTeleport(sender, args);
         }
@@ -181,7 +192,8 @@ namespace VolatileAIO.Organs
             //for extensions
         }
 
-        protected virtual void Volatile_OnUpdateChargeableSpell(Spellbook sender, SpellbookUpdateChargeableSpellEventArgs args)
+        protected virtual void Volatile_OnUpdateChargeableSpell(Spellbook sender,
+            SpellbookUpdateChargeableSpellEventArgs args)
         {
             //for extensions
         }
@@ -220,8 +232,13 @@ namespace VolatileAIO.Organs
         {
             //for extensions
         }
-        
+
         protected virtual void Volatile_OnHeartBeat(EventArgs args)
+        {
+            //for extensions
+        }
+
+        protected virtual void Volative_OnDrawEnd(EventArgs args)
         {
             //for extensions
         }
@@ -245,7 +262,7 @@ namespace VolatileAIO.Organs
         {
             //for extensions
         }
-        
+
         protected virtual void OnSpellCast(Spellbook sender, SpellbookCastSpellEventArgs args)
         {
             //for extensions
@@ -256,14 +273,15 @@ namespace VolatileAIO.Organs
             //for extensions
         }
 
-        protected virtual void Volatile_OnTeleport(Obj_AI_Base sender, GameObjectTeleportEventArgs args)
+        protected virtual void Volatile_OnTeleport(Obj_AI_Base sender, Teleport.TeleportEventArgs args)
         {
             //for extensions
         }
 
         #endregion
 
-        //Checks if player is in fountain
+        #region Utility
+
         public static bool InFountain(AIHeroClient hero)
         {
             float fountainRange = 562500; //750 * 750
@@ -277,5 +295,13 @@ namespace VolatileAIO.Organs
             }
             return hero.IsVisible && hero.Distance(vec3, true) < fountainRange;
         }
+
+        public static bool IsChampion(Obj_AI_Base unit)
+        {
+            var hero = unit as AIHeroClient;
+            return hero != null && hero.IsValid;
+        }
+
+        #endregion
     }
 }

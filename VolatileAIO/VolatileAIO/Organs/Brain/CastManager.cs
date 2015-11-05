@@ -34,20 +34,6 @@ namespace VolatileAIO.Organs.Brain
             }
         }
 
-        internal struct DifferencePChamp
-        {
-            public string Name;
-            public List<float> Differences;
-
-            public DifferencePChamp(string n)
-            {
-                Name = n;
-                Differences = new List<float>();
-            }
-        }
-
-        public static List<DifferencePChamp> Champions = new List<DifferencePChamp>();
-
         public static List<LastSpells> _lastSpells = new List<LastSpells>();
 
         internal class Cast
@@ -190,10 +176,6 @@ namespace VolatileAIO.Organs.Brain
                                " & args dmg: " + args.Damage + " & preddmg: " + spell.dmg);
 
                 if (spell.target != args.Target.Name) continue;
-                if (!Champions.Exists(p => p.Name == spell.target)) continue;
-
-                Champions.Find(p => p.Name == spell.target)
-                    .Differences.Add(Math.Abs(spell.dmg - args.Damage));
                 HitCount++;
                 sremove = spell;
             }
