@@ -68,6 +68,7 @@
     <Compile Include="Organs\Brain\ManaManager.cs" />
     <Compile Include="Organs\Brain\MEC.cs" />
     <Compile Include="Organs\Brain\MinionManager.cs" />
+    <Compile Include="Organs\Brain\RecallTracker.cs" />
     <Compile Include="Organs\Brain\SkinManager.cs" />
     <Compile Include="Organs\Brain\TargetManager.cs" />
     <Compile Include="Organs\Brain\TickManager.cs" />

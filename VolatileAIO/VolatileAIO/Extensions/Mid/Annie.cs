@@ -119,22 +119,6 @@ namespace VolatileAIO.Extensions.Mid
             MiscMenu.Add("support", new CheckBox("Support Mode", false));
             MiscMenu.Add("lvlup", new CheckBox("Auto Level Up Spells"));
 
-
-            SkinMenu = VolatileMenu.AddSubMenu("Skin Changer", "skin");
-            SkinMenu.AddGroupLabel("Choose the desired skin");
-
-            var skinchange = SkinMenu.Add("skinid", new Slider("Skin", 8, 0, 9));
-            var skinid = new[]
-            {
-                "Default", "Goth", "Red Riding", "Annie in Wonderland", "Prom Queen", "Frostfire", "Franken Tibbers",
-                "Reverse", "Panda", "Sweetheart"
-            };
-            skinchange.DisplayName = skinid[skinchange.CurrentValue];
-            skinchange.OnValueChange +=
-                delegate (ValueBase<int> sender, ValueBase<int>.ValueChangeArgs changeArgs)
-                {
-                    sender.DisplayName = skinid[changeArgs.NewValue];
-                };
             Interrupter.OnInterruptableSpell += OnInterruptableSpell;
             Orbwalker.OnPreAttack += OrbwalkerOnOnPreAttack;
             GameObject.OnCreate += GameObjectOnOnCreate;

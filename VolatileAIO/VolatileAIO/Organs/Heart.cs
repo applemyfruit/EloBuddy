@@ -31,6 +31,7 @@ namespace VolatileAIO.Organs
             GameObject.OnDelete += GameObjectOnOnDelete;
             Game.OnWndProc += Game_OnWndProc;
             AttackableUnit.OnDamage += OnDamage;
+            Obj_AI_Base.OnTeleport += Obj_AI_Base_OnTeleport;
             Obj_AI_Base.OnProcessSpellCast += OnProcessSpellCast;
             Obj_AI_Base.OnBuffGain += OnBuffGain;
             Obj_AI_Base.OnBuffLose += OnBuffLose;
@@ -81,6 +82,8 @@ namespace VolatileAIO.Organs
             SkinManager.Initialize();
         }
 
+        #region privatevoid
+
         private void OnUpdateDeathChecker(EventArgs args)
         {
             if (Player.IsDead) return;
@@ -93,29 +96,19 @@ namespace VolatileAIO.Organs
             Volative_OnDraw(args);
         }
 
-        protected virtual void Volatile_OnPostAttack(AttackableUnit target, EventArgs args)
-        {
-            //for addons
-        }
-
         private void OrbwalkerOnOnPostAttack(AttackableUnit target, EventArgs args)
         {
             Volatile_OnPostAttack(target, args);
         }
 
-        protected virtual void Volatile_OnHeartBeat(EventArgs args)
-        {
-            //for addons
-        }
-
         private void OnDamage(AttackableUnit sender, AttackableUnitDamageEventArgs args)
         {
-            Volatile_OnDamage(sender,args);
+            Volatile_OnDamage(sender, args);
         }
 
         private void OnStopCast(Obj_AI_Base sender, SpellbookStopCastEventArgs args)
         {
-            //for addons
+            Volatile_OnStopCast(sender, args);
         }
 
         private void OnCastSpell(Spellbook sender, SpellbookCastSpellEventArgs args)
@@ -125,47 +118,48 @@ namespace VolatileAIO.Organs
 
         private void OnUpdateChargeableSpell(Spellbook sender, SpellbookUpdateChargeableSpellEventArgs args)
         {
-            //for addons
+            Volatile_OnUpdateChargeableSpell(sender, args);
         }
 
         private void OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
-            //for addons
+            Volatile_ProcessSpellCast(sender, args);
         }
 
         private void GameObjectOnOnDelete(GameObject sender, EventArgs args)
         {
-            //for addons
+            Volatile_OnObjectDelete(sender, args);
         }
 
         private void GameObjectOnOnCreate(GameObject sender, EventArgs args)
         {
-            //for addons
+            Volatile_OnObjectCreate(sender, args);
         }
 
-        private void OnGapcloser(AIHeroClient sender, Gapcloser.GapcloserEventArgs e)
+        private void OnGapcloser(AIHeroClient sender, Gapcloser.GapcloserEventArgs args)
         {
-                Volatile_AntiGapcloser(sender, e);
+            Volatile_AntiGapcloser(sender, args);
         }
 
-        private void OnInterruptableSpell(Obj_AI_Base sender, Interrupter.InterruptableSpellEventArgs e)
+        private void OnInterruptableSpell(Obj_AI_Base sender, Interrupter.InterruptableSpellEventArgs args)
         {
-            //for addons
+            Volatile_OnInterruptable(sender, args);
         }
 
         private void OnBuffLose(Obj_AI_Base sender, Obj_AI_BaseBuffLoseEventArgs args)
         {
-            //for addons
+            Volatile_OnBuffLose(sender, args);
         }
 
         private void OnBuffGain(Obj_AI_Base sender, Obj_AI_BaseBuffGainEventArgs args)
         {
-            //for addons
+            Volatile_OnBuffGain(sender, args);
         }
 
-        protected virtual void Volative_OnDraw(EventArgs args)
+        private void Game_OnWndProc(WndEventArgs args)
         {
-            //for addons
+            Volatile_OnWndProc(args);
+            if ((args.Msg == (uint) WindowMessages.LeftButtonDown)) TargetManager.SetChosenTarget(args);
         }
 
         private void OrbwalkerOnOnPreAttack(AttackableUnit target, Orbwalker.PreAttackArgs args)
@@ -173,15 +167,73 @@ namespace VolatileAIO.Organs
             Volatile_OnPreAttack(target, args);
         }
 
-        protected virtual void Volatile_OnPreAttack(AttackableUnit target, Orbwalker.PreAttackArgs args)
+        private void Obj_AI_Base_OnTeleport(Obj_AI_Base sender, GameObjectTeleportEventArgs args)
         {
-            //for addons
+            Volatile_OnTeleport(sender, args);
         }
 
-        private void Game_OnWndProc(WndEventArgs args)
+        #endregion
+
+        #region virtualvoid
+
+        protected virtual void Volatile_OnStopCast(Obj_AI_Base sender, SpellbookStopCastEventArgs args)
         {
-            Volatile_OnWndProc(args);
-            if ((args.Msg == (uint)WindowMessages.LeftButtonDown)) TargetManager.SetChosenTarget(args);
+            //for extensions
+        }
+
+        protected virtual void Volatile_OnUpdateChargeableSpell(Spellbook sender, SpellbookUpdateChargeableSpellEventArgs args)
+        {
+            //for extensions
+        }
+
+        protected virtual void Volatile_ProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
+        {
+            //for extensions
+        }
+
+        protected virtual void Volatile_OnObjectDelete(GameObject sender, EventArgs args)
+        {
+            //for extensions
+        }
+
+        protected virtual void Volatile_OnObjectCreate(GameObject sender, EventArgs args)
+        {
+            //for extensions
+        }
+
+        protected virtual void Volatile_OnInterruptable(Obj_AI_Base sender, Interrupter.InterruptableSpellEventArgs args)
+        {
+            //for extensions
+        }
+
+        protected virtual void Volatile_OnBuffLose(Obj_AI_Base sender, Obj_AI_BaseBuffLoseEventArgs args)
+        {
+            //for extensions
+        }
+
+        protected virtual void Volatile_OnBuffGain(Obj_AI_Base sender, Obj_AI_BaseBuffGainEventArgs args)
+        {
+            //for extensions
+        }
+
+        protected virtual void Volatile_OnPostAttack(AttackableUnit target, EventArgs args)
+        {
+            //for extensions
+        }
+        
+        protected virtual void Volatile_OnHeartBeat(EventArgs args)
+        {
+            //for extensions
+        }
+
+        protected virtual void Volative_OnDraw(EventArgs args)
+        {
+            //for extensions
+        }
+
+        protected virtual void Volatile_OnPreAttack(AttackableUnit target, Orbwalker.PreAttackArgs args)
+        {
+            //for extensions
         }
 
         protected virtual void Volatile_OnWndProc(WndEventArgs args)
@@ -193,7 +245,25 @@ namespace VolatileAIO.Organs
         {
             //for extensions
         }
+        
+        protected virtual void OnSpellCast(Spellbook sender, SpellbookCastSpellEventArgs args)
+        {
+            //for extensions
+        }
 
+        protected virtual void Volatile_OnDamage(AttackableUnit sender, AttackableUnitDamageEventArgs args)
+        {
+            //for extensions
+        }
+
+        protected virtual void Volatile_OnTeleport(Obj_AI_Base sender, GameObjectTeleportEventArgs args)
+        {
+            //for extensions
+        }
+
+        #endregion
+
+        //Checks if player is in fountain
         public static bool InFountain(AIHeroClient hero)
         {
             float fountainRange = 562500; //750 * 750
@@ -206,16 +276,6 @@ namespace VolatileAIO.Organs
                 fountainRange = 1102500; //1050 * 1050
             }
             return hero.IsVisible && hero.Distance(vec3, true) < fountainRange;
-        }
-
-        protected virtual void OnSpellCast(Spellbook sender, SpellbookCastSpellEventArgs args)
-        {
-            //
-        }
-
-        protected virtual void Volatile_OnDamage(AttackableUnit sender, AttackableUnitDamageEventArgs args)
-        {
-            //
         }
     }
 }

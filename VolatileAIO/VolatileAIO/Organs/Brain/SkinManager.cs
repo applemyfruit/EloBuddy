@@ -13,6 +13,7 @@ namespace VolatileAIO.Organs.Brain
     {
         private static XmlDocument _infoXml;
         private static Model[] _models;
+        private static int _originalSkinIndex;
 
         internal struct Model
         {
@@ -86,13 +87,15 @@ namespace VolatileAIO.Organs.Brain
                                         .ToArray()))
                         .ToArray();
             ModelNames = _models.Select(model => model.Name).ToArray();
+
+            _originalSkinIndex = Player.SkinId;
             _hackMenu["models"].Cast<Slider>().MaxValue = _models.Length-1;
             _hackMenu["models"].Cast<Slider>().CurrentValue = Array.IndexOf(ModelNames, Player.ChampionName);
         }
 
         private static void SkinManager_OnResetSkin(ValueBase<bool> sender, ValueBase<bool>.ValueChangeArgs args)
         {
-            _hackMenu["skins"].Cast<Slider>().CurrentValue = 0;
+            _hackMenu["skins"].Cast<Slider>().CurrentValue = _originalSkinIndex;
             if (_hackMenu["resetSkin"].Cast<CheckBox>().CurrentValue)
                 _hackMenu["resetSkin"].Cast<CheckBox>().CurrentValue = false;
         }
