@@ -67,14 +67,14 @@ namespace VolatileAIO.Organs.Brain
             _hackMenu.Add("trackRecalls", new CheckBox("Track Recalls"));
             _hackMenu.Add("resetPos", new CheckBox("Reset Values")).OnValueChange += RecallTracker_OnReset; ;
             _hackMenu.Add("recallx", new Slider("X Position", 645, 0, Drawing.Width));
-            _hackMenu.Add("recally", new Slider("Y Position", 910, 0, Drawing.Height));
+            _hackMenu.Add("recally", new Slider("Y Position", 860, 0, Drawing.Height));
             _hackMenu.Add("recallwidth", new Slider("Bar Width", 465, 0, 1500));
         }
 
         private void RecallTracker_OnReset(ValueBase<bool> sender, ValueBase<bool>.ValueChangeArgs args)
         {
             _hackMenu["recallx"].Cast<Slider>().CurrentValue = 645;
-            _hackMenu["recally"].Cast<Slider>().CurrentValue = 915;
+            _hackMenu["recally"].Cast<Slider>().CurrentValue = 860;
             _hackMenu["recallwidth"].Cast<Slider>().CurrentValue = 465;
 
             if (_hackMenu["resetPos"].Cast<CheckBox>().CurrentValue)

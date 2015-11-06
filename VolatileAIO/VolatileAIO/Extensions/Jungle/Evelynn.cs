@@ -13,6 +13,67 @@ namespace VolatileAIO.Extensions.Jungle
 {
     internal class Evelynn : Heart
     {
+
+        #region Spell and Menu Declaration
+
+        public static int Mode;
+        public static bool IsAutoAttacking;
+
+        public static Spell.Active Q;
+        public static Spell.Active W;
+        public static Spell.Targeted E;
+        public static Spell.Skillshot R;
+
+        public static Menu SpellMenu;
+
+        #endregion
+
+        #region Spell and Menu Loading
+
+        public Evelynn()
+        {
+            InitializeSpells();
+            InitializeMenu();
+            DrawManager.UpdateValues(Q, W, E, R);
+        }
+
+        private static void InitializeMenu()
+        {
+            SpellMenu = VolatileMenu.AddSubMenu("Spell Menu", "spellmenu");
+
+            SpellMenu.AddGroupLabel("Q Settings");
+            SpellMenu.Add("qtc", new CheckBox("Use Q in Combo"));
+            SpellMenu.Add("useQTL", new CheckBox("Use Q in farm"));
+            SpellMenu.Add("qon", new CheckBox("Auto Q if enemy is near"));
+
+            SpellMenu.AddGroupLabel("W Settings");
+            SpellMenu.Add("wtc", new CheckBox("Use W in Combo"));
+            SpellMenu.Add("wtosafe", new CheckBox("Anti-Gapcloser W"));
+            SpellMenu.Add("wt2", new CheckBox("Auto W if at least 2 enemy is near"));
+
+            SpellMenu.AddGroupLabel("E Settings");
+            SpellMenu.Add("useETL", new CheckBox("Use E in farm"));
+            SpellMenu.Add("etc", new CheckBox("Use E in Combo"));
+
+            SpellMenu.AddGroupLabel("R Settings");
+            SpellMenu.Add("rtc", new CheckBox("Use R in Combo"));
+            SpellMenu.AddSeparator();
+            SpellMenu.Add("rslider", new Slider("Minimum people for R", 1, 0, 5));
+        }
+
+        public static void InitializeSpells()
+        {
+            var spells = new Initialize().Spells(Initialize.Type.Active, Initialize.Type.Active,
+                Initialize.Type.Targeted, Initialize.Type.Skillshot);
+            Q = (Spell.Active) spells[0];
+            W = (Spell.Active) spells[1];
+            E = (Spell.Targeted) spells[2];
+            R = (Spell.Skillshot) spells[3];
+            R.AllowedCollisionCount = int.MaxValue;
+        }
+
+        #endregion
+
         protected override void Volatile_OnHeartBeat(EventArgs args)
         {
             TickManager.Tick();
@@ -115,70 +176,12 @@ namespace VolatileAIO.Extensions.Jungle
                                 Player.CalculateDamageOnUnit(enemy, DamageType.Magical,
                                     Player.GetSpellDamage(Player, SpellSlot.R)))
                             {
-                                    CastManager.Cast.Circle.WujuStyle(R, DamageType.Magical, 0, SpellMenu["rslider"].Cast<Slider>().CurrentValue, HitChance.Medium, enemy);
+                                CastManager.Cast.Circle.WujuStyle(R, DamageType.Magical, 0,
+                                    SpellMenu["rslider"].Cast<Slider>().CurrentValue, HitChance.Medium, enemy);
                             }
                         }
                 }
             }
         }
-
-        #region Spell and Menu Declaration
-
-        public static int Mode;
-        public static bool IsAutoAttacking;
-
-        public static Spell.Active Q;
-        public static Spell.Active W;
-        public static Spell.Targeted E;
-        public static Spell.Skillshot R;
-
-        public static Menu SpellMenu;
-
-        #endregion
-
-        #region Spell and Menu Loading
-
-        public Evelynn()
-        {
-            InitializeSpells();
-            InitializeMenu();
-            DrawManager.UpdateValues(Q, W, E, R);
-        }
-
-        private static void InitializeMenu()
-        {
-            SpellMenu = VolatileMenu.AddSubMenu("Spell Menu", "spellmenu");
-
-            SpellMenu.AddGroupLabel("Q Settings");
-            SpellMenu.Add("qtc", new CheckBox("Use Q in Combo"));
-            SpellMenu.Add("useQTL", new CheckBox("Use Q in farm"));
-            SpellMenu.Add("qon", new CheckBox("Auto Q if enemy is near"));
-
-            SpellMenu.AddGroupLabel("W Settings");
-            SpellMenu.Add("wtc", new CheckBox("Use W in Combo"));
-            SpellMenu.Add("wtosafe", new CheckBox("Anti-Gapcloser W"));
-            SpellMenu.Add("wt2", new CheckBox("Auto W if at least 2 enemy is near"));
-
-            SpellMenu.AddGroupLabel("E Settings");
-            SpellMenu.Add("useETL", new CheckBox("Use E in farm"));
-            SpellMenu.Add("etc", new CheckBox("Use E in Combo"));
-
-            SpellMenu.AddGroupLabel("R Settings");
-            SpellMenu.Add("rtc", new CheckBox("Use R in Combo"));
-            SpellMenu.AddSeparator();
-            SpellMenu.Add("rslider", new Slider("Minimum people for R", 1, 0, 5));
-        }
-
-        public static void InitializeSpells()
-        {
-            var spells = new Initialize().Spells(Initialize.Type.Active, Initialize.Type.Active, Initialize.Type.Targeted, Initialize.Type.Skillshot);
-            Q = (Spell.Active)spells[0];
-            W = (Spell.Active)spells[1];
-            E = (Spell.Targeted)spells[2];
-            R = (Spell.Skillshot)spells[3];
-            R.AllowedCollisionCount = int.MaxValue;
-        }
-
-        #endregion
     }
 }
