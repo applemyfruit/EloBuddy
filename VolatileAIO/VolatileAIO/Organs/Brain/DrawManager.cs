@@ -32,8 +32,7 @@ namespace VolatileAIO.Organs.Brain
             var target = TargetManager.Target(1000, DamageType.Physical);
             if (target != null)
             {
-                //Drawing.DrawCircle(target.Position, 100, Color.Red);
-                Circle.Draw(new ColorBGRA(Color.Red.R, Color.Red.G, Color.Red.B, Color.Red.A), 20, 3F, target.Position);
+                Drawing.DrawCircle(target.Position, 100, Color.Red);
             }
 
             const int width = 103;

@@ -20,7 +20,8 @@ namespace VolatileAIO.Organs.Brain
             {"Blitzcrank", State.FullyDeveloped },
             {"Cassiopeia", State.PartDeveloped },
             {"Evelynn", State.PartDeveloped },
-            {"Ezreal", State.BeingOptimized }
+            {"Ezreal", State.BeingOptimized },
+            {"Tristana", State.Outdated }
         };
 
         public enum State
@@ -63,6 +64,10 @@ namespace VolatileAIO.Organs.Brain
                     break;
                 case "ezreal":
                     new Ezreal();
+                    _loaded = true;
+                    break;
+                case "tristana":
+                    new Tristana();
                     _loaded = true;
                     break;
                 default:

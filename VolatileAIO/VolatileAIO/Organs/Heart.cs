@@ -71,7 +71,11 @@ namespace VolatileAIO.Organs
             VolatileMenu.AddGroupLabel("Supported Champions:");
             foreach (var champion in ExtensionLoader.ExtensionState)
             {
-                VolatileMenu.AddLabel(champion.Key + " Status: " + champion.Value);
+                var label = champion.Key;
+                for (var i = champion.Key.Length; i < 20; i++)
+                    label += " ";
+                label += "Status: " + champion.Value;
+                VolatileMenu.AddLabel(label);
             }
             VolatileMenu.AddSeparator();
             VolatileMenu.AddLabel("Developer Options:");
