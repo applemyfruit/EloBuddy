@@ -17,8 +17,8 @@ namespace VolatileAIO.Organs
         public static Menu VolatileMenu;
         protected static Menu HackMenu;
         protected List<Spell.SpellBase> Spells = new List<Spell.SpellBase>();
-        public static SpellPriorityManager ManaManager = new SpellPriorityManager();
-        public static DrawManager DrawManager = new DrawManager();
+        public static SpellPriorityManager PriorityManager;
+        public static DrawManager DrawManager;
         public static RecallTracker RecallTracker;
 
         protected Heart()
@@ -83,9 +83,11 @@ namespace VolatileAIO.Organs
             VolatileMenu.AddLabel("Developer Options:");
             VolatileMenu.Add("debug", new CheckBox("Debug", false));
             new ExtensionLoader();
+            PriorityManager = new SpellPriorityManager();
             HackMenu = VolatileMenu.AddSubMenu("Hacks", "hacks", "Volatile Hacks");
             SkinManager.Initialize();
             RecallTracker = new RecallTracker();
+            DrawManager = new DrawManager();
         }
 
         #region privatevoid
@@ -98,7 +100,6 @@ namespace VolatileAIO.Organs
         private void OnUpdateDeathChecker(EventArgs args)
         {
             if (Player.IsDead) return;
-            TickManager.Tick();
             Volatile_OnHeartBeat(args);
         }
 
@@ -252,6 +253,7 @@ namespace VolatileAIO.Organs
 
         protected virtual void Volatile_OnHeartBeat(EventArgs args)
         {
+            TickManager.Tick();
             //for extensions
         }
 

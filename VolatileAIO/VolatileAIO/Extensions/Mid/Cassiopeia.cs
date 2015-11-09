@@ -19,13 +19,13 @@ namespace VolatileAIO.Extensions.Mid
             InitializeSpells();
         }
 
-        private static void InitializeSpells()
+        private void InitializeSpells()
         {
-            var spells = new Initialize().Spells(Initialize.Type.Skillshot, Initialize.Type.Skillshot, Initialize.Type.Targeted, Initialize.Type.Skillshot);
-            Q = (Spell.Skillshot)spells[0];
-            W = (Spell.Skillshot)spells[1];
-            E = (Spell.Targeted)spells[2];
-            R = (Spell.Skillshot)spells[3];
+            Spells = new Initialize().Spells(Initialize.Type.Skillshot, Initialize.Type.Skillshot, Initialize.Type.Targeted, Initialize.Type.Skillshot);
+            Q = (Spell.Skillshot)Spells[0];
+            W = (Spell.Skillshot)Spells[1];
+            E = (Spell.Targeted)Spells[2];
+            R = (Spell.Skillshot)Spells[3];
             Q.AllowedCollisionCount = int.MaxValue;
             W.AllowedCollisionCount = int.MaxValue;
             R.AllowedCollisionCount = int.MaxValue;

@@ -124,7 +124,7 @@ namespace VolatileAIO.Extensions.Mid
             Obj_AI_Base.OnProcessSpellCast += OnProcessSpellCast;
         }
 
-        public static void InitializeSpells()
+        public void InitializeSpells()
         {
             Zhonia = new Item((int)ItemId.Zhonyas_Hourglass);
             if (HasSpell("summonerdot"))
@@ -134,11 +134,11 @@ namespace VolatileAIO.Extensions.Mid
             Flash = new Spell.Skillshot(FlashSlot, 32767, SkillShotType.Linear);
             AbilitySequence = new[] { 1, 2, 1, 2, 3, 4, 1, 1, 1, 2, 4, 2, 2, 3, 3, 4, 3, 3 };
 
-            var spells = new Initialize().Spells(Initialize.Type.Targeted, Initialize.Type.Skillshot, Initialize.Type.Active, Initialize.Type.Skillshot);
-            Q = (Spell.Targeted)spells[0];
-            W = (Spell.Skillshot)spells[1];
-            E = (Spell.Active)spells[2];
-            R = (Spell.Skillshot)spells[3];
+            Spells = new Initialize().Spells(Initialize.Type.Targeted, Initialize.Type.Skillshot, Initialize.Type.Active, Initialize.Type.Skillshot);
+            Q = (Spell.Targeted)Spells[0];
+            W = (Spell.Skillshot)Spells[1];
+            E = (Spell.Active)Spells[2];
+            R = (Spell.Skillshot)Spells[3];
             W.AllowedCollisionCount = int.MaxValue;
             R.AllowedCollisionCount = int.MaxValue;
         }

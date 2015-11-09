@@ -21,7 +21,7 @@ namespace VolatileAIO.Organs.Brain
             {"Cassiopeia", State.PartDeveloped },
             {"Evelynn", State.PartDeveloped },
             {"Ezreal", State.BeingOptimized },
-            {"Tristana", State.Outdated }
+            {"Tristana", State.BeingOptimized }
         };
 
         public enum State

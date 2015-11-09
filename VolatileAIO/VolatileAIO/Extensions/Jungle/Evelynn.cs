@@ -60,14 +60,14 @@ namespace VolatileAIO.Extensions.Jungle
             SpellMenu.Add("rslider", new Slider("Minimum people for R", 1, 0, 5));
         }
 
-        public static void InitializeSpells()
+        public void InitializeSpells()
         {
-            var spells = new Initialize().Spells(Initialize.Type.Active, Initialize.Type.Active,
+            Spells = new Initialize().Spells(Initialize.Type.Active, Initialize.Type.Active,
                 Initialize.Type.Targeted, Initialize.Type.Skillshot);
-            Q = (Spell.Active) spells[0];
-            W = (Spell.Active) spells[1];
-            E = (Spell.Targeted) spells[2];
-            R = (Spell.Skillshot) spells[3];
+            Q = (Spell.Active) Spells[0];
+            W = (Spell.Active) Spells[1];
+            E = (Spell.Targeted) Spells[2];
+            R = (Spell.Skillshot) Spells[3];
             R.AllowedCollisionCount = int.MaxValue;
         }
 

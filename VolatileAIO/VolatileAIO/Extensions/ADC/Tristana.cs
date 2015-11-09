@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using EloBuddy;
 using EloBuddy.SDK;
+using EloBuddy.SDK.Enumerations;
+using EloBuddy.SDK.Events;
 using EloBuddy.SDK.Menu;
 using EloBuddy.SDK.Menu.Values;
 using VolatileAIO.Organs;
@@ -27,11 +29,12 @@ namespace VolatileAIO.Extensions.ADC
 
         public Tristana()
         {
-            var spells = new Initialize().Spells(Initialize.Type.Active, Initialize.Type.Skillshot, Initialize.Type.Targeted, Initialize.Type.Targeted);
-            Q = (Spell.Active)spells[0];
-            W = (Spell.Skillshot)spells[1];
-            E = (Spell.Targeted)spells[2];
-            R = (Spell.Targeted)spells[3];
+            Spells = new Initialize().Spells(Initialize.Type.Active, Initialize.Type.Skillshot, Initialize.Type.Targeted,
+                Initialize.Type.Targeted);
+            Q = (Spell.Active) Spells[0];
+            W = (Spell.Skillshot) Spells[1];
+            E = (Spell.Targeted) Spells[2];
+            R = (Spell.Targeted) Spells[3];
             W.AllowedCollisionCount = int.MaxValue;
 
             Spells.Add(Q);
@@ -50,12 +53,14 @@ namespace VolatileAIO.Extensions.ADC
             SpellMenu.Add("qth", new CheckBox("Use Q in Harass"));
             SpellMenu.Add("qthe", new CheckBox("Only Q in Harass if target has E"));
             SpellMenu.Add("qtl", new CheckBox("Use Q in Laneclear"));
+            SpellMenu.Add("qtj", new CheckBox("Use Q in Jungleclear"));
 
             SpellMenu.AddGroupLabel("E Settings");
             SpellMenu.Add("etc", new CheckBox("Use E in Combo"));
             SpellMenu.Add("eth", new CheckBox("Use E in Harass"));
             SpellMenu.Add("focuse", new CheckBox("Always Focus E Target"));
             SpellMenu.Add("etl", new CheckBox("Use E in Laneclear", false));
+            SpellMenu.Add("etj", new CheckBox("Use E in Jungleclear"));
             SpellMenu.Add("eontower", new CheckBox("Use E on Tower"));
             SpellMenu.AddLabel("Use E on: ");
             foreach (var enemy in EntityManager.Heroes.Enemies)
@@ -67,7 +72,6 @@ namespace VolatileAIO.Extensions.ADC
             SpellMenu.Add("agc", new CheckBox("Anti-Gapcloser"));
             SpellMenu.Add("int", new CheckBox("Interrupter"));
             SpellMenu.Add("rks", new CheckBox("SmartFinisher E+R"));
-            SpellMenu.AddSeparator();
             SpellMenu.AddLabel("Use SmartFinisher On: ");
             foreach (var enemy in EntityManager.Heroes.Enemies)
             {
@@ -94,17 +98,40 @@ namespace VolatileAIO.Extensions.ADC
                     Orbwalker.ForcedTarget = null;
                 }
             }
-
             if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Combo)
                 Combo();
             if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Harass)
                 Harass();
             if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.LaneClear)
                 LaneClear();
+            if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.JungleClear)
+                JungleClear();
             if (TickManager.NoLag(0))
             {
                 E.Range = 625 + 9*((uint) Player.Level - 1);
                 R.Range = 517 + 9*((uint) Player.Level - 1);
+            }
+        }
+
+        private void JungleClear()
+        {
+            var camp = EntityManager.MinionsAndMonsters.Monsters.Where(m => Player.Distance(m) < E.Range*1.2);
+            Obj_AI_Minion target = null;
+            foreach (var monster in camp)
+            {
+                if (target == null)
+                    target = monster;
+                else if (monster.MinionLevel > target.MinionLevel)
+                    target = monster;
+            }
+            if (target == null) return;
+            if (E.IsReady() && SpellMenu["etj"].Cast<CheckBox>().CurrentValue && TickManager.NoLag(3))
+            {
+                E.Cast(target);
+            }
+            if (Q.IsReady() && SpellMenu["qtj"].Cast<CheckBox>().CurrentValue && TickManager.NoLag(3))
+            {
+                Q.Cast();
             }
         }
 
@@ -113,7 +140,8 @@ namespace VolatileAIO.Extensions.ADC
             if (SpellMenu["eontower"].Cast<CheckBox>().CurrentValue)
             {
                 var turret =
-                    EntityManager.Turrets.Enemies.FirstOrDefault(t => !t.IsDead && t.HealthPercent > 5 && t.IsValidTarget(Player.AttackRange));
+                    EntityManager.Turrets.Enemies.FirstOrDefault(
+                        t => !t.IsDead && t.HealthPercent > 5 && t.Distance(Player)>E.Range);
                 if (turret != null)
                     E.Cast(turret);
             }
@@ -124,7 +152,37 @@ namespace VolatileAIO.Extensions.ADC
                 MinionTeam.NotAlly,
                 MinionOrderTypes.MaxHealth);
             if (minions.Count <= 0) return;
+            if (minions.Count <= 0)
+            {
+                return;
+            }
 
+            if (E.IsReady() && SpellMenu["etl"].Cast<CheckBox>().CurrentValue && minions.Count > 2)
+            {
+                foreach (var minion in
+                    ObjectManager.Get<Obj_AI_Minion>()
+                        .Where(minion => minion.IsValidTarget(Player.AttackRange)))
+                {
+                    E.Cast(minion);
+                }
+            }
+
+            var eminion =
+                minions.Find(x => x.HasBuff("TristanaECharge") && x.IsValidTarget(Player.AttackRange));
+
+            if (eminion != null)
+            {
+                Orbwalker.ForcedTarget = eminion;
+            }
+
+            if (Q.IsReady() && SpellMenu["qtl"].Cast<CheckBox>().CurrentValue)
+            {
+                var eMob = minions.FindAll(x => x.IsValidTarget() && x.HasBuff("TristanaECharge"));
+                if (eMob.Any())
+                {
+                    Q.Cast();
+                }
+            }
         }
 
         private static void Harass()
@@ -178,7 +236,7 @@ namespace VolatileAIO.Extensions.ADC
             var eTarget =
                 EntityManager.Heroes.Enemies.Find(
                     x => x.HasBuff("TristanaECharge") && x.IsValidTarget(Player.AttackRange));
-            var target = eTarget ?? TargetSelector.GetTarget(E.Range, DamageType.Physical);
+            var target = eTarget ?? TargetManager.Target(E, DamageType.Physical);
             if (target == null || !target.IsValidTarget()) return;
 
             if (Q.IsReady() && target.IsValid && SpellMenu["qtc"].Cast<CheckBox>().CurrentValue && TickManager.NoLag(1))
@@ -214,6 +272,21 @@ namespace VolatileAIO.Extensions.ADC
                     R.Cast(target);
                 }
             }
+        }
+
+        protected override void Volatile_AntiGapcloser(AIHeroClient sender, Gapcloser.GapcloserEventArgs e)
+        {
+            if (!SpellMenu["agc"].Cast<CheckBox>().CurrentValue) return;
+            if (sender.IsValidTarget(R.Range) && R.IsReady())
+            {
+                R.Cast(sender);
+            }
+        }
+
+        protected override void Volatile_OnInterruptable(Obj_AI_Base sender, Interrupter.InterruptableSpellEventArgs args)
+        {
+            if (!SpellMenu["int"].Cast<CheckBox>().CurrentValue || args.DangerLevel<DangerLevel.High || sender.Distance(Player)>R.Range) return;
+            R.Cast(sender);
         }
 
         private double GetEDamage(Obj_AI_Base target)

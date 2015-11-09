@@ -30,11 +30,11 @@ namespace VolatileAIO.Extensions.ADC
 
         public Ezreal()
         {
-            var spells = new Initialize().Spells(Initialize.Type.Skillshot, Initialize.Type.Skillshot, Initialize.Type.Active, Initialize.Type.Skillshot);
-            Q = (Spell.Skillshot)spells[0];
-            W = (Spell.Skillshot)spells[1];
-            E = (Spell.Active)spells[2];
-            R = (Spell.Skillshot)spells[3];
+            Spells = new Initialize().Spells(Initialize.Type.Skillshot, Initialize.Type.Skillshot, Initialize.Type.Active, Initialize.Type.Skillshot);
+            Q = (Spell.Skillshot)Spells[0];
+            W = (Spell.Skillshot)Spells[1];
+            E = (Spell.Active)Spells[2];
+            R = (Spell.Skillshot)Spells[3];
             W.AllowedCollisionCount = int.MaxValue;
             R.AllowedCollisionCount = int.MaxValue;
 

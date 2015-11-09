@@ -89,14 +89,14 @@ namespace VolatileAIO.Extensions.Support
             }
         }
 
-        public static void InitializeSpells()
+        public void InitializeSpells()
         {
-            var spells = new Initialize().Spells(Initialize.Type.Skillshot, Initialize.Type.Active,
+            Spells = new Initialize().Spells(Initialize.Type.Skillshot, Initialize.Type.Active,
                 Initialize.Type.Active, Initialize.Type.Active);
-            Q = (Spell.Skillshot) spells[0];
-            W = (Spell.Active) spells[1];
-            E = (Spell.Active) spells[2];
-            R = (Spell.Active) spells[3];
+            Q = (Spell.Skillshot) Spells[0];
+            W = (Spell.Active) Spells[1];
+            E = (Spell.Active) Spells[2];
+            R = (Spell.Active) Spells[3];
         }
 
         protected override void Volatile_OnHeartBeat(EventArgs args)
