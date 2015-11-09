@@ -34,7 +34,6 @@ namespace VolatileAIO.Extensions.Jungle
         {
             InitializeSpells();
             InitializeMenu();
-            DrawManager.UpdateValues(Q, W, E, R);
         }
 
         private static void InitializeMenu()
@@ -76,10 +75,8 @@ namespace VolatileAIO.Extensions.Jungle
 
         protected override void Volatile_OnHeartBeat(EventArgs args)
         {
-            TickManager.Tick();
             if (Player.IsDead) return;
             AutoCastSpells();
-            ManaManager.SetMana();
             if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Combo)
             {
                 Combo();
@@ -96,7 +93,6 @@ namespace VolatileAIO.Extensions.Jungle
         protected override void Volatile_AntiGapcloser(AIHeroClient sender, Gapcloser.GapcloserEventArgs e)
         {
             if (SpellMenu["wtosafe"].Cast<CheckBox>().CurrentValue && W.IsReady() && sender.IsEnemy &&
-                Player.Mana > ManaManager.ManaQ + ManaManager.ManaR &&
                 Player.Position.Extend(Game.CursorPos, Q.Range).CountEnemiesInRange(400) < 3)
             {
                 if (sender.IsValidTarget(E.Range))

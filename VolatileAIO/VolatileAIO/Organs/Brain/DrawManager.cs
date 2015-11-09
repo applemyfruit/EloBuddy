@@ -15,20 +15,23 @@ namespace VolatileAIO.Organs.Brain
         private bool _initialized;
         private Spell.SpellBase _q, _w, _e, _r;
 
-        
-        internal void UpdateValues(Spell.SpellBase q, Spell.SpellBase w, Spell.SpellBase e, Spell.SpellBase r)
+        internal void UpdateValues()
         {
-            if (!TickManager.NoLag(0)) return;
+            if (!TickManager.NoLag(0) || Spells.Count == 0) return;
             if (!_initialized) _initialized = true;
-            _q = q;
-            _w = w;
-            _e = e;
-            _r = r;
+            _q = Spells.Find(s => s.Slot == SpellSlot.Q);
+            _w = Spells.Find(s => s.Slot == SpellSlot.W);
+            _e = Spells.Find(s => s.Slot == SpellSlot.E);
+            _r = Spells.Find(s => s.Slot == SpellSlot.R);
         }
 
         private void DrawDamageIndicator()
         {
-            if (!_initialized) return;
+            if (!_initialized)
+            {
+                UpdateValues();
+                return;
+            }
             var target = TargetManager.Target(1000, DamageType.Physical);
             if (target != null)
             {
@@ -121,18 +124,18 @@ namespace VolatileAIO.Organs.Brain
 
                     if (!recall.Hero.IsAlly)
                         Drawing.DrawLine(RecallTracker.X(), Y,
-                        RecallTracker.X() + (recall.PercentComplete()*_hackMenu["recallwidth"].Cast<Slider>().CurrentValue/100), Y, 16, Color.DarkRed);
+                        RecallTracker.X() + (recall.PercentComplete()*HackMenu["recallwidth"].Cast<Slider>().CurrentValue/100), Y, 16, Color.DarkRed);
                     else
                         Drawing.DrawLine(RecallTracker.X(), Y,
-                       RecallTracker.X() + (recall.PercentComplete() * _hackMenu["recallwidth"].Cast<Slider>().CurrentValue / 100), Y, 16, Color.DarkGreen);
+                       RecallTracker.X() + (recall.PercentComplete() * HackMenu["recallwidth"].Cast<Slider>().CurrentValue / 100), Y, 16, Color.DarkGreen);
 
                     Vector2[] BoxVectors = new Vector2[5];
                     BoxVectors[0] = new Vector2(RecallTracker.X(), Y2 - 8);
                     BoxVectors[1] = new Vector2(RecallTracker.X(), Y2 + 8);
                     BoxVectors[2] = new Vector2(
-                        RecallTracker.X() + _hackMenu["recallwidth"].Cast<Slider>().CurrentValue, Y2 + 8);
+                        RecallTracker.X() + HackMenu["recallwidth"].Cast<Slider>().CurrentValue, Y2 + 8);
                     BoxVectors[3] = new Vector2(
-                        RecallTracker.X() + _hackMenu["recallwidth"].Cast<Slider>().CurrentValue, Y2 - 8);
+                        RecallTracker.X() + HackMenu["recallwidth"].Cast<Slider>().CurrentValue, Y2 - 8);
 
                     BoxVectors[4] = new Vector2(RecallTracker.X(), Y2 - 8);
                     Line.DrawLine(Color.White, BoxVectors);

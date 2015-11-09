@@ -16,12 +16,12 @@ namespace VolatileAIO.Organs.Brain
 
         public float X()
         {
-            return _hackMenu["recallx"].Cast<Slider>().CurrentValue;
+            return HackMenu["recallx"].Cast<Slider>().CurrentValue;
         }
 
         public float Y()
         {
-            return _hackMenu["recally"].Cast<Slider>().CurrentValue;
+            return HackMenu["recally"].Cast<Slider>().CurrentValue;
         }
 
         public class Recall
@@ -63,27 +63,27 @@ namespace VolatileAIO.Organs.Brain
 
         public RecallTracker()
         {
-            _hackMenu.AddGroupLabel("Volatile Recall Tracker");
-            _hackMenu.Add("trackRecalls", new CheckBox("Track Recalls"));
-            _hackMenu.Add("resetPos", new CheckBox("Reset Values")).OnValueChange += RecallTracker_OnReset; ;
-            _hackMenu.Add("recallx", new Slider("X Position", 645, 0, Drawing.Width));
-            _hackMenu.Add("recally", new Slider("Y Position", 860, 0, Drawing.Height));
-            _hackMenu.Add("recallwidth", new Slider("Bar Width", 465, 0, 1500));
+            HackMenu.AddGroupLabel("Volatile Recall Tracker");
+            HackMenu.Add("trackRecalls", new CheckBox("Track Recalls"));
+            HackMenu.Add("resetPos", new CheckBox("Reset Values")).OnValueChange += RecallTracker_OnReset; ;
+            HackMenu.Add("recallx", new Slider("X Position", 645, 0, Drawing.Width));
+            HackMenu.Add("recally", new Slider("Y Position", 860, 0, Drawing.Height));
+            HackMenu.Add("recallwidth", new Slider("Bar Width", 465, 0, 1500));
         }
 
         private void RecallTracker_OnReset(ValueBase<bool> sender, ValueBase<bool>.ValueChangeArgs args)
         {
-            _hackMenu["recallx"].Cast<Slider>().CurrentValue = 645;
-            _hackMenu["recally"].Cast<Slider>().CurrentValue = 860;
-            _hackMenu["recallwidth"].Cast<Slider>().CurrentValue = 465;
+            HackMenu["recallx"].Cast<Slider>().CurrentValue = 645;
+            HackMenu["recally"].Cast<Slider>().CurrentValue = 860;
+            HackMenu["recallwidth"].Cast<Slider>().CurrentValue = 465;
 
-            if (_hackMenu["resetPos"].Cast<CheckBox>().CurrentValue)
-                _hackMenu["resetPos"].Cast<CheckBox>().CurrentValue = false;
+            if (HackMenu["resetPos"].Cast<CheckBox>().CurrentValue)
+                HackMenu["resetPos"].Cast<CheckBox>().CurrentValue = false;
         }
 
         protected override void Volatile_OnTeleport(Obj_AI_Base sender, Teleport.TeleportEventArgs args)
         {
-            if (args.Type == TeleportType.Recall && sender is AIHeroClient && _hackMenu["trackRecalls"].Cast<CheckBox>().CurrentValue && !sender.IsMe)
+            if (args.Type == TeleportType.Recall && sender is AIHeroClient && HackMenu["trackRecalls"].Cast<CheckBox>().CurrentValue && !sender.IsMe)
             {
                 switch (args.Status)
                 {

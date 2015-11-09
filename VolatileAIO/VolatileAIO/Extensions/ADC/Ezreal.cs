@@ -39,7 +39,6 @@ namespace VolatileAIO.Extensions.ADC
             R.AllowedCollisionCount = int.MaxValue;
 
             InitializeMenu();
-            DrawManager.UpdateValues(Q, W, E, R);
         }
 
         private static void InitializeMenu()
@@ -81,10 +80,8 @@ namespace VolatileAIO.Extensions.ADC
 
         protected override void Volatile_OnHeartBeat(EventArgs args)
         {
-            TickManager.Tick();
             if (Player.IsDead) return;
             AutoCastSpells();
-            ManaManager.SetMana();
             Stack();
             if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Combo)
             {
@@ -241,7 +238,6 @@ namespace VolatileAIO.Extensions.ADC
         protected override void Volatile_AntiGapcloser(AIHeroClient sender, Gapcloser.GapcloserEventArgs e)
         {
             if (SpellMenu["etosafe"].Cast<CheckBox>().CurrentValue && E.IsReady() && sender.IsEnemy &&
-                Player.Mana > ManaManager.ManaQ + ManaManager.ManaR &&
                 Player.Position.Extend(Game.CursorPos, E.Range).CountEnemiesInRange(400) < 3)
             {
                 if (sender.IsValidTarget(E.Range))

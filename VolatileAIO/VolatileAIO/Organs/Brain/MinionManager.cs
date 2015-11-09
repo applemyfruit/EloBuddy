@@ -107,7 +107,7 @@ namespace VolatileAIO.Organs.Brain
             MinionTeam team = MinionTeam.Enemy,
             MinionOrderTypes order = MinionOrderTypes.Health)
         {
-            var result = (from minion in ObjectManager.Get<Obj_AI_Minion>()
+            var result = (from minion in EntityManager.MinionsAndMonsters.Minions
                 where minion.IsValidTarget(range)
                 let minionTeam = minion.Team
                 where

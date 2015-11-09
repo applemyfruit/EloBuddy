@@ -17,7 +17,6 @@ namespace VolatileAIO.Extensions.Mid
         public Cassiopeia()
         {
             InitializeSpells();
-            DrawManager.UpdateValues(Q, W, E, R);
         }
 
         private static void InitializeSpells()
@@ -34,7 +33,6 @@ namespace VolatileAIO.Extensions.Mid
 
         protected override void Volatile_OnHeartBeat(EventArgs args)
         {
-            TickManager.Tick();
             if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Combo)
             {
                 Combo();

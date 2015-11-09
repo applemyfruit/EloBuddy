@@ -32,7 +32,6 @@ namespace VolatileAIO.Extensions.Mid
         {
             InitializeSpells();
             InitializeMenu();
-            DrawManager.UpdateValues(Q, W, E, R);
         }
 
         public static GameObject TibbersObject { get; set; }
@@ -146,13 +145,11 @@ namespace VolatileAIO.Extensions.Mid
 
         protected override void Volatile_OnHeartBeat(EventArgs args)
         {
-            TickManager.Tick();
             if (Player.IsDead) return;
             LevelUpSpells();
             MoveTibbers();
             Pyrostack();
             Zhonya();
-            ManaManager.SetMana();
             switch (Orbwalker.ActiveModesFlags)
             {
                 case Orbwalker.ActiveModes.Combo:

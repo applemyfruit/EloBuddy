@@ -66,7 +66,7 @@
     <Compile Include="Organs\Brain\CastManager.cs" />
     <Compile Include="Organs\Brain\DrawManager.cs" />
     <Compile Include="Organs\Brain\Initialize.cs" />
-    <Compile Include="Organs\Brain\ManaManager.cs" />
+    <Compile Include="Organs\Brain\SpellPriorityManager.cs" />
     <Compile Include="Organs\Brain\MEC.cs" />
     <Compile Include="Organs\Brain\MinionManager.cs" />
     <Compile Include="Organs\Brain\RecallTracker.cs" />

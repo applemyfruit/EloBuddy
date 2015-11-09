@@ -28,7 +28,6 @@ namespace VolatileAIO.Extensions.Support
         {
             InitializeMenu();
             InitializeSpells();
-            DrawManager.UpdateValues(Q, W, E, R);
         }
 
         private static void InitializeMenu()
@@ -102,7 +101,6 @@ namespace VolatileAIO.Extensions.Support
 
         protected override void Volatile_OnHeartBeat(EventArgs args)
         {
-            TickManager.Tick();
             AutoCast();
             if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Combo) Combo();
             if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Harass) Harass();

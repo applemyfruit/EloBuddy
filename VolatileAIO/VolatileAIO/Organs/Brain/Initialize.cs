@@ -110,7 +110,6 @@ namespace VolatileAIO.Organs.Brain
                     break;
             }
 
-            DrawManager.UpdateValues(qBase, wBase, eBase, rBase);
             return new List<Spell.SpellBase>
             {
                 qBase,

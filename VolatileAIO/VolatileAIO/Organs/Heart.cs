@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using EloBuddy;
 using EloBuddy.SDK;
@@ -14,9 +15,9 @@ namespace VolatileAIO.Organs
     {
         protected static readonly AIHeroClient Player = ObjectManager.Player;
         public static Menu VolatileMenu;
-        protected static Menu _hackMenu;
-
-        public static ManaManager ManaManager = new ManaManager();
+        protected static Menu HackMenu;
+        protected List<Spell.SpellBase> Spells = new List<Spell.SpellBase>();
+        public static SpellPriorityManager ManaManager = new SpellPriorityManager();
         public static DrawManager DrawManager = new DrawManager();
         public static RecallTracker RecallTracker;
 
@@ -37,6 +38,7 @@ namespace VolatileAIO.Organs
             Obj_AI_Base.OnProcessSpellCast += OnProcessSpellCast;
             Obj_AI_Base.OnBuffGain += OnBuffGain;
             Obj_AI_Base.OnBuffLose += OnBuffLose;
+            Obj_AI_Base.OnLevelUp += Obj_AI_Base_OnLevelUp;
             Spellbook.OnUpdateChargeableSpell += OnUpdateChargeableSpell;
             Spellbook.OnCastSpell += OnCastSpell;
             Spellbook.OnStopCast += OnStopCast;
@@ -81,16 +83,22 @@ namespace VolatileAIO.Organs
             VolatileMenu.AddLabel("Developer Options:");
             VolatileMenu.Add("debug", new CheckBox("Debug", false));
             new ExtensionLoader();
-            _hackMenu = VolatileMenu.AddSubMenu("Hacks", "hacks", "Volatile Hacks");
+            HackMenu = VolatileMenu.AddSubMenu("Hacks", "hacks", "Volatile Hacks");
             SkinManager.Initialize();
             RecallTracker = new RecallTracker();
         }
 
         #region privatevoid
 
+        private void Obj_AI_Base_OnLevelUp(Obj_AI_Base sender, Obj_AI_BaseLevelUpEventArgs args)
+        {
+            Volatile_OnLevelUp(sender,args);
+        }
+
         private void OnUpdateDeathChecker(EventArgs args)
         {
             if (Player.IsDead) return;
+            TickManager.Tick();
             Volatile_OnHeartBeat(args);
         }
 
@@ -190,6 +198,11 @@ namespace VolatileAIO.Organs
         #endregion
 
         #region virtualvoid
+
+        protected virtual void Volatile_OnLevelUp(Obj_AI_Base sender, Obj_AI_BaseLevelUpEventArgs args)
+        {
+            //for extensions
+        }
 
         protected virtual void Volatile_OnStopCast(Obj_AI_Base sender, SpellbookStopCastEventArgs args)
         {
