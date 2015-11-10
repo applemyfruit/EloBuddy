@@ -60,7 +60,6 @@
   <ItemGroup>
     <Compile Include="Extensions\ADC\Tristana.cs" />
     <Compile Include="Extensions\Jungle\Evelynn.cs" />
-    <Compile Include="Extensions\Mid\Annie.cs" />
     <Compile Include="Extensions\Mid\Cassiopeia.cs" />
     <Compile Include="Extensions\Support\Blitzcrank.cs" />
     <Compile Include="Organs\Brain\CastManager.cs" />
@@ -80,15 +79,26 @@
     <Compile Include="Organs\Brain\Data\SpellDatabase.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="Organs\Brain\Data\SkinInfo.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Initiated.wav" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

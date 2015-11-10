@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Media;
 using EloBuddy;
 using EloBuddy.SDK;
 using EloBuddy.SDK.Events;
@@ -16,10 +17,11 @@ namespace VolatileAIO.Organs
         protected static readonly AIHeroClient Player = ObjectManager.Player;
         public static Menu VolatileMenu;
         protected static Menu HackMenu;
-        protected List<Spell.SpellBase> Spells = new List<Spell.SpellBase>();
+        public List<Spell.SpellBase> Spells = new List<Spell.SpellBase>();
         public static SpellPriorityManager PriorityManager;
         public static DrawManager DrawManager;
         public static RecallTracker RecallTracker;
+        private static readonly SoundPlayer Initiated = new SoundPlayer(Properties.Resources.Initiated);
 
         protected Heart()
         {
@@ -80,14 +82,17 @@ namespace VolatileAIO.Organs
                 VolatileMenu.AddLabel(label);
             }
             VolatileMenu.AddSeparator();
-            VolatileMenu.AddLabel("Developer Options:");
+            VolatileMenu.AddLabel("AIO Options:");
             VolatileMenu.Add("debug", new CheckBox("Debug", false));
+            VolatileMenu.Add("welcome", new CheckBox("Play 'initiated' sound"));
             new ExtensionLoader();
             PriorityManager = new SpellPriorityManager();
             HackMenu = VolatileMenu.AddSubMenu("Hacks", "hacks", "Volatile Hacks");
             SkinManager.Initialize();
             RecallTracker = new RecallTracker();
             DrawManager = new DrawManager();
+            if (VolatileMenu["welcome"].Cast<CheckBox>().CurrentValue)
+            Initiated.Play();
         }
 
         #region privatevoid

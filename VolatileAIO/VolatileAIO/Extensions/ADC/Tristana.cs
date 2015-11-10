@@ -111,6 +111,7 @@ namespace VolatileAIO.Extensions.ADC
                 E.Range = 625 + 9*((uint) Player.Level - 1);
                 R.Range = 517 + 9*((uint) Player.Level - 1);
             }
+            Chat.Print(Spells.Count);
         }
 
         private void JungleClear()
