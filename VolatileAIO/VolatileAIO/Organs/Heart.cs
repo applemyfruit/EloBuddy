@@ -17,7 +17,6 @@ namespace VolatileAIO.Organs
         protected static readonly AIHeroClient Player = ObjectManager.Player;
         public static Menu VolatileMenu;
         protected static Menu HackMenu;
-        public List<Spell.SpellBase> Spells = new List<Spell.SpellBase>();
         public static SpellPriorityManager PriorityManager;
         public static DrawManager DrawManager;
         public static RecallTracker RecallTracker;

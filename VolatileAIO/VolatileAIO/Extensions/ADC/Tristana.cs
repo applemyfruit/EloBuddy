@@ -9,6 +9,8 @@ using EloBuddy.SDK.Menu;
 using EloBuddy.SDK.Menu.Values;
 using VolatileAIO.Organs;
 using VolatileAIO.Organs.Brain;
+using VolatileAIO.Organs.Brain.Data;
+using VolatileAIO.Organs._Test;
 
 namespace VolatileAIO.Extensions.ADC
 {
@@ -29,18 +31,13 @@ namespace VolatileAIO.Extensions.ADC
 
         public Tristana()
         {
-            Spells = new Initialize().Spells(Initialize.Type.Active, Initialize.Type.Skillshot, Initialize.Type.Targeted,
+            PlayerData.Spells = new Initialize().Spells(Initialize.Type.Active, Initialize.Type.Skillshot, Initialize.Type.Targeted,
                 Initialize.Type.Targeted);
-            Q = (Spell.Active) Spells[0];
-            W = (Spell.Skillshot) Spells[1];
-            E = (Spell.Targeted) Spells[2];
-            R = (Spell.Targeted) Spells[3];
+            Q = (Spell.Active) PlayerData.Spells[0];
+            W = (Spell.Skillshot) PlayerData.Spells[1];
+            E = (Spell.Targeted) PlayerData.Spells[2];
+            R = (Spell.Targeted) PlayerData.Spells[3];
             W.AllowedCollisionCount = int.MaxValue;
-
-            Spells.Add(Q);
-            Spells.Add(W);
-            Spells.Add(E);
-            Spells.Add(R);
             InitializeMenu();
         }
 
@@ -111,7 +108,6 @@ namespace VolatileAIO.Extensions.ADC
                 E.Range = 625 + 9*((uint) Player.Level - 1);
                 R.Range = 517 + 9*((uint) Player.Level - 1);
             }
-            Chat.Print(Spells.Count);
         }
 
         private void JungleClear()

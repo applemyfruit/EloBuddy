@@ -10,6 +10,7 @@ using EloBuddy.SDK.Menu.Values;
 using SharpDX;
 using VolatileAIO.Organs;
 using VolatileAIO.Organs.Brain;
+using VolatileAIO.Organs.Brain.Data;
 using VolatileAIO.Organs._Test;
 using Color = System.Drawing.Color;
 
@@ -91,12 +92,12 @@ namespace VolatileAIO.Extensions.Support
 
         public void InitializeSpells()
         {
-            Spells = new Initialize().Spells(Initialize.Type.Skillshot, Initialize.Type.Active,
+            PlayerData.Spells = new Initialize().Spells(Initialize.Type.Skillshot, Initialize.Type.Active,
                 Initialize.Type.Active, Initialize.Type.Active);
-            Q = (Spell.Skillshot) Spells[0];
-            W = (Spell.Active) Spells[1];
-            E = (Spell.Active) Spells[2];
-            R = (Spell.Active) Spells[3];
+            Q = (Spell.Skillshot) PlayerData.Spells[0];
+            W = (Spell.Active) PlayerData.Spells[1];
+            E = (Spell.Active) PlayerData.Spells[2];
+            R = (Spell.Active) PlayerData.Spells[3];
         }
 
         protected override void Volatile_OnHeartBeat(EventArgs args)

@@ -3,6 +3,7 @@ using EloBuddy;
 using EloBuddy.SDK;
 using VolatileAIO.Organs;
 using VolatileAIO.Organs.Brain;
+using VolatileAIO.Organs.Brain.Data;
 using VolatileAIO.Organs._Test;
 
 namespace VolatileAIO.Extensions.Mid
@@ -21,11 +22,11 @@ namespace VolatileAIO.Extensions.Mid
 
         private void InitializeSpells()
         {
-            Spells = new Initialize().Spells(Initialize.Type.Skillshot, Initialize.Type.Skillshot, Initialize.Type.Targeted, Initialize.Type.Skillshot);
-            Q = (Spell.Skillshot)Spells[0];
-            W = (Spell.Skillshot)Spells[1];
-            E = (Spell.Targeted)Spells[2];
-            R = (Spell.Skillshot)Spells[3];
+            PlayerData.Spells = new Initialize().Spells(Initialize.Type.Skillshot, Initialize.Type.Skillshot, Initialize.Type.Targeted, Initialize.Type.Skillshot);
+            Q = (Spell.Skillshot)PlayerData.Spells[0];
+            W = (Spell.Skillshot)PlayerData.Spells[1];
+            E = (Spell.Targeted)PlayerData.Spells[2];
+            R = (Spell.Skillshot)PlayerData.Spells[3];
             Q.AllowedCollisionCount = int.MaxValue;
             W.AllowedCollisionCount = int.MaxValue;
             R.AllowedCollisionCount = int.MaxValue;

@@ -6,6 +6,8 @@ using EloBuddy.SDK;
 using EloBuddy.SDK.Menu.Values;
 using EloBuddy.SDK.Rendering;
 using SharpDX;
+using VolatileAIO.Organs.Brain.Data;
+using VolatileAIO.Organs._Test;
 using Color = System.Drawing.Color;
 
 namespace VolatileAIO.Organs.Brain
@@ -17,12 +19,12 @@ namespace VolatileAIO.Organs.Brain
 
         internal void UpdateValues()
         {
-            if (!TickManager.NoLag(0) || Spells.Count == 0) return;
+            if (!TickManager.NoLag(0) || PlayerData.Spells.Count == 0) return;
             if (!_initialized) _initialized = true;
-            _q = Spells.Find(s => s.Slot == SpellSlot.Q);
-            _w = Spells.Find(s => s.Slot == SpellSlot.W);
-            _e = Spells.Find(s => s.Slot == SpellSlot.E);
-            _r = Spells.Find(s => s.Slot == SpellSlot.R);
+            _q = PlayerData.Spells.Find(s => s.Slot == SpellSlot.Q);
+            _w = PlayerData.Spells.Find(s => s.Slot == SpellSlot.W);
+            _e = PlayerData.Spells.Find(s => s.Slot == SpellSlot.E);
+            _r = PlayerData.Spells.Find(s => s.Slot == SpellSlot.R);
         }
 
         private void DrawDamageIndicator()

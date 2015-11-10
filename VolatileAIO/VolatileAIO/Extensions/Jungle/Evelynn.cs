@@ -8,6 +8,8 @@ using EloBuddy.SDK.Menu;
 using EloBuddy.SDK.Menu.Values;
 using VolatileAIO.Organs;
 using VolatileAIO.Organs.Brain;
+using VolatileAIO.Organs.Brain.Data;
+using VolatileAIO.Organs._Test;
 
 namespace VolatileAIO.Extensions.Jungle
 {
@@ -62,12 +64,12 @@ namespace VolatileAIO.Extensions.Jungle
 
         public void InitializeSpells()
         {
-            Spells = new Initialize().Spells(Initialize.Type.Active, Initialize.Type.Active,
+            PlayerData.Spells = new Initialize().Spells(Initialize.Type.Active, Initialize.Type.Active,
                 Initialize.Type.Targeted, Initialize.Type.Skillshot);
-            Q = (Spell.Active) Spells[0];
-            W = (Spell.Active) Spells[1];
-            E = (Spell.Targeted) Spells[2];
-            R = (Spell.Skillshot) Spells[3];
+            Q = (Spell.Active) PlayerData.Spells[0];
+            W = (Spell.Active) PlayerData.Spells[1];
+            E = (Spell.Targeted) PlayerData.Spells[2];
+            R = (Spell.Skillshot) PlayerData.Spells[3];
             R.AllowedCollisionCount = int.MaxValue;
         }
 
