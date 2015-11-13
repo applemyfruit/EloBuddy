@@ -5,11 +5,17 @@ using EloBuddy.SDK;
 using EloBuddy.SDK.Enumerations;
 using EloBuddy.SDK.Menu;
 using EloBuddy.SDK.Menu.Values;
+using Color = System.Drawing.Color;
 
 namespace TBlitzReworked
 {
     internal class Blitzcrank
     {
+        public static int CastCount;
+        public static int HitCount;
+        public static float LastGrab;
+        public static float LastHit;
+
         public static Spell.Skillshot Q;
         public static Spell.Active W;
         public static Spell.Active E;
@@ -17,6 +23,7 @@ namespace TBlitzReworked
 
         public static Menu BlitzMenu;
         public static Menu SpellMenu;
+        public static Menu DrawingsMenu;
 
         public static AIHeroClient Player = ObjectManager.Player;
 
@@ -25,6 +32,8 @@ namespace TBlitzReworked
             InitializeMenu();
             InitializeSpells();
             InitializeEvents();
+            CastCount = 0;
+            HitCount = 0;
         }
 
         private static void InitializeEvents()
@@ -32,6 +41,7 @@ namespace TBlitzReworked
             Game.OnTick += OnTick;
             Orbwalker.OnPostAttack += OnPostAttack;
             Spellbook.OnCastSpell += OnSpellCast;
+            Drawing.OnEndScene += Drawings;
         }
 
         private static void InitializeMenu()
@@ -72,39 +82,77 @@ namespace TBlitzReworked
             SpellMenu.Add("rcmode", new Slider("R Mode - Q->E->R", 0, 0, 2)).OnValueChange +=
                 Blitzcrank_OnComboModeChanged;
             SpellMenu.Add("ramount", new Slider("Enemies in range", 2, 1, 5)).IsVisible = false;
-            UpdateSlider();
+            UpdateSliders(1);
+
+            DrawingsMenu = BlitzMenu.AddSubMenu("Drawings Menu", "drawmenu");
+            DrawingsMenu.AddGroupLabel("Q Settings");
+            DrawingsMenu.Add("drawmode", new Slider("Mode - Rangeline", 1, 1, 3)).OnValueChange += Blitzcrank_OnQDrawModeChanged;
+            DrawingsMenu.Add("drawhc", new CheckBox("Draw Hitchance"));
+            DrawingsMenu.Add("drawhc2", new CheckBox("Draw Hitcount"));
+            UpdateSliders(2);
+        }
+        
+        public void InitializeSpells()
+        {
+            Q = new Spell.Skillshot(SpellSlot.Q, 1050, SkillShotType.Linear, (int)250f, (int)1800f, (int)70f);
+            W = new Spell.Active(SpellSlot.W, 0);
+            E = new Spell.Active(SpellSlot.E, 150);
+            R = new Spell.Active(SpellSlot.R, 550);
+        }
+
+        private static void Blitzcrank_OnQDrawModeChanged(ValueBase<int> sender, ValueBase<int>.ValueChangeArgs args)
+        {
+            UpdateSliders(2);
         }
 
         private static void Blitzcrank_OnComboModeChanged(ValueBase<int> sender, ValueBase<int>.ValueChangeArgs args)
         {
-            UpdateSlider();
+            UpdateSliders(1);
         }
 
-        private static void UpdateSlider()
+        private static void UpdateSliders(int i)
         {
-            if (SpellMenu["rcmode"].Cast<Slider>().CurrentValue == 0)
+            switch (i)
             {
-                SpellMenu["rcmode"].Cast<Slider>().DisplayName = "ComboMode - Q->E->R";
-                SpellMenu["ramount"].Cast<Slider>().IsVisible = false;
+                case 1:
+                    switch (SpellMenu["rcmode"].Cast<Slider>().CurrentValue)
+                    {
+                        case 0:
+                            SpellMenu["rcmode"].Cast<Slider>().DisplayName = "ComboMode - Q->E->R";
+                            SpellMenu["ramount"].Cast<Slider>().IsVisible = false;
+                            break;
+                        case 1:
+                            SpellMenu["rcmode"].Cast<Slider>().DisplayName = "ComboMode - R if ";
+                            SpellMenu["ramount"].Cast<Slider>().IsVisible = true;
+                            break;
+                        case 2:
+                            SpellMenu["rcmode"].Cast<Slider>().DisplayName = "ComboMode - Dont use R in combo";
+                            SpellMenu["ramount"].Cast<Slider>().IsVisible = false;
+                            break;
+                    }
+                    break;
+                case 2:
+                    switch (DrawingsMenu["drawmode"].Cast<Slider>().CurrentValue)
+                    {
+                        case 1:
+                            DrawingsMenu["drawmode"].Cast<Slider>().DisplayName = "Mode - Rangeline";
+                            break;
+                        case 2:
+                            DrawingsMenu["drawmode"].Cast<Slider>().DisplayName = "Mode - Rangecircle";
+                            break;
+                        case 3:
+                            DrawingsMenu["drawmode"].Cast<Slider>().DisplayName = "Mode - Disabled";
+                            break;
+                    }
+                    break;
             }
-            else if (SpellMenu["rcmode"].Cast<Slider>().CurrentValue == 1)
-            {
-                SpellMenu["rcmode"].Cast<Slider>().DisplayName = "ComboMode - R if ";
-                SpellMenu["ramount"].Cast<Slider>().IsVisible = true;
-            }
-            else if (SpellMenu["rcmode"].Cast<Slider>().CurrentValue == 2)
-            {
-                SpellMenu["rcmode"].Cast<Slider>().DisplayName = "ComboMode - Dont use R in combo";
-                SpellMenu["ramount"].Cast<Slider>().IsVisible = false;
-            }
+            
         }
 
-        public void InitializeSpells()
+        private static string HitchanceString(AIHeroClient t)
         {
-            Q = new Spell.Skillshot(SpellSlot.Q, 1050, SkillShotType.Linear, (int) 250f, (int) 1800f, (int) 70f);
-            W = new Spell.Active(SpellSlot.W, 0);
-            E = new Spell.Active(SpellSlot.E, 150);
-            R = new Spell.Active(SpellSlot.R, 550);
+            var hc = Q.GetPrediction(t).HitChance;
+            return "Hitchance - " + hc;
         }
 
         private static void OnTick(EventArgs args)
@@ -112,20 +160,66 @@ namespace TBlitzReworked
             AutoCast();
             if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Combo) Combo();
             if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Harass) Harass();
+            if (!Q.IsReady() && (Game.Time - LastHit) > 2)
+            {
+                foreach (var e in EntityManager.Heroes.Enemies.Where(t => t.HasBuff("rocketgrab2")))
+                {
+                    HitCount++;
+                    LastHit = Game.Time;
+                }
+            }
+        }
+
+        private static void Drawings(EventArgs args)
+        {
+            switch (DrawingsMenu["drawmode"].Cast<Slider>().CurrentValue)
+            {
+                case 1:
+                    foreach (var enemy in EntityManager.Heroes.Enemies.Where(e=>Player.Distance(e)<Q.Range))
+                    {
+                        Drawing.DrawLine(Player.Position.WorldToScreen(), enemy.Position.WorldToScreen(), 1,
+                            enemy == TargetSelector.GetTarget(Q.Range, DamageType.Magical) ? Color.Green : Color.Gray);
+                    }
+                    break;
+                case 2:
+                    Drawing.DrawCircle(Player.Position, Q.Range, Color.LawnGreen);
+                    break;
+            }
+            if (DrawingsMenu["drawhc"].Cast<CheckBox>().CurrentValue)
+            {
+                foreach (var enemy in EntityManager.Heroes.Enemies.Where(e => Player.Distance(e) <= Q.Range))
+                {
+                    Drawing.DrawText(enemy.Position.WorldToScreen().X - 20, enemy.Position.WorldToScreen().Y + 20,
+                        enemy == TargetSelector.GetTarget(Q.Range, DamageType.Magical) ? Color.Chartreuse : Color.Gray,
+                        HitchanceString(enemy));
+                }
+            }
+            if (DrawingsMenu["drawhc2"].Cast<CheckBox>().CurrentValue)
+            {
+                var w = Drawing.Width - 200;
+                var h = (Drawing.Height / (float) 3) * 1.5;
+                Drawing.DrawText(w, (float)h, Color.Red,
+                    String.Format("Casted Spell.Q Count: {0}", CastCount));
+                Drawing.DrawText(w, (float)h + 20, Color.Red,
+                    String.Format("Hit Spell.Q Count: {0}", HitCount));
+                Drawing.DrawText(w, (float)h + 40, Color.Red,
+                    String.Format("Hitchance (%): {0}%",
+                        CastCount > 0
+                            ? (((float)HitCount / CastCount) * 100).ToString("00.00")
+                            : "n/a"));
+            }
         }
 
         private static void OnPostAttack(AttackableUnit target, EventArgs args)
         {
-            if (target.IsWard() || target.IsStructure())
+            if (!target.IsWard() && !target.IsStructure()) return;
+            if (SpellMenu["etpush"].Cast<CheckBox>().CurrentValue && E.IsReady())
             {
-                if (SpellMenu["etpush"].Cast<CheckBox>().CurrentValue && E.IsReady())
-                {
-                    E.Cast();
-                }
-                if (SpellMenu["wtpush"].Cast<CheckBox>().CurrentValue && W.IsReady())
-                {
-                    W.Cast();
-                }
+                E.Cast();
+            }
+            if (SpellMenu["wtpush"].Cast<CheckBox>().CurrentValue && W.IsReady())
+            {
+                W.Cast();
             }
         }
 
@@ -156,6 +250,11 @@ namespace TBlitzReworked
         {
             if (!sender.Owner.IsMe) return;
             if (args.Slot == SpellSlot.E) Orbwalker.ResetAutoAttack();
+            if (args.Slot == SpellSlot.Q && (Game.Time - LastGrab) > 2)
+            {
+                CastCount++;
+                LastGrab = Game.Time;
+            }
         }
 
         private static void AutoCast()
