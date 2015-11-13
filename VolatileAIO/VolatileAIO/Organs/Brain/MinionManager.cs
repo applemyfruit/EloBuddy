@@ -190,6 +190,7 @@ namespace VolatileAIO.Organs.Brain
         public static FarmLocation GetBestCircularFarmLocation(List<Vector2> minionPositions,
             float width,
             float range,
+            // ReSharper disable once InconsistentNaming
             int useMECMax = 9)
         {
             var result = new Vector2();

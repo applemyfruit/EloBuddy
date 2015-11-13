@@ -83,7 +83,7 @@ namespace VolatileAIO.Organs
             VolatileMenu.AddSeparator();
             VolatileMenu.AddLabel("AIO Options:");
             VolatileMenu.Add("debug", new CheckBox("Debug", false));
-            VolatileMenu.Add("welcome", new CheckBox("Play 'initiated' sound"));
+            VolatileMenu.Add("welcome", new CheckBox("Play 'initiated' sound", false));
             new ExtensionLoader();
             PriorityManager = new SpellPriorityManager();
             HackMenu = VolatileMenu.AddSubMenu("Hacks", "hacks", "Volatile Hacks");

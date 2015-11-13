@@ -174,7 +174,7 @@ namespace VolatileAIO.Extensions.Jungle
                                 Player.CalculateDamageOnUnit(enemy, DamageType.Magical,
                                     Player.GetSpellDamage(Player, SpellSlot.R)))
                             {
-                                CastManager.Cast.Circle.WujuStyle(R, DamageType.Magical, 0,
+                                CastManager.Cast.Circle.Optimized(R, DamageType.Magical, 0,
                                     SpellMenu["rslider"].Cast<Slider>().CurrentValue, HitChance.Medium, enemy);
                             }
                         }

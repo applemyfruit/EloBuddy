@@ -34,6 +34,18 @@ namespace VolatileAIO.Organs.Brain
             }
         }
 
+        internal struct OptimizedLocation
+        {
+            public int ChampsHit;
+            public Vector2 Position;
+
+            public OptimizedLocation(Vector2 position, int champsHit)
+            {
+                Position = position;
+                ChampsHit = champsHit;
+            }
+        }
+
         public static List<LastSpells> _lastSpells = new List<LastSpells>();
 
         internal class Cast
@@ -92,10 +104,10 @@ namespace VolatileAIO.Organs.Brain
                             .Select(
                                 minion =>
                                     Prediction.Position.PredictUnitPosition(minion,
-                                        (int)(spell.CastDelay + (Player.Distance(minion) / spell.Speed))))
+                                        (int) (spell.CastDelay + (Player.Distance(minion)/spell.Speed))))
                             .ToList();
 
-                    if (MinionManager.GetBestLineFarmLocation(minions, spell.Width, spell.Range).MinionsHit>=minHit)
+                    if (MinionManager.GetBestLineFarmLocation(minions, spell.Width, spell.Range).MinionsHit >= minHit)
                         spell.Cast(
                             MinionManager.GetBestLineFarmLocation(minions, spell.Width, spell.Range).Position.To3D());
                 }
@@ -125,10 +137,10 @@ namespace VolatileAIO.Organs.Brain
                             MinionManager.GetBestCircularFarmLocation(minions, spell.Width, spell.Range).Position.To3D());
                 }
 
-                internal static void WujuStyle(Spell.Skillshot spell, DamageType damageType,
-                    int range = 0, int minHit = 1, HitChance hitChance = HitChance.Medium, AIHeroClient targetHero = null)
+                internal static void Optimized(Spell.Skillshot spell, DamageType damageType,
+                    int range = 0, int minHit = 1, HitChance hitChance = HitChance.Medium,
+                    AIHeroClient targetHero = null)
                 {
-                    //Credits to WujuSan for the original algorithm, now optimized by turkey for better hitchance
                     if ((spell.Slot != SpellSlot.Q || !TickManager.NoLag(1)) &&
                         (spell.Slot != SpellSlot.W || !TickManager.NoLag(2)) &&
                         (spell.Slot != SpellSlot.E || !TickManager.NoLag(3)) &&
@@ -149,10 +161,13 @@ namespace VolatileAIO.Organs.Brain
                     if (!target.IsValidTarget(spell.Range + spell.Radius) ||
                         spell.GetPrediction(target).HitChance < hitChance)
                         return;
-                    var posAndHits = CircleSpellPos(spell.GetPrediction(target).CastPosition.To2D(), spell);
 
-                    if (posAndHits.First().Value >= minHit)
-                        spell.Cast(posAndHits.First().Key.To3D());
+                    var champs = EntityManager.Heroes.Enemies.Where(e => e.Distance(target) < spell.Radius).Select(champ => champ.Position.To2D()).ToList();
+
+                    var posAndHits = GetOptimizedCircleLocation(champs, spell.Width, spell.Range);
+
+                    if (posAndHits.ChampsHit >= minHit)
+                        spell.Cast(posAndHits.Position.To3DWorld());
                 }
             }
         }
@@ -193,70 +208,71 @@ namespace VolatileAIO.Organs.Brain
         {
             _isAutoAttacking = true;
         }
-       
-        private static int CountSpellHits(Vector2 castPosition, Spell.Skillshot spell)
-        {
-            return GetEnemiesPosition(spell).Count(enemyPos => castPosition.Distance(enemyPos) <= spell.Radius);
-        }
 
-        private static Dictionary<Vector2, int> CircleSpellPos(Vector2 targetPosition, Spell.Skillshot spell)
+        public static OptimizedLocation GetOptimizedCircleLocation(List<Vector2> champPositions,
+            float width,
+            float range,
+            // ReSharper disable once InconsistentNaming
+            int useMECMax = 9)
         {
-            var spellPos = new List<Vector2>
+            var result = new Vector2();
+            var champsHit = 0;
+            var startPos = ObjectManager.Player.ServerPosition.To2D();
+
+            range = range*range;
+
+            if (champPositions.Count == 0)
             {
-                new Vector2(targetPosition.X + (spell.Radius/(float) 1.25), targetPosition.Y - (spell.Radius/(float) 3)),
-                new Vector2(targetPosition.X + (spell.Radius/(float) 1.25), targetPosition.Y),
-                new Vector2(targetPosition.X + (spell.Radius/3)*2, targetPosition.Y - spell.Radius),
-                new Vector2(targetPosition.X + (spell.Radius/3)*2, targetPosition.Y - (spell.Radius/3)*2),
-                new Vector2(targetPosition.X + (spell.Radius/3)*2, targetPosition.Y - (spell.Radius/(float) 3)),
-                new Vector2(targetPosition.X + (spell.Radius/3)*2, targetPosition.Y + (spell.Radius/(float) 3)),
-                new Vector2(targetPosition.X + (spell.Radius/3)*2, targetPosition.Y),
-                new Vector2(targetPosition.X + (spell.Radius/(float) 2), targetPosition.Y + (spell.Radius/(float) 2)),
-                new Vector2(targetPosition.X + (spell.Radius/(float) 3), targetPosition.Y - spell.Radius),
-                new Vector2(targetPosition.X + (spell.Radius/(float) 3), targetPosition.Y - (spell.Radius/3)*2),
-                new Vector2(targetPosition.X + (spell.Radius/(float) 3), targetPosition.Y - (spell.Radius/(float) 3)),
-                new Vector2(targetPosition.X + (spell.Radius/(float) 3), targetPosition.Y - (spell.Radius/(float) 1.25)),
-                new Vector2(targetPosition.X + (spell.Radius/(float) 3), targetPosition.Y + (spell.Radius/3)*2),
-                new Vector2(targetPosition.X + (spell.Radius/(float) 3), targetPosition.Y + (spell.Radius/(float) 3)),
-                new Vector2(targetPosition.X + (spell.Radius/(float) 3), targetPosition.Y),
-                new Vector2(targetPosition.X, targetPosition.Y - spell.Radius),
-                new Vector2(targetPosition.X, targetPosition.Y - (spell.Radius/3)*2),
-                new Vector2(targetPosition.X, targetPosition.Y - (spell.Radius/(float) 3)),
-                new Vector2(targetPosition.X, targetPosition.Y),
-                new Vector2(targetPosition.X, targetPosition.Y + (spell.Radius/(float) 3)),
-                new Vector2(targetPosition.X, targetPosition.Y + (spell.Radius/3)*2),
-                new Vector2(targetPosition.X - (spell.Radius/(float) 3), targetPosition.Y),
-                new Vector2(targetPosition.X - (spell.Radius/(float) 3), targetPosition.Y + (spell.Radius/(float) 3)),
-                new Vector2(targetPosition.X - (spell.Radius/(float) 3), targetPosition.Y + (spell.Radius/3)*2),
-                new Vector2(targetPosition.X - (spell.Radius/(float) 3), targetPosition.Y - (spell.Radius/(float) 3)),
-                new Vector2(targetPosition.X - (spell.Radius/(float) 3), targetPosition.Y - (spell.Radius/3)*2),
-                new Vector2(targetPosition.X - (spell.Radius/(float) 3), targetPosition.Y - (spell.Radius/(float) 1.25)),
-                new Vector2(targetPosition.X - (spell.Radius/(float) 3), targetPosition.Y - spell.Radius),
-                new Vector2(targetPosition.X - (spell.Radius/(float) 2), targetPosition.Y + (spell.Radius/(float) 2)),
-                new Vector2(targetPosition.X - (spell.Radius/3)*2, targetPosition.Y),
-                new Vector2(targetPosition.X - (spell.Radius/3)*2, targetPosition.Y + (spell.Radius/(float) 3)),
-                new Vector2(targetPosition.X - (spell.Radius/3)*2, targetPosition.Y - (spell.Radius/(float) 3)),
-                new Vector2(targetPosition.X - (spell.Radius/3)*2, targetPosition.Y - (spell.Radius/3)*2),
-                new Vector2(targetPosition.X - (spell.Radius/3)*2, targetPosition.Y - spell.Radius),
-                new Vector2(targetPosition.X - (spell.Radius/(float) 1.25), targetPosition.Y),
-                new Vector2(targetPosition.X - (spell.Radius/(float) 1.25), targetPosition.Y - (spell.Radius/(float) 3)),
-            };
+                return new OptimizedLocation(result, champsHit);
+            }
+            
+            if (champPositions.Count <= useMECMax)
+            {
+                var subGroups = GetCombinations(champPositions);
+                foreach (var subGroup in subGroups)
+                {
+                    if (subGroup.Count > 0)
+                    {
+                        var circle = MEC.GetMec(subGroup);
 
-            var posAndHits = spellPos.ToDictionary(pos => pos, pos => CountSpellHits(pos, spell));
+                        if (circle.Radius <= width && circle.Center.Distance(startPos, true) <= range)
+                        {
+                            champsHit = subGroup.Count;
+                            return new OptimizedLocation(circle.Center, champsHit);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                foreach (var pos in champPositions)
+                {
+                    if (pos.Distance(startPos, true) <= range)
+                    {
+                        var count = champPositions.Count(pos2 => pos.Distance(pos2, true) <= width*width);
 
-            var posToGg = posAndHits.First(pos => pos.Value == posAndHits.Values.Max()).Key;
-            var hits = posAndHits.First(pos => pos.Key == posToGg).Value;
-            return hits <= 1
-                ? new Dictionary<Vector2, int> {{targetPosition, hits}}
-                : new Dictionary<Vector2, int> {{posToGg, hits}};
+                        if (count >= champsHit)
+                        {
+                            result = pos;
+                            champsHit = count;
+                        }
+                    }
+                }
+            }
+
+            return new OptimizedLocation(result, champsHit);
         }
 
-        private static IEnumerable<Vector2> GetEnemiesPosition(Spell.Skillshot spell)
+        private static List<List<Vector2>> GetCombinations(List<Vector2> allValues)
         {
-            return
-                EntityManager.Heroes.Enemies.Where(
-                    hero => !hero.IsDead && Player.Distance(hero) <= spell.Range + spell.Radius)
-                    .Select(hero => spell.GetPrediction(hero).CastPosition.To2D())
-                    .ToList();
+            var collection = new List<List<Vector2>>();
+            for (var counter = 0; counter < (1 << allValues.Count); ++counter)
+            {
+                var combination = allValues.Where((t, i) => (counter & (1 << i)) == 0).ToList();
+
+                collection.Add(combination);
+            }
+            return collection;
         }
     }
 }

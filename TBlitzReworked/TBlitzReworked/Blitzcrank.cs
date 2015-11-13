@@ -177,6 +177,10 @@ namespace TBlitzReworked
                 case 1:
                     foreach (var enemy in EntityManager.Heroes.Enemies.Where(e=>Player.Distance(e)<Q.Range))
                     {
+                        if(SpellMenu["dontgrab"+enemy.ChampionName.ToLower()].Cast<CheckBox>().CurrentValue)
+                            Drawing.DrawLine(Player.Position.WorldToScreen(), enemy.Position.WorldToScreen(), 1,
+                            Color.Maroon);
+                        else
                         Drawing.DrawLine(Player.Position.WorldToScreen(), enemy.Position.WorldToScreen(), 1,
                             enemy == TargetSelector.GetTarget(Q.Range, DamageType.Magical) ? Color.Green : Color.Gray);
                     }
@@ -189,6 +193,10 @@ namespace TBlitzReworked
             {
                 foreach (var enemy in EntityManager.Heroes.Enemies.Where(e => Player.Distance(e) <= Q.Range))
                 {
+                    if (SpellMenu["dontgrab" + enemy.ChampionName.ToLower()].Cast<CheckBox>().CurrentValue)
+                        Drawing.DrawText(enemy.Position.WorldToScreen().X - 20, enemy.Position.WorldToScreen().Y + 20,
+                        Color.Red, HitchanceString(enemy));
+                    else
                     Drawing.DrawText(enemy.Position.WorldToScreen().X - 20, enemy.Position.WorldToScreen().Y + 20,
                         enemy == TargetSelector.GetTarget(Q.Range, DamageType.Magical) ? Color.Chartreuse : Color.Gray,
                         HitchanceString(enemy));
@@ -226,7 +234,7 @@ namespace TBlitzReworked
         private static void Harass()
         {
             var target = TargetSelector.GetTarget(Q.Range, DamageType.Magical);
-            if (SpellMenu["qth"].Cast<CheckBox>().CurrentValue &&
+            if (target !=null && SpellMenu["qth"].Cast<CheckBox>().CurrentValue &&
                 !SpellMenu["dontgrab" + target.ChampionName.ToLower()].Cast<CheckBox>().CurrentValue &&
                 Player.Distance(target) > Player.GetAutoAttackRange())
                 QLogic(target);

@@ -46,8 +46,8 @@ namespace VolatileAIO.Extensions.Mid
 
         private static void Combo()
         {
-            CastManager.Cast.Circle.WujuStyle(Q, DamageType.Magical);
-            CastManager.Cast.Circle.WujuStyle(W, DamageType.Magical, 0, 2);
+            CastManager.Cast.Circle.Optimized(Q, DamageType.Magical);
+            CastManager.Cast.Circle.Optimized(W, DamageType.Magical, 0, 2);
         }
 
         private static void LaneClear()
