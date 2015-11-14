@@ -162,7 +162,7 @@ namespace VolatileAIO.Organs.Brain
                         spell.GetPrediction(target).HitChance < hitChance)
                         return;
 
-                    var champs = EntityManager.Heroes.Enemies.Where(e => e.Distance(target) < spell.Radius).Select(champ => champ.Position.To2D()).ToList();
+                    var champs = EntityManager.Heroes.Enemies.Where(e => e.Distance(target) < spell.Radius).Select(champ => Prediction.Position.PredictUnitPosition(champ, ((int)Player.Distance(champ) / spell.Speed) + spell.CastDelay)).ToList();
 
                     var posAndHits = GetOptimizedCircleLocation(champs, spell.Width, spell.Range);
 

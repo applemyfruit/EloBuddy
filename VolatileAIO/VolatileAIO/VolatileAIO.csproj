@@ -61,6 +61,7 @@
     <Compile Include="Extensions\ADC\Tristana.cs" />
     <Compile Include="Extensions\Jungle\Evelynn.cs" />
     <Compile Include="Extensions\Mid\Cassiopeia.cs" />
+    <Compile Include="Extensions\Support\Alistar.cs" />
     <Compile Include="Extensions\Support\Blitzcrank.cs" />
     <Compile Include="Organs\Brain\CastManager.cs" />
     <Compile Include="Organs\Brain\Data\PlayerData.cs" />
