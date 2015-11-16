@@ -94,7 +94,7 @@ namespace TBlitzReworked
         
         public void InitializeSpells()
         {
-            Q = new Spell.Skillshot(SpellSlot.Q, 1000, SkillShotType.Linear, (int)250f, (int)1800f, (int)70f);
+            Q = new Spell.Skillshot(SpellSlot.Q, 980, SkillShotType.Linear, (int)250f, (int)1800f, (int)70f);
             W = new Spell.Active(SpellSlot.W, 0);
             E = new Spell.Active(SpellSlot.E, 150);
             R = new Spell.Active(SpellSlot.R, 550);
@@ -310,7 +310,7 @@ namespace TBlitzReworked
             if (target != null)
                 if (SpellMenu["qtc"].Cast<CheckBox>().CurrentValue &&
                     !SpellMenu["dontgrab" + target.ChampionName.ToLower()].Cast<CheckBox>().CurrentValue &&
-                    Player.Distance(target) > Player.GetAutoAttackRange())
+                    Player.Distance(target) > Player.GetAutoAttackRange() && Player.Distance(target)<Q.Range)
                     QLogic(target);
 
             if (SpellMenu["wtc"].Cast<CheckBox>().CurrentValue && W.IsReady())

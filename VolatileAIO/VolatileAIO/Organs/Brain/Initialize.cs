@@ -19,37 +19,37 @@ namespace VolatileAIO.Organs.Brain
         public List<Spell.SpellBase> Spells(Type q, Type w, Type e, Type r)
         {
             Spell.SpellBase qBase = null;
-            var firstOrDefault = Player.Spellbook.Spells.FirstOrDefault(s => s.Slot == SpellSlot.Q);
+            var firstOrDefault = Player.Spellbook.Spells.Find(s => s.Slot == SpellSlot.Q);
             var qData = firstOrDefault.SData;
             var qData2 =
-                SpellDatabase.Spells.FirstOrDefault(
+                SpellDatabase.Spells.Find(
                     s =>
                         string.Equals(s.ChampionName, Player.ChampionName, StringComparison.CurrentCultureIgnoreCase) &&
                         s.Slot == SpellSlot.Q);
 
             Spell.SpellBase wBase = null;
-            firstOrDefault = Player.Spellbook.Spells.FirstOrDefault(s => s.Slot == SpellSlot.W);
+            firstOrDefault = Player.Spellbook.Spells.Find(s => s.Slot == SpellSlot.W);
             var wData = firstOrDefault.SData;
             var wData2 =
-                SpellDatabase.Spells.FirstOrDefault(
+                SpellDatabase.Spells.Find(
                     s =>
                         string.Equals(s.ChampionName, Player.ChampionName, StringComparison.CurrentCultureIgnoreCase) &&
                         s.Slot == SpellSlot.W);
 
             Spell.SpellBase eBase = null;
-            firstOrDefault = Player.Spellbook.Spells.FirstOrDefault(s => s.Slot == SpellSlot.E);
+            firstOrDefault = Player.Spellbook.Spells.Find(s => s.Slot == SpellSlot.E);
             var eData = firstOrDefault.SData;
             var eData2 =
-                SpellDatabase.Spells.FirstOrDefault(
+                SpellDatabase.Spells.Find(
                     s =>
                         string.Equals(s.ChampionName, Player.ChampionName, StringComparison.CurrentCultureIgnoreCase) &&
                         s.Slot == SpellSlot.E);
 
             Spell.SpellBase rBase = null;
-            firstOrDefault = Player.Spellbook.Spells.FirstOrDefault(s => s.Slot == SpellSlot.R);
+            firstOrDefault = Player.Spellbook.Spells.Find(s => s.Slot == SpellSlot.R);
             var rData = firstOrDefault.SData;
             var rData2 =
-                SpellDatabase.Spells.FirstOrDefault(
+                SpellDatabase.Spells.Find(
                     s =>
                         string.Equals(s.ChampionName, Player.ChampionName, StringComparison.CurrentCultureIgnoreCase) &&
                         s.Slot == SpellSlot.R);
@@ -60,7 +60,7 @@ namespace VolatileAIO.Organs.Brain
                     qBase = new Spell.Active(SpellSlot.Q, (uint) qData.CastRange);
                     break;
                 case Type.Skillshot:
-                    qBase = new Spell.Skillshot(SpellSlot.Q, (uint) qData2.Range, qData2.Type, qData2.Delay,
+                    qBase = new Spell.Skillshot(SpellSlot.Q, Convert.ToUInt32(eData2.Range * 0.95), qData2.Type, qData2.Delay,
                         qData2.MissileSpeed, qData2.Radius);
                     break;
                 case Type.Targeted:
@@ -74,7 +74,7 @@ namespace VolatileAIO.Organs.Brain
                     wBase = new Spell.Active(SpellSlot.W, (uint) wData.CastRange);
                     break;
                 case Type.Skillshot:
-                    wBase = new Spell.Skillshot(SpellSlot.W, (uint) wData2.Range, wData2.Type, wData2.Delay,
+                    wBase = new Spell.Skillshot(SpellSlot.W, Convert.ToUInt32(eData2.Range * 0.95), wData2.Type, wData2.Delay,
                         wData2.MissileSpeed, wData2.Radius);
                     break;
                 case Type.Targeted:
@@ -88,7 +88,7 @@ namespace VolatileAIO.Organs.Brain
                     eBase = new Spell.Active(SpellSlot.E, (uint) eData.CastRange);
                     break;
                 case Type.Skillshot:
-                    eBase = new Spell.Skillshot(SpellSlot.E, (uint) eData2.Range, eData2.Type, eData2.Delay,
+                    eBase = new Spell.Skillshot(SpellSlot.E, Convert.ToUInt32(eData2.Range*0.95), eData2.Type, eData2.Delay,
                         eData2.MissileSpeed, eData2.Radius);
                     break;
                 case Type.Targeted:
@@ -102,7 +102,7 @@ namespace VolatileAIO.Organs.Brain
                     rBase = new Spell.Active(SpellSlot.R, (uint) rData.CastRange);
                     break;
                 case Type.Skillshot:
-                    rBase = new Spell.Skillshot(SpellSlot.R, (uint) rData2.Range, rData2.Type, rData2.Delay,
+                    rBase = new Spell.Skillshot(SpellSlot.R, Convert.ToUInt32(eData2.Range * 0.95), rData2.Type, rData2.Delay,
                         rData2.MissileSpeed, rData2.Radius);
                     break;
                 case Type.Targeted:

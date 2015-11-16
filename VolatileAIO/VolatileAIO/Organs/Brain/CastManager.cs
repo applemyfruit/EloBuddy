@@ -15,24 +15,6 @@ namespace VolatileAIO.Organs.Brain
     internal class CastManager : Heart
     {
         private static bool _isAutoAttacking;
-        public static int HitCount;
-        public static int CastCount;
-
-        internal struct LastSpells
-        {
-            public string name;
-            public int tick;
-            public float dmg;
-            public string target;
-
-            public LastSpells(string n, int t, float d, string tg)
-            {
-                name = n;
-                tick = t;
-                dmg = d;
-                target = tg;
-            }
-        }
 
         internal struct OptimizedLocation
         {
@@ -45,8 +27,6 @@ namespace VolatileAIO.Organs.Brain
                 ChampsHit = champsHit;
             }
         }
-
-        public static List<LastSpells> _lastSpells = new List<LastSpells>();
 
         internal class Cast
         {
@@ -75,19 +55,6 @@ namespace VolatileAIO.Organs.Brain
                         return;
 
                     spell.Cast(spell.GetPrediction(target).CastPosition);
-
-                    lock (_lastSpells)
-                    {
-                        _lastSpells.RemoveAll(p => Environment.TickCount - p.tick > 2000);
-
-                        if (_lastSpells.Exists(p => p.name == spell.Name) || spell.Slot != SpellSlot.Q)
-                            return;
-
-                        _lastSpells.Add(new LastSpells(spell.Name, Environment.TickCount,
-                            Player.GetSpellDamage(target, spell.Slot), target.Name));
-
-                        CastCount++;
-                    }
                 }
 
                 internal static void Farm(Spell.Skillshot spell, int minHit = 1)
@@ -171,33 +138,6 @@ namespace VolatileAIO.Organs.Brain
                 }
             }
         }
-
-        protected override void Volatile_OnDamage(AttackableUnit sender, AttackableUnitDamageEventArgs args)
-        {
-            if (!sender.IsMe) return;
-            _lastSpells.RemoveAll(p => Environment.TickCount - p.tick > 2000);
-
-            if (args.Source.NetworkId != Player.NetworkId ||
-                !EntityManager.Heroes.Enemies.Exists(p => p.NetworkId == args.Target.NetworkId)) return;
-
-            if (_lastSpells.Count == 0) return;
-
-            var sremove = new LastSpells("", 0, 0, "");
-            foreach (var spell in _lastSpells)
-            {
-
-                if (VolatileMenu["debug"].Cast<CheckBox>().CurrentValue)
-                    Chat.Print(spell.name +
-                               " & args dmg: " + args.Damage + " & preddmg: " + spell.dmg);
-
-                if (spell.target != args.Target.Name) continue;
-                HitCount++;
-                sremove = spell;
-            }
-            if (_lastSpells.Contains(sremove))
-                _lastSpells.Remove(sremove);
-        }
-
 
         protected override void Volatile_OnPostAttack(AttackableUnit target, EventArgs args)
         {
