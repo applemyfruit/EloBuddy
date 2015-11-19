@@ -17,7 +17,9 @@ namespace VolatileAIO.Organs
         protected static readonly AIHeroClient Player = ObjectManager.Player;
         public static Menu VolatileMenu;
         protected static Menu HackMenu;
-        public static SpellPriorityManager PriorityManager;
+        protected static Menu TargetMenu;
+        public static AutoLeveler AutoLeveler;
+        public static ManaManager ManaManager;
         public static DrawManager DrawManager;
         public static RecallTracker RecallTracker;
         private static readonly SoundPlayer Initiated = new SoundPlayer(Properties.Resources.Initiated);
@@ -85,7 +87,10 @@ namespace VolatileAIO.Organs
             VolatileMenu.Add("debug", new CheckBox("Debug", false));
             VolatileMenu.Add("welcome", new CheckBox("Play 'initiated' sound", false));
             new ExtensionLoader();
-            PriorityManager = new SpellPriorityManager();
+            ManaManager = new ManaManager();
+            AutoLeveler = new AutoLeveler();
+            TargetMenu = VolatileMenu.AddSubMenu("Target Manager", "targetmenu", "Volatile TargetManager");
+            TargetMenu.Add("chosenignores", new CheckBox("Ignore all other champions if Selected Target", false));
             HackMenu = VolatileMenu.AddSubMenu("Hacks", "hacks", "Volatile Hacks");
             SkinManager.Initialize();
             RecallTracker = new RecallTracker();

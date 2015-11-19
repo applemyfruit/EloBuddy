@@ -16,6 +16,7 @@ namespace VolatileAIO.Organs.Brain
 
         public static readonly Dictionary<string, State> ExtensionState = new Dictionary<string, State>()
         {
+            {"Alistar", State.FullyDeveloped },
             {"Blitzcrank", State.FullyDeveloped },
             {"Cassiopeia", State.PartDeveloped },
             {"Evelynn", State.PartDeveloped },
@@ -36,7 +37,7 @@ namespace VolatileAIO.Organs.Brain
             Chat.Print("<font color = \"#00FF00\">Succesfully loaded Extension: </font><font color = \"#FFFF00\">" + ObjectManager.Player.ChampionName + "</font>");
             State state;
             ExtensionState.TryGetValue(ObjectManager.Player.ChampionName, out state);
-            if ((int)state<4) Chat.Print("<font color = \"#FFCC00\">Please note:</font> <font color = \"#FFFF00\">" + ObjectManager.Player.ChampionName + "</font><font color = \"#FFCC00\"> is still </font>!<font color = \"#800000\">" + Enum.GetName(state.GetType(),state)+"</font>!");
+            if ((int)state<3) Chat.Print("<font color = \"#FFCC00\">Please note:</font> <font color = \"#FFFF00\">" + ObjectManager.Player.ChampionName + "</font><font color = \"#FFCC00\"> is still </font>!<font color = \"#800000\">" + Enum.GetName(state.GetType(),state)+"</font>!");
         }
 
         public ExtensionLoader()
@@ -45,6 +46,10 @@ namespace VolatileAIO.Organs.Brain
             if (ExtensionState.ContainsKey(ObjectManager.Player.ChampionName)) WelcomeChat();
             switch (ObjectManager.Player.ChampionName.ToLower())
             {
+                case "alistar":
+                    new Alistar();
+                    _loaded = true;
+                    break;
                 case "blitzcrank":
                     new Blitzcrank();
                     _loaded = true;

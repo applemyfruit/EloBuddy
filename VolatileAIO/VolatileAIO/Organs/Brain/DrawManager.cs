@@ -42,10 +42,9 @@ namespace VolatileAIO.Organs.Brain
 
             const int width = 103;
             const int height = 9;
-            const int xOffset = -11;
-            const int yOffset = 17;
             foreach (var enemy in EntityManager.Heroes.Enemies)
             {
+                var xOffset = enemy.HPBarXOffset;
                 if (!enemy.IsHPBarRendered) continue;
                 var barPosition = enemy.HPBarPosition;
                 float drawDamage = 0, drawQ = 0, drawW = 0, drawE = 0, drawR = 0;
@@ -61,7 +60,7 @@ namespace VolatileAIO.Organs.Brain
                 if (_r.IsReady()) drawR = (Player.GetSpellDamage(enemy, SpellSlot.R) / drawDamage);
 
                 var hpleft = Math.Max(0, enemy.Health - drawDamage) / enemy.MaxHealth;
-                var yPos = barPosition.Y + yOffset;
+                var yPos = barPosition.Y + enemy.HPBarYOffset + 5;
                 var xPosDamage = barPosition.X + xOffset + width * hpleft;
                 var xPosCurrentHp = barPosition.X + xOffset + width * enemy.Health / enemy.MaxHealth;
                 var differenceInHp = xPosCurrentHp - xPosDamage;
@@ -80,7 +79,7 @@ namespace VolatileAIO.Organs.Brain
             }
         }
 
-        private void DrawDebug()
+        private static void DrawDebug()
         {
             //CursorPos
             Drawing.DrawText(Game.CursorPos2D.X, Game.CursorPos2D.Y - 20, Color.Red, Game.CursorPos2D.X + "," + Game.CursorPos2D.Y);
@@ -97,57 +96,53 @@ namespace VolatileAIO.Organs.Brain
             }
         }
 
-        private void DrawRecalls()
+        private static void DrawRecalls()
         {
-            if (RecallTracker.Recalls.Any())
+            if (!RecallTracker.Recalls.Any()) return;
+            var i = 0;
+            RecallTracker.Recall removeme = null;
+            foreach (var recall in RecallTracker.Recalls)
             {
-                int i = 0;
-                RecallTracker.Recall removeme = null;
-                foreach (var recall in RecallTracker.Recalls)
-                {
-                    var Y = RecallTracker.Y() - i;
-                    var Y2 = Y + 15;
+                var y = RecallTracker.Y() - i;
+                var y2 = y + 15;
 
-                    if (!recall.Hero.IsAlly)
-                        Drawing.DrawLine(RecallTracker.X(), Y,
-                        RecallTracker.X() + (recall.PercentComplete()*HackMenu["recallwidth"].Cast<Slider>().CurrentValue/100), Y, 16, Color.DarkRed);
-                    else
-                        Drawing.DrawLine(RecallTracker.X(), Y,
-                       RecallTracker.X() + (recall.PercentComplete() * HackMenu["recallwidth"].Cast<Slider>().CurrentValue / 100), Y, 16, Color.DarkGreen);
+                Drawing.DrawLine(RecallTracker.X(), y,
+                    RecallTracker.X() +
+                    (recall.PercentComplete()*HackMenu["recallwidth"].Cast<Slider>().CurrentValue/100), y, 16,
+                    !recall.Hero.IsAlly ? Color.DarkRed : Color.DarkGreen);
 
-                    Vector2[] BoxVectors = new Vector2[5];
-                    BoxVectors[0] = new Vector2(RecallTracker.X(), Y2 - 8);
-                    BoxVectors[1] = new Vector2(RecallTracker.X(), Y2 + 8);
-                    BoxVectors[2] = new Vector2(
-                        RecallTracker.X() + HackMenu["recallwidth"].Cast<Slider>().CurrentValue, Y2 + 8);
-                    BoxVectors[3] = new Vector2(
-                        RecallTracker.X() + HackMenu["recallwidth"].Cast<Slider>().CurrentValue, Y2 - 8);
+                var boxVectors = new Vector2[5];
+                boxVectors[0] = new Vector2(RecallTracker.X(), y2 - 8);
+                boxVectors[1] = new Vector2(RecallTracker.X(), y2 + 8);
+                boxVectors[2] = new Vector2(
+                    RecallTracker.X() + HackMenu["recallwidth"].Cast<Slider>().CurrentValue, y2 + 8);
+                boxVectors[3] = new Vector2(
+                    RecallTracker.X() + HackMenu["recallwidth"].Cast<Slider>().CurrentValue, y2 - 8);
 
-                    BoxVectors[4] = new Vector2(RecallTracker.X(), Y2 - 8);
-                    Line.DrawLine(Color.White, BoxVectors);
+                boxVectors[4] = new Vector2(RecallTracker.X(), y2 - 8);
+                Line.DrawLine(Color.White, boxVectors);
 
-                    var recallString = "";
+                var recallString = "";
 
-                    if (recall.IsAborted)
-                        recallString =
+                if (recall.IsAborted)
+                    recallString =
                         recall.Hero.ChampionName + " - " + recall.PercentComplete() + "%" + " - Aborted!";
-                    else if (recall.PercentComplete() == 100)
-                        recallString =
+                else if (recall.PercentComplete() > 99.99)
+                    recallString =
                         recall.Hero.ChampionName + " - " + recall.PercentComplete() + "%" + " - Finished!";
-                    else
-                        recallString =
+                else
+                    recallString =
                         recall.Hero.ChampionName + " - " + recall.PercentComplete() + "%";
 
-                    Drawing.DrawText(RecallTracker.X() + 10, Y + 8, Color.White, recallString);
+                Drawing.DrawText(RecallTracker.X() + 10, y + 8, Color.White, recallString);
 
-                    if (recall.ExpireTime < Environment.TickCount)
-                    {
-                        removeme = recall;
-                    }
-                    i += 20;
+                if (recall.ExpireTime < Environment.TickCount)
+                {
+                    removeme = recall;
                 }
-                if (removeme != null) RecallTracker.Recalls.Remove(removeme);
+                i += 20;
             }
+            if (removeme != null) RecallTracker.Recalls.Remove(removeme);
         }
     }
 }
