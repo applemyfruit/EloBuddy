@@ -63,6 +63,7 @@
     <Compile Include="Extensions\Mid\Cassiopeia.cs" />
     <Compile Include="Extensions\Support\Alistar.cs" />
     <Compile Include="Extensions\Support\Blitzcrank.cs" />
+    <Compile Include="Organs\Brain\Activator.cs" />
     <Compile Include="Organs\Brain\ManaManager.cs" />
     <Compile Include="Organs\Brain\CastManager.cs" />
     <Compile Include="Organs\Brain\Data\PlayerData.cs" />

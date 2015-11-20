@@ -51,7 +51,7 @@ namespace VolatileAIO.Organs.Brain
 
         public AutoLeveler()
         {
-            _autoLevelMenu = VolatileMenu.AddSubMenu("AutoLeveler", "priority", "Volatile Automatic Spell Leveler");
+            _autoLevelMenu = VolatileMenu.AddSubMenu("AutoLeveler", "autolevel", "Volatile Automatic Spell Leveler");
             _autoLevelMenu.AddLabel("Auto-Leveler will automatically level your spells in the set priority");
             _autoLevelMenu.Add("autolevel", new CheckBox("Use Auto-Leveler"));
             _autoLevelMenu.AddSeparator();
@@ -79,6 +79,7 @@ namespace VolatileAIO.Organs.Brain
             {
                 slider.CurrentValue = 1;
             }
+            UpdateSliders();
         }
         
         private static void AutoLeveler_OnValueChange(ValueBase<int> sender,

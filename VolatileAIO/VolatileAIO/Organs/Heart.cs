@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Media;
 using EloBuddy;
 using EloBuddy.SDK;
@@ -9,6 +7,7 @@ using EloBuddy.SDK.Menu;
 using EloBuddy.SDK.Menu.Values;
 using SharpDX;
 using VolatileAIO.Organs.Brain;
+using Activator = VolatileAIO.Organs.Brain.Activator;
 
 namespace VolatileAIO.Organs
 {
@@ -22,6 +21,7 @@ namespace VolatileAIO.Organs
         public static ManaManager ManaManager;
         public static DrawManager DrawManager;
         public static RecallTracker RecallTracker;
+        public static Activator Activator;
         private static readonly SoundPlayer Initiated = new SoundPlayer(Properties.Resources.Initiated);
 
         protected Heart()
@@ -60,7 +60,7 @@ namespace VolatileAIO.Organs
             Chat.Print(
                 "Starting <font color = \"#740000\">Volatile AIO</font> <font color = \"#B87F7F\">Heart.cs</font>:");
 
-            VolatileMenu = MainMenu.AddMenu(Player.ChampionName, "volatilemenu", "Volatile " + Player.ChampionName);
+            VolatileMenu = MainMenu.AddMenu("V." + Player.ChampionName, "volatilemenu", "Volatile " + Player.ChampionName);
 
             //InfoBoard
             VolatileMenu.AddGroupLabel("Heart.cs");
@@ -97,6 +97,7 @@ namespace VolatileAIO.Organs
             DrawManager = new DrawManager();
             if (VolatileMenu["welcome"].Cast<CheckBox>().CurrentValue)
             Initiated.Play();
+            Activator = new Activator();
         }
 
         #region privatevoid
@@ -110,6 +111,7 @@ namespace VolatileAIO.Organs
         {
             if (Player.IsDead) return;
             Volatile_OnHeartBeat(args);
+            TickManager.Tick();
         }
 
         private void OnDrawDeathChecker(EventArgs args)
@@ -262,7 +264,6 @@ namespace VolatileAIO.Organs
 
         protected virtual void Volatile_OnHeartBeat(EventArgs args)
         {
-            TickManager.Tick();
             //for extensions
         }
 

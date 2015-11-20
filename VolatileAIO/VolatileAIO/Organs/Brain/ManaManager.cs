@@ -68,6 +68,7 @@ namespace VolatileAIO.Organs.Brain
             {
                 slider.CurrentValue = 1;
             }
+            UpdateSliders();
         }
 
         protected override void OnSpellCast(Spellbook sender, SpellbookCastSpellEventArgs args)
