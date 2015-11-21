@@ -87,10 +87,10 @@ namespace VolatileAIO.Organs
             VolatileMenu.Add("debug", new CheckBox("Debug", false));
             VolatileMenu.Add("welcome", new CheckBox("Play 'initiated' sound", false));
             new ExtensionLoader();
-            ManaManager = new ManaManager();
-            AutoLeveler = new AutoLeveler();
             TargetMenu = VolatileMenu.AddSubMenu("Target Manager", "targetmenu", "Volatile TargetManager");
             TargetMenu.Add("chosenignores", new CheckBox("Ignore all other champions if Selected Target", false));
+            ManaManager = new ManaManager();
+            AutoLeveler = new AutoLeveler();
             HackMenu = VolatileMenu.AddSubMenu("Hacks", "hacks", "Volatile Hacks");
             SkinManager.Initialize();
             RecallTracker = new RecallTracker();

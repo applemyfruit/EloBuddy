@@ -85,7 +85,7 @@ namespace VolatileAIO.Organs.Brain
             CleansersMenu.Add("special", new CheckBox("Cleanse Special Spells"));
             CleansersMenu.Add("stun", new CheckBox("Cleanse Stun"));
             CleansersMenu.Add("snare", new CheckBox("Cleanse Snare"));
-            CleansersMenu.Add("stun", new CheckBox("Cleanse Charm"));
+            CleansersMenu.Add("charm", new CheckBox("Cleanse Charm"));
             CleansersMenu.Add("fear", new CheckBox("Cleanse Fear"));
             CleansersMenu.Add("suppr", new CheckBox("Cleanse Suppression"));
             CleansersMenu.Add("taunt", new CheckBox("Cleanse Taunt"));
@@ -663,8 +663,8 @@ namespace VolatileAIO.Organs.Brain
                 }
             }
 
-            if (OffensivesMenu["tmat"].Cast<CheckBox>().CurrentValue ||
-                OffensivesMenu["rh"].Cast<CheckBox>().CurrentValue)
+            if ((OffensivesMenu["tmat"].Cast<CheckBox>().CurrentValue ||
+                OffensivesMenu["rh"].Cast<CheckBox>().CurrentValue) && (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Combo || Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Harass))
             {
                 if (Hydra.IsReady() && Player.CountEnemiesInRange(Hydra.Range) > 0)
                     Hydra.Cast();

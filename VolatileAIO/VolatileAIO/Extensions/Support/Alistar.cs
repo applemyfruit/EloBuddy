@@ -94,8 +94,7 @@ namespace VolatileAIO.Extensions.Support
                         .ToList();
                 var location = CastManager.GetOptimizedCircleLocation(champs, _q.Range, _flash.SData.CastRange);
                 Player.Spellbook.CastSpell(_flash.Slot, location.Position.To3DWorld());
-                Core.DelayAction(() => _q.Cast(), 10);
-                //_q.Cast();
+                _q.Cast();
             }
             else if (SpellMenu["flashqhap"].Cast<KeyBind>().CurrentValue)
             {
@@ -111,8 +110,7 @@ namespace VolatileAIO.Extensions.Support
                 var location = CastManager.GetOptimizedCircleLocation(champs, _q.Range, _flash.SData.CastRange);
                 if (location.ChampsHit < SpellMenu["fqamount"].Cast<Slider>().CurrentValue) return;
                 Player.Spellbook.CastSpell(_flash.Slot, location.Position.To3DWorld());
-                Core.DelayAction(() => _q.Cast(), 10);
-                //_q.Cast();
+                _q.Cast();
             }
         }
 
