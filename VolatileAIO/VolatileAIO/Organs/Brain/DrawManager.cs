@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using EloBuddy;
 using EloBuddy.SDK;
@@ -7,7 +8,8 @@ using EloBuddy.SDK.Menu.Values;
 using EloBuddy.SDK.Rendering;
 using SharpDX;
 using VolatileAIO.Organs.Brain.Data;
-using VolatileAIO.Organs._Test;
+using System.Windows;
+using EloBuddy.SDK.Menu;
 using Color = System.Drawing.Color;
 
 namespace VolatileAIO.Organs.Brain
@@ -16,6 +18,15 @@ namespace VolatileAIO.Organs.Brain
     {
         private bool _initialized;
         private Spell.SpellBase _q, _w, _e, _r;
+        private Menu DrawMenu;
+
+        public DrawManager()
+        {
+            DrawMenu = VolatileMenu.AddSubMenu("Drawings", "drawings", "Volatile Drawings");
+            DrawMenu.Add("dmg", new CheckBox("Draw Volatile DamageIndicator"));
+            DrawMenu.Add("rl", new CheckBox("Draw Volatile RangeLines"));
+            DrawMenu.Add("recall", new CheckBox("Draw Recalls"));
+        }
 
         internal void UpdateValues()
         {
@@ -29,11 +40,6 @@ namespace VolatileAIO.Organs.Brain
 
         private void DrawDamageIndicator()
         {
-            if (!_initialized)
-            {
-                UpdateValues();
-                return;
-            }
             var target = TargetManager.Target(1000, DamageType.Physical);
             if (target != null)
             {
@@ -54,45 +60,156 @@ namespace VolatileAIO.Organs.Brain
                 if (_e.IsReady()) drawDamage += Player.GetSpellDamage(enemy, SpellSlot.E);
                 if (_r.IsReady()) drawDamage += Player.GetSpellDamage(enemy, SpellSlot.R);
 
-                if (_q.IsReady()) drawQ = (Player.GetSpellDamage(enemy, SpellSlot.Q) / drawDamage);
-                if (_w.IsReady()) drawW = (Player.GetSpellDamage(enemy, SpellSlot.W) / drawDamage);
-                if (_e.IsReady()) drawE = (Player.GetSpellDamage(enemy, SpellSlot.E) / drawDamage);
-                if (_r.IsReady()) drawR = (Player.GetSpellDamage(enemy, SpellSlot.R) / drawDamage);
+                if (_q.IsReady()) drawQ = (Player.GetSpellDamage(enemy, SpellSlot.Q)/drawDamage);
+                if (_w.IsReady()) drawW = (Player.GetSpellDamage(enemy, SpellSlot.W)/drawDamage);
+                if (_e.IsReady()) drawE = (Player.GetSpellDamage(enemy, SpellSlot.E)/drawDamage);
+                if (_r.IsReady()) drawR = (Player.GetSpellDamage(enemy, SpellSlot.R)/drawDamage);
 
-                var hpleft = Math.Max(0, enemy.Health - drawDamage) / enemy.MaxHealth;
+                var hpleft = Math.Max(0, enemy.Health - drawDamage)/enemy.MaxHealth;
                 var yPos = barPosition.Y + enemy.HPBarYOffset + 5;
-                var xPosDamage = barPosition.X + xOffset + width * hpleft;
-                var xPosCurrentHp = barPosition.X + xOffset + width * enemy.Health / enemy.MaxHealth;
+                var xPosDamage = barPosition.X + xOffset + width*hpleft;
+                var xPosCurrentHp = barPosition.X + xOffset + width*enemy.Health/enemy.MaxHealth;
                 var differenceInHp = xPosCurrentHp - xPosDamage;
-                var pos1 = barPosition.X + xOffset + (107 * hpleft);
+                var pos1 = barPosition.X + xOffset + (107*hpleft);
                 for (var i = 0; i < differenceInHp; i++)
                 {
-                    if (_q.IsReady() && i < drawQ * differenceInHp)
-                        Drawing.DrawLine(pos1 + i, yPos, pos1 + i, yPos + height, 1, Color.Cyan);
-                    else if (_w.IsReady() && i < (drawQ + drawW) * differenceInHp)
-                        Drawing.DrawLine(pos1 + i, yPos, pos1 + i, yPos + height, 1, Color.Orange);
-                    else if (_e.IsReady() && i < (drawQ + drawW + drawE) * differenceInHp)
-                        Drawing.DrawLine(pos1 + i, yPos, pos1 + i, yPos + height, 1, Color.Yellow);
-                    else if (_r.IsReady() && i < (drawQ + drawW + drawE + drawR) * differenceInHp)
-                        Drawing.DrawLine(pos1 + i, yPos, pos1 + i, yPos + height, 1, Color.YellowGreen);
+                    if (_q.IsReady() && i < drawQ*differenceInHp)
+                        Drawing.DrawLine(pos1 + i, yPos, pos1 + i, yPos + height, 1, Color.Chartreuse);
+                    else if (_w.IsReady() && i < (drawQ + drawW)*differenceInHp)
+                        Drawing.DrawLine(pos1 + i, yPos, pos1 + i, yPos + height, 1, Color.Gold);
+                    else if (_e.IsReady() && i < (drawQ + drawW + drawE)*differenceInHp)
+                        Drawing.DrawLine(pos1 + i, yPos, pos1 + i, yPos + height, 1, Color.OrangeRed);
+                    else if (_r.IsReady() && i < (drawQ + drawW + drawE + drawR)*differenceInHp)
+                        Drawing.DrawLine(pos1 + i, yPos, pos1 + i, yPos + height, 1, Color.Firebrick);
                 }
             }
         }
 
         private static void DrawDebug()
         {
-            //CursorPos
-            Drawing.DrawText(Game.CursorPos2D.X, Game.CursorPos2D.Y - 20, Color.Red, Game.CursorPos2D.X + "," + Game.CursorPos2D.Y);
+            var angle = Math.Atan2(Game.CursorPos.Y - Player.Position.Y, Game.CursorPos.X - Player.Position.X);
+            var sin = (Math.Sin(angle)*300) + Player.Position.Y;
+            var cosin = (Math.Cos(angle)*300) + Player.Position.X;
+            var cursor = new Vector3((float) cosin, (float) sin, Player.Position.Z);
+            Drawing.DrawText(Game.CursorPos2D.X, Game.CursorPos2D.Y - 20, Color.Red,
+                Game.CursorPos.X + "," + Game.CursorPos.Y);
+            Drawing.DrawLine(Player.Position.WorldToScreen(), Game.CursorPos2D, 1, Color.DarkRed);
+            Drawing.DrawText(Player.Position.WorldToScreen().X, Player.Position.WorldToScreen().Y + 10, Color.Red,
+                Player.Position.X + "," + Player.Position.Y + Environment.NewLine +
+                angle*(180.0/Math.PI));
+            Drawing.DrawCircle(cursor, 40, Color.Aqua);
         }
-
 
         protected override void Volative_OnDrawEnd(EventArgs args)
         {
-            DrawDamageIndicator();
-            DrawRecalls();
+            if (!_initialized)
+            {
+                UpdateValues();
+                return;
+            }
+            if (DrawMenu["dmg"].Cast<CheckBox>().CurrentValue)
+                DrawDamageIndicator();
+            if (DrawMenu["recall"].Cast<CheckBox>().CurrentValue)
+                DrawRecalls();
+            if (DrawMenu["rl"].Cast<CheckBox>().CurrentValue)
+                DrawRangeLines();
             if (VolatileMenu["debug"].Cast<CheckBox>().CurrentValue)
             {
-               DrawDebug();
+                DrawDebug();
+            }
+        }
+
+        private static void DrawRangeLines()
+        {
+            var maxrange = PlayerData.Spells.Where(s=>s.IsLearned).Max(s => s.Range);
+            foreach (var hero in EntityManager.Heroes.Enemies.Where(e => e.Distance(Player) < maxrange && !e.IsDead))
+            {
+                var spellranges = new Dictionary<uint, List<SpellSlot>>();
+                var s = from spell in PlayerData.Spells where spell.IsLearned select spell.Range;
+                var spells = s.ToList();
+                spells.Sort();
+
+                foreach (var spell in spells)
+                {
+                    var range = (uint) 0;
+                    if (spell > 0)
+                        range = spell;
+                    else
+                    {
+                        try
+                        {
+                            var ss = (Spell.Skillshot) PlayerData.Spells.Find(sp => sp.Range == spell);
+                            range = (uint) ss.Width;
+                        }
+                        catch (Exception)
+                        {
+                            // ignored
+                        }
+                    }
+                    if (range < 50) continue;
+                    if (range > hero.Distance(Player))
+                        if (spellranges.ContainsKey((uint) hero.Distance(Player)))
+                            spellranges[(uint) hero.Distance(Player)].Add(
+                                PlayerData.Spells.Find(sp => sp.Range == spell).Slot);
+                        else
+                            spellranges.Add((uint) hero.Distance(Player),
+                                new List<SpellSlot> { PlayerData.Spells.Find(sp => sp.Range == spell).Slot});
+                    else if (spellranges.ContainsKey(range))
+                        spellranges[range].Add(PlayerData.Spells.Find(sp => sp.Range == spell).Slot);
+                    else
+                        spellranges.Add(range,
+                            new List<SpellSlot> {PlayerData.Spells.Find(sp => sp.Range == spell).Slot});
+                }
+                
+                var i = 0;
+                var lastloc = new Vector3(0, 0, 0);
+                foreach (var range in spellranges)
+                {
+                    var angle = Math.Atan2(hero.Position.Y - Player.Position.Y, hero.Position.X - Player.Position.X);
+                    var sin = (Math.Sin(angle)*(range.Key - 20)) + Player.Position.Y;
+                    var cosin = (Math.Cos(angle)*(range.Key - 20)) + Player.Position.X;
+                    var location = new Vector3((float) cosin, (float) sin, Player.Position.Z);
+                    if (i == 0)
+                    {
+                        Drawing.DrawLine(Player.Position.WorldToScreen(), location.WorldToScreen(), 2, Color.Red);
+                        sin = (Math.Sin(angle)*(range.Key)) + Player.Position.Y;
+                        cosin = (Math.Cos(angle)*(range.Key)) + Player.Position.X;
+                        location = new Vector3((float) cosin, (float) sin, Player.Position.Z);
+                        Drawing.DrawCircle(location, 30,
+                            PlayerData.Spells.Find(sp => range.Value.Contains(sp.Slot)).IsReady()
+                                ? Color.Chartreuse
+                                : Color.Firebrick);
+                        string text = "";
+                        text = range.Value.Aggregate(text, (current, spell) => current + spell);
+                        Drawing.DrawText(location.WorldToScreen().X, location.WorldToScreen().Y - (float) 7.5,
+                            Color.White,
+                            text, 15);
+                        i++;
+                        sin = (Math.Sin(angle)*(range.Key + 20)) + Player.Position.Y;
+                        cosin = (Math.Cos(angle)*(range.Key + 20)) + Player.Position.X;
+                        lastloc = new Vector3((float) cosin, (float) sin, Player.Position.Z);
+                    }
+                    else
+                    {
+                        Drawing.DrawLine(lastloc.WorldToScreen(), location.WorldToScreen(), 2, Color.Red);
+                        sin = (Math.Sin(angle)*(range.Key)) + Player.Position.Y;
+                        cosin = (Math.Cos(angle)*(range.Key)) + Player.Position.X;
+                        location = new Vector3((float) cosin, (float) sin, Player.Position.Z);
+                        Drawing.DrawCircle(location, 30,
+                            PlayerData.Spells.Find(sp => range.Value.Contains(sp.Slot)).IsReady()
+                                ? Color.Chartreuse
+                                : Color.Firebrick);
+                        string text = "";
+                        text = range.Value.Aggregate(text, (current, spell) => current + spell);
+                        Drawing.DrawText(location.WorldToScreen().X, location.WorldToScreen().Y - (float) 7.5,
+                            Color.White,
+                            text, 15);
+                        i++;
+                        sin = (Math.Sin(angle)*(range.Key + 20)) + Player.Position.Y;
+                        cosin = (Math.Cos(angle)*(range.Key + 20)) + Player.Position.X;
+                        lastloc = new Vector3((float) cosin, (float) sin, Player.Position.Z);
+                    }
+                }
             }
         }
 

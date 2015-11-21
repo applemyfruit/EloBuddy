@@ -91,10 +91,10 @@ namespace VolatileAIO.Organs
             TargetMenu.Add("chosenignores", new CheckBox("Ignore all other champions if Selected Target", false));
             ManaManager = new ManaManager();
             AutoLeveler = new AutoLeveler();
+            DrawManager = new DrawManager();
             HackMenu = VolatileMenu.AddSubMenu("Hacks", "hacks", "Volatile Hacks");
             SkinManager.Initialize();
             RecallTracker = new RecallTracker();
-            DrawManager = new DrawManager();
             if (VolatileMenu["welcome"].Cast<CheckBox>().CurrentValue)
             Initiated.Play();
             Activator = new Activator();

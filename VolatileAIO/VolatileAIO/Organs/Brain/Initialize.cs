@@ -60,7 +60,7 @@ namespace VolatileAIO.Organs.Brain
                     qBase = new Spell.Active(SpellSlot.Q, (uint) qData.CastRange);
                     break;
                 case Type.Skillshot:
-                    qBase = new Spell.Skillshot(SpellSlot.Q, Convert.ToUInt32(eData2.Range * 0.95), qData2.Type, qData2.Delay,
+                    qBase = new Spell.Skillshot(SpellSlot.Q, Convert.ToUInt32(qData2.Range * 0.95), qData2.Type, qData2.Delay,
                         qData2.MissileSpeed, qData2.Radius);
                     break;
                 case Type.Targeted:
@@ -74,7 +74,7 @@ namespace VolatileAIO.Organs.Brain
                     wBase = new Spell.Active(SpellSlot.W, (uint) wData.CastRange);
                     break;
                 case Type.Skillshot:
-                    wBase = new Spell.Skillshot(SpellSlot.W, Convert.ToUInt32(eData2.Range * 0.95), wData2.Type, wData2.Delay,
+                    wBase = new Spell.Skillshot(SpellSlot.W, Convert.ToUInt32(wData2.Range * 0.95), wData2.Type, wData2.Delay,
                         wData2.MissileSpeed, wData2.Radius);
                     break;
                 case Type.Targeted:
@@ -102,7 +102,7 @@ namespace VolatileAIO.Organs.Brain
                     rBase = new Spell.Active(SpellSlot.R, (uint) rData.CastRange);
                     break;
                 case Type.Skillshot:
-                    rBase = new Spell.Skillshot(SpellSlot.R, Convert.ToUInt32(eData2.Range * 0.95), rData2.Type, rData2.Delay,
+                    rBase = new Spell.Skillshot(SpellSlot.R, Convert.ToUInt32(rData2.Range * 0.95), rData2.Type, rData2.Delay,
                         rData2.MissileSpeed, rData2.Radius);
                     break;
                 case Type.Targeted:
