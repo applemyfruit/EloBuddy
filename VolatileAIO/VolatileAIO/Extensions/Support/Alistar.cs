@@ -66,7 +66,7 @@ namespace VolatileAIO.Extensions.Support
         protected override void OnSpellCast(Spellbook sender, SpellbookCastSpellEventArgs args)
         {
             if (Orbwalker.ActiveModesFlags != Orbwalker.ActiveModes.Combo || !_q.IsReady() || !sender.Owner.IsMe ||
-                args.Slot != SpellSlot.W || args.Process == false) return;
+                args.Slot != SpellSlot.W || args.Process == false || !sender.Owner.IsMe) return;
 
             var qdelay = Math.Max(0, Player.Distance(args.Target) - 365)/1.2f - 25;
             Core.DelayAction(() => _q.Cast(), (int) qdelay);

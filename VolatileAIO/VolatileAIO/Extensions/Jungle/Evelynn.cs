@@ -9,7 +9,6 @@ using EloBuddy.SDK.Menu.Values;
 using VolatileAIO.Organs;
 using VolatileAIO.Organs.Brain;
 using VolatileAIO.Organs.Brain.Data;
-using VolatileAIO.Organs._Test;
 
 namespace VolatileAIO.Extensions.Jungle
 {

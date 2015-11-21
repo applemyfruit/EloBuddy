@@ -61,6 +61,7 @@ namespace VolatileAIO.Organs.Brain
         public static void Initialize()
         {
             HackMenu.AddGroupLabel("Volatile Skinchanger");
+            HackMenu.AddLabel("PSA: Changing your Model might in rare cases crash the game." + Environment.NewLine +"This does not apply to changing skin.");
             HackMenu.Add("models", new Slider("Model - ", 0, 0, 0)).OnValueChange += SkinManager_OnModelSliderChange;
             HackMenu.Add("skins", new Slider("Skin - Classic", 0, 0, 0)).OnValueChange += SkinManager_OnSkinSliderChange;
             HackMenu.Add("resetModel", new CheckBox("Reset Model", false)).OnValueChange += SkinManager_OnResetModel;

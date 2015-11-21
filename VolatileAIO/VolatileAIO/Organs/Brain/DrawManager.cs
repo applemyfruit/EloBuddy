@@ -43,7 +43,7 @@ namespace VolatileAIO.Organs.Brain
             var target = TargetManager.Target(1000, DamageType.Physical);
             if (target != null)
             {
-                Drawing.DrawCircle(target.Position, 100, Color.Red);
+                new Circle {Color = Color.Cyan, Radius = 100, BorderWidth = 2f}.Draw(target.Position);
             }
 
             const int width = 103;
@@ -74,13 +74,13 @@ namespace VolatileAIO.Organs.Brain
                 for (var i = 0; i < differenceInHp; i++)
                 {
                     if (_q.IsReady() && i < drawQ*differenceInHp)
-                        Drawing.DrawLine(pos1 + i, yPos, pos1 + i, yPos + height, 1, Color.Chartreuse);
+                        Drawing.DrawLine(pos1 + i, yPos, pos1 + i, yPos + height, 1, Color.Turquoise);
                     else if (_w.IsReady() && i < (drawQ + drawW)*differenceInHp)
-                        Drawing.DrawLine(pos1 + i, yPos, pos1 + i, yPos + height, 1, Color.Gold);
+                        Drawing.DrawLine(pos1 + i, yPos, pos1 + i, yPos + height, 1, Color.Chartreuse);
                     else if (_e.IsReady() && i < (drawQ + drawW + drawE)*differenceInHp)
-                        Drawing.DrawLine(pos1 + i, yPos, pos1 + i, yPos + height, 1, Color.OrangeRed);
+                        Drawing.DrawLine(pos1 + i, yPos, pos1 + i, yPos + height, 1, Color.Gold);
                     else if (_r.IsReady() && i < (drawQ + drawW + drawE + drawR)*differenceInHp)
-                        Drawing.DrawLine(pos1 + i, yPos, pos1 + i, yPos + height, 1, Color.Firebrick);
+                        Drawing.DrawLine(pos1 + i, yPos, pos1 + i, yPos + height, 1, Color.OrangeRed);
                 }
             }
         }
@@ -121,8 +121,24 @@ namespace VolatileAIO.Organs.Brain
 
         private static void DrawRangeLines()
         {
-            var maxrange = PlayerData.Spells.Where(s=>s.IsLearned).Max(s => s.Range);
-            foreach (var hero in EntityManager.Heroes.Enemies.Where(e => e.Distance(Player) < maxrange && !e.IsDead))
+            if (!PlayerData.Spells.Any(s=>s.IsLearned)) return;
+            uint[] maxrange = {PlayerData.Spells.Where(s => s.IsLearned).Max(s => s.Range)};
+            if (maxrange[0] == 0)
+                try
+                {
+                    foreach (var ss in PlayerData.Spells.Where(s => s.IsLearned).Cast<Spell.Skillshot>().Where(ss => ss.Width > maxrange[0]))
+                    {
+                        maxrange[0] = (uint)ss.Width;
+                    }
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
+            foreach (
+                var hero in
+                    EntityManager.Heroes.Enemies.Where(
+                        e => e.Distance(Player) < maxrange[0] && !e.IsDead && e.IsValid && e.IsVisible && e.IsValidTarget(maxrange[0])))
             {
                 var spellranges = new Dictionary<uint, List<SpellSlot>>();
                 var s = from spell in PlayerData.Spells where spell.IsLearned select spell.Range;
@@ -153,14 +169,14 @@ namespace VolatileAIO.Organs.Brain
                                 PlayerData.Spells.Find(sp => sp.Range == spell).Slot);
                         else
                             spellranges.Add((uint) hero.Distance(Player),
-                                new List<SpellSlot> { PlayerData.Spells.Find(sp => sp.Range == spell).Slot});
+                                new List<SpellSlot> {PlayerData.Spells.Find(sp => sp.Range == spell).Slot});
                     else if (spellranges.ContainsKey(range))
                         spellranges[range].Add(PlayerData.Spells.Find(sp => sp.Range == spell).Slot);
                     else
                         spellranges.Add(range,
                             new List<SpellSlot> {PlayerData.Spells.Find(sp => sp.Range == spell).Slot});
                 }
-                
+
                 var i = 0;
                 var lastloc = new Vector3(0, 0, 0);
                 foreach (var range in spellranges)
@@ -175,10 +191,20 @@ namespace VolatileAIO.Organs.Brain
                         sin = (Math.Sin(angle)*(range.Key)) + Player.Position.Y;
                         cosin = (Math.Cos(angle)*(range.Key)) + Player.Position.X;
                         location = new Vector3((float) cosin, (float) sin, Player.Position.Z);
-                        Drawing.DrawCircle(location, 30,
-                            PlayerData.Spells.Find(sp => range.Value.Contains(sp.Slot)).IsReady()
-                                ? Color.Chartreuse
-                                : Color.Firebrick);
+                        if (PlayerData.Spells.Find(sp => range.Value.Contains(sp.Slot)).IsReady())
+                            new Circle
+                            {
+                                Color = Color.Chartreuse,
+                                Radius = 20,
+                                BorderWidth = 1f
+                            }.Draw(location);
+                        else
+                            new Circle
+                            {
+                                Color = Color.Firebrick,
+                                Radius = 20,
+                                BorderWidth = 1f
+                            }.Draw(location);
                         string text = "";
                         text = range.Value.Aggregate(text, (current, spell) => current + spell);
                         Drawing.DrawText(location.WorldToScreen().X, location.WorldToScreen().Y - (float) 7.5,
@@ -195,10 +221,20 @@ namespace VolatileAIO.Organs.Brain
                         sin = (Math.Sin(angle)*(range.Key)) + Player.Position.Y;
                         cosin = (Math.Cos(angle)*(range.Key)) + Player.Position.X;
                         location = new Vector3((float) cosin, (float) sin, Player.Position.Z);
-                        Drawing.DrawCircle(location, 30,
-                            PlayerData.Spells.Find(sp => range.Value.Contains(sp.Slot)).IsReady()
-                                ? Color.Chartreuse
-                                : Color.Firebrick);
+                        if (PlayerData.Spells.Find(sp => range.Value.Contains(sp.Slot)).IsReady())
+                            new Circle()
+                            {
+                                Color = Color.Chartreuse,
+                                Radius = 20,
+                                BorderWidth = 2f
+                            }.Draw(location);
+                        else
+                            new Circle()
+                            {
+                                Color = Color.Firebrick,
+                                Radius = 20,
+                                BorderWidth = 2f
+                            }.Draw(location);
                         string text = "";
                         text = range.Value.Aggregate(text, (current, spell) => current + spell);
                         Drawing.DrawText(location.WorldToScreen().X, location.WorldToScreen().Y - (float) 7.5,
