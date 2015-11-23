@@ -17,7 +17,7 @@ namespace VolatileAIO.Organs.Brain
         private static SpellSlot _four = SpellSlot.Unknown;
         private static SpellSlot _lastBlocked = SpellSlot.Unknown;
         private static float _lastBlockedTime=0;
-        private static Menu _mmMenu;
+        internal static Menu MmMenu;
 
         public float GetMana(SpellSlot slot)
         {
@@ -27,31 +27,31 @@ namespace VolatileAIO.Organs.Brain
 
         private static bool PrioritiesAreSet()
         {
-            if (_mmMenu["s2"].Cast<Slider>().CurrentValue == _mmMenu["s3"].Cast<Slider>().CurrentValue)
+            if (MmMenu["s2"].Cast<Slider>().CurrentValue == MmMenu["s3"].Cast<Slider>().CurrentValue)
                 return false;
-            if (_mmMenu["s2"].Cast<Slider>().CurrentValue == _mmMenu["s4"].Cast<Slider>().CurrentValue)
+            if (MmMenu["s2"].Cast<Slider>().CurrentValue == MmMenu["s4"].Cast<Slider>().CurrentValue)
                 return false;
-            if (_mmMenu["s3"].Cast<Slider>().CurrentValue == _mmMenu["s4"].Cast<Slider>().CurrentValue)
+            if (MmMenu["s3"].Cast<Slider>().CurrentValue == MmMenu["s4"].Cast<Slider>().CurrentValue)
                 return false;
             return true;
         }
 
         public ManaManager()
-        {
-            _mmMenu = VolatileMenu.AddSubMenu("Mana Manager (beta)", "priority", "Volatile Mana Manager (beta)");
-            _mmMenu.AddLabel(
+        {   
+            MmMenu = VolatileMenu.AddSubMenu("Mana Manager (beta)", "manamanager", "Volatile Mana Manager (beta)");
+            MmMenu.AddLabel(
                 "Mana Manager will make sure you dont use a lower priority spell if it doesnt leave you" +
                 Environment.NewLine +
                 "with enough mana for higher priority spells.");
-            _mmMenu.Add("manamanager", new CheckBox("Use Mana Manager", false));
-            _mmMenu.AddSeparator();
-            _mmMenu.Add("s1", new Slider("R", 4, 1, 4)).OnValueChange +=
+            MmMenu.Add("manamanager", new CheckBox("Use Mana Manager", false));
+            MmMenu.AddSeparator();
+            MmMenu.Add("s1", new Slider("R", 4, 1, 4)).OnValueChange +=
                 ManaManager_OnValueChange;
-            _mmMenu.Add("s2", new Slider("Q", 1, 1, 4)).OnValueChange +=
+            MmMenu.Add("s2", new Slider("Q", 1, 1, 4)).OnValueChange +=
                 ManaManager_OnValueChange;
-            _mmMenu.Add("s3", new Slider("Q", 1, 1, 4)).OnValueChange +=
+            MmMenu.Add("s3", new Slider("Q", 1, 1, 4)).OnValueChange +=
                 ManaManager_OnValueChange;
-            _mmMenu.Add("s4", new Slider("Q", 1, 1, 4)).OnValueChange +=
+            MmMenu.Add("s4", new Slider("Q", 1, 1, 4)).OnValueChange +=
                 ManaManager_OnValueChange;
             ResetSliders();
         }
@@ -59,10 +59,10 @@ namespace VolatileAIO.Organs.Brain
         private static void ResetSliders()
         {
             var sliders = new List<Slider>();
-            sliders.Add(_mmMenu["s1"].Cast<Slider>());
-            sliders.Add(_mmMenu["s2"].Cast<Slider>());
-            sliders.Add(_mmMenu["s3"].Cast<Slider>());
-            sliders.Add(_mmMenu["s4"].Cast<Slider>());
+            sliders.Add(MmMenu["s1"].Cast<Slider>());
+            sliders.Add(MmMenu["s2"].Cast<Slider>());
+            sliders.Add(MmMenu["s3"].Cast<Slider>());
+            sliders.Add(MmMenu["s4"].Cast<Slider>());
 
             foreach (var slider in sliders)
             {
@@ -74,7 +74,7 @@ namespace VolatileAIO.Organs.Brain
         protected override void OnSpellCast(Spellbook sender, SpellbookCastSpellEventArgs args)
         {
             if (!sender.Owner.IsMe || !PrioritiesAreSet() || Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.None ||
-                !_mmMenu["manamanager"].Cast<CheckBox>().CurrentValue) return;
+                !MmMenu["manamanager"].Cast<CheckBox>().CurrentValue) return;
             var slot = args.Slot;
             if (slot == _two)
             {
@@ -149,10 +149,10 @@ namespace VolatileAIO.Organs.Brain
         private static void UpdateSliders()
         {
             var sliders = new Dictionary<int, Slider>();
-            sliders.Add(1, _mmMenu["s1"].Cast<Slider>());
-            sliders.Add(2, _mmMenu["s2"].Cast<Slider>());
-            sliders.Add(3, _mmMenu["s3"].Cast<Slider>());
-            sliders.Add(4, _mmMenu["s4"].Cast<Slider>());
+            sliders.Add(1, MmMenu["s1"].Cast<Slider>());
+            sliders.Add(2, MmMenu["s2"].Cast<Slider>());
+            sliders.Add(3, MmMenu["s3"].Cast<Slider>());
+            sliders.Add(4, MmMenu["s4"].Cast<Slider>());
 
             foreach (var slider in sliders)
             {

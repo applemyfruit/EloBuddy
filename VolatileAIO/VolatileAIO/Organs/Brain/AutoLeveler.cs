@@ -15,14 +15,14 @@ namespace VolatileAIO.Organs.Brain
         private static SpellSlot _two = SpellSlot.Unknown;
         private static SpellSlot _three = SpellSlot.Unknown;
         private static SpellSlot _four = SpellSlot.Unknown;
-        private static Menu _autoLevelMenu;
+        internal static Menu AutoLevelMenu;
 
         protected override void Volatile_OnLevelUp(Obj_AI_Base sender, Obj_AI_BaseLevelUpEventArgs args)
         {
             if (!PrioritiesAreSet()) return;
 
-            if (!sender.IsMe || !_autoLevelMenu["autolevel"].Cast<CheckBox>().CurrentValue ||
-                Player.Level < _autoLevelMenu["start"].Cast<Slider>().CurrentValue)
+            if (!sender.IsMe || !AutoLevelMenu["autolevel"].Cast<CheckBox>().CurrentValue ||
+                Player.Level < AutoLevelMenu["start"].Cast<Slider>().CurrentValue)
                 return;
             if (!PlayerData.Spells.Find(s => s.Slot == _one).IsLearned)
                 Player.Spellbook.LevelSpell(_one);
@@ -40,40 +40,40 @@ namespace VolatileAIO.Organs.Brain
 
         private static bool PrioritiesAreSet()
         {
-            if (_autoLevelMenu["s2"].Cast<Slider>().CurrentValue == _autoLevelMenu["s3"].Cast<Slider>().CurrentValue)
+            if (AutoLevelMenu["s2"].Cast<Slider>().CurrentValue == AutoLevelMenu["s3"].Cast<Slider>().CurrentValue)
                 return false;
-            if (_autoLevelMenu["s2"].Cast<Slider>().CurrentValue == _autoLevelMenu["s4"].Cast<Slider>().CurrentValue)
+            if (AutoLevelMenu["s2"].Cast<Slider>().CurrentValue == AutoLevelMenu["s4"].Cast<Slider>().CurrentValue)
                 return false;
-            if (_autoLevelMenu["s3"].Cast<Slider>().CurrentValue == _autoLevelMenu["s4"].Cast<Slider>().CurrentValue)
+            if (AutoLevelMenu["s3"].Cast<Slider>().CurrentValue == AutoLevelMenu["s4"].Cast<Slider>().CurrentValue)
                 return false;
             return true;
         }
 
         public AutoLeveler()
         {
-            _autoLevelMenu = VolatileMenu.AddSubMenu("AutoLeveler", "autolevel", "Volatile Automatic Spell Leveler");
-            _autoLevelMenu.AddLabel("Auto-Leveler will automatically level your spells in the set priority");
-            _autoLevelMenu.Add("autolevel", new CheckBox("Use Auto-Leveler"));
-            _autoLevelMenu.AddSeparator();
-            _autoLevelMenu.Add("s1", new Slider("R", 4, 1, 4)).OnValueChange +=
+            AutoLevelMenu = VolatileMenu.AddSubMenu("AutoLeveler", "autoleveler", "Volatile Automatic Spell Leveler");
+            AutoLevelMenu.AddLabel("Auto-Leveler will automatically level your spells in the set priority");
+            AutoLevelMenu.Add("autolevel", new CheckBox("Use Auto-Leveler"));
+            AutoLevelMenu.AddSeparator();
+            AutoLevelMenu.Add("s1", new Slider("R", 4, 1, 4)).OnValueChange +=
                 AutoLeveler_OnValueChange;
-            _autoLevelMenu.Add("s2", new Slider("Q", 1, 1, 4)).OnValueChange +=
+            AutoLevelMenu.Add("s2", new Slider("Q", 1, 1, 4)).OnValueChange +=
                 AutoLeveler_OnValueChange;
-            _autoLevelMenu.Add("s3", new Slider("Q", 1, 1, 4)).OnValueChange +=
+            AutoLevelMenu.Add("s3", new Slider("Q", 1, 1, 4)).OnValueChange +=
                 AutoLeveler_OnValueChange;
-            _autoLevelMenu.Add("s4", new Slider("Q", 1, 1, 4)).OnValueChange +=
+            AutoLevelMenu.Add("s4", new Slider("Q", 1, 1, 4)).OnValueChange +=
                 AutoLeveler_OnValueChange;
-            _autoLevelMenu.Add("start", new Slider("Start Auto-Leveler at level: ", 2, 1, 6));
+            AutoLevelMenu.Add("start", new Slider("Start Auto-Leveler at level: ", 2, 1, 6));
             ResetSliders();
         }
 
         private static void ResetSliders()
         {
             var sliders = new List<Slider>();
-            sliders.Add(_autoLevelMenu["s1"].Cast<Slider>());
-            sliders.Add(_autoLevelMenu["s2"].Cast<Slider>());
-            sliders.Add(_autoLevelMenu["s3"].Cast<Slider>());
-            sliders.Add(_autoLevelMenu["s4"].Cast<Slider>());
+            sliders.Add(AutoLevelMenu["s1"].Cast<Slider>());
+            sliders.Add(AutoLevelMenu["s2"].Cast<Slider>());
+            sliders.Add(AutoLevelMenu["s3"].Cast<Slider>());
+            sliders.Add(AutoLevelMenu["s4"].Cast<Slider>());
 
             foreach (var slider in sliders)
             {
@@ -110,10 +110,10 @@ namespace VolatileAIO.Organs.Brain
         private static void UpdateSliders()
         {
             var sliders = new Dictionary<int, Slider>();
-            sliders.Add(1, _autoLevelMenu["s1"].Cast<Slider>());
-            sliders.Add(2, _autoLevelMenu["s2"].Cast<Slider>());
-            sliders.Add(3, _autoLevelMenu["s3"].Cast<Slider>());
-            sliders.Add(4, _autoLevelMenu["s4"].Cast<Slider>());
+            sliders.Add(1, AutoLevelMenu["s1"].Cast<Slider>());
+            sliders.Add(2, AutoLevelMenu["s2"].Cast<Slider>());
+            sliders.Add(3, AutoLevelMenu["s3"].Cast<Slider>());
+            sliders.Add(4, AutoLevelMenu["s4"].Cast<Slider>());
 
             foreach (var slider in sliders)
             {

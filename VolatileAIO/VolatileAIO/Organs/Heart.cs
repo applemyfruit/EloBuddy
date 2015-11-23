@@ -23,10 +23,12 @@ namespace VolatileAIO.Organs
         public static RecallTracker RecallTracker;
         public static Activator Activator;
         private static readonly SoundPlayer Initiated = new SoundPlayer(Properties.Resources.Initiated);
+        private static ChampionProfiles _championProfiles;
 
         protected Heart()
         {
             Game.OnUpdate += OnUpdateDeathChecker;
+            Chat.OnInput += Chat_OnInput;
             Drawing.OnEndScene += OnDrawDeathChecker;
             Drawing.OnDraw += Drawing_OnDraw;
             Interrupter.OnInterruptableSpell += OnInterruptableSpell;
@@ -45,6 +47,8 @@ namespace VolatileAIO.Organs
             Spellbook.OnUpdateChargeableSpell += OnUpdateChargeableSpell;
             Spellbook.OnCastSpell += OnCastSpell;
             Spellbook.OnStopCast += OnStopCast;
+            Game.OnEnd += Game_OnEnd;
+            Game.OnDisconnect += Game_OnDisconnect;
         }
 
         public Heart(bool beat)
@@ -98,9 +102,25 @@ namespace VolatileAIO.Organs
             if (VolatileMenu["welcome"].Cast<CheckBox>().CurrentValue)
             Initiated.Play();
             Activator = new Activator();
+            _championProfiles = new ChampionProfiles();
         }
 
         #region privatevoid
+
+        private void Game_OnDisconnect(EventArgs args)
+        {
+            Volatile_OnDisconnect(args);
+        }
+
+        private void Chat_OnInput(ChatInputEventArgs args)
+        {
+            Volatile_OnChatInput(args);
+        }
+
+        private void Game_OnEnd(GameEndEventArgs args)
+        {
+            Volatile_OnEnd(args);
+        }
 
         private void Obj_AI_Base_OnLevelUp(Obj_AI_Base sender, Obj_AI_BaseLevelUpEventArgs args)
         {
@@ -210,6 +230,21 @@ namespace VolatileAIO.Organs
         #endregion
 
         #region virtualvoid
+
+        protected virtual void Volatile_OnDisconnect(EventArgs args)
+        {
+            //for extensions
+        }
+
+        protected virtual void Volatile_OnChatInput(ChatInputEventArgs args)
+        {
+            //for extensions
+        }
+
+        protected virtual void Volatile_OnEnd(GameEndEventArgs args)
+        {
+            //for extensions
+        }
 
         protected virtual void Volatile_OnLevelUp(Obj_AI_Base sender, Obj_AI_BaseLevelUpEventArgs args)
         {

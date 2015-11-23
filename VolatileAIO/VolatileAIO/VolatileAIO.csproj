@@ -40,6 +40,10 @@
     <Reference Include="EloBuddy.SDK">
       <HintPath>..\..\..\..\..\Desktop\Elobuddy\System\EloBuddy.SDK.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="SharpDX">
       <HintPath>..\..\..\..\..\Desktop\Elobuddy\System\SharpDX.dll</HintPath>
     </Reference>
@@ -66,6 +70,7 @@
     <Compile Include="Extensions\Support\Alistar.cs" />
     <Compile Include="Extensions\Support\Blitzcrank.cs" />
     <Compile Include="Organs\Brain\Activator.cs" />
+    <Compile Include="Organs\Brain\ChampionProfiles.cs" />
     <Compile Include="Organs\Brain\ManaManager.cs" />
     <Compile Include="Organs\Brain\CastManager.cs" />
     <Compile Include="Organs\Brain\Data\PlayerData.cs" />
@@ -104,6 +109,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="Resources\Initiated.wav" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
