@@ -2335,6 +2335,25 @@ namespace VolatileAIO.Organs._Test
                         }
                 });
 
+            Spells.Add(
+                 new SpellData
+                 {
+                     ChampionName = "Morgana",
+                     SpellName = "TormentedSoil",
+                     Slot = SpellSlot.W,
+                     Type = SkillShotType.Circular,
+                     Delay = 250,
+                     Range = 900,
+                     Radius = 400,
+                     MissileSpeed = 2200,
+                     FixedRange = true,
+                     AddHitbox = false,
+                     DangerValue = 1,
+                     IsDangerous = false,
+                     MissileSpellName = "TormentedSoil",
+                     CanBeRemoved = false,
+                 });
+
             #endregion Morgana
 
             #region Nami
