@@ -74,14 +74,15 @@ namespace VolatileAIO.Organs.Brain
         private void InitializeCleansers()
         {
             CleansersMenu = ActivatorMenu.AddSubMenu("Cleansers", "cleansers");
+            CleansersMenu.AddGroupLabel("Cleansers");
             CleansersMenu.Add("qss", new CheckBox("Use QSS"));
-            CleansersMenu.Add("qss2", new CheckBox("Use Mikaels"));
             CleansersMenu.Add("qss3", new CheckBox("Use Mercurial"));
             CleansersMenu.Add("qss4", new CheckBox("Use Dervish"));
-
+            CleansersMenu.AddGroupLabel("Mikaels");
+            CleansersMenu.Add("qss2", new CheckBox("Use Mikaels"));
             foreach (var ally in EntityManager.Heroes.Allies)
                 CleansersMenu.Add("m" + ally.ChampionName, new CheckBox("Mikaels " + ally.ChampionName));
-
+            CleansersMenu.AddGroupLabel("Debuffs to cleanse");
             CleansersMenu.Add("special", new CheckBox("Cleanse Special Spells"));
             CleansersMenu.Add("stun", new CheckBox("Cleanse Stun"));
             CleansersMenu.Add("snare", new CheckBox("Cleanse Snare"));
@@ -696,7 +697,7 @@ namespace VolatileAIO.Organs.Brain
 
                 if (Corrupting.IsReady())
                 {
-                    if (Player.CountEnemiesInRange(700) > 0 && Player.Health + 200 < Player.MaxHealth)
+                    if (Player.CountEnemiesInRange(700) > 0 && Player.Health + 300 < Player.MaxHealth)
                         Corrupting.Cast();
                     else if (Player.Health < Player.MaxHealth*0.6)
                         Corrupting.Cast();

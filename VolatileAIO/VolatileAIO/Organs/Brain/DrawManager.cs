@@ -10,7 +10,9 @@ using SharpDX;
 using VolatileAIO.Organs.Brain.Data;
 using System.Windows;
 using EloBuddy.SDK.Menu;
+using VolatileAIO.Organs._Test;
 using Color = System.Drawing.Color;
+using SpellData = VolatileAIO.Organs.Brain.Data.SpellData;
 
 namespace VolatileAIO.Organs.Brain
 {
@@ -18,14 +20,17 @@ namespace VolatileAIO.Organs.Brain
     {
         private bool _initialized;
         private Spell.SpellBase _q, _w, _e, _r;
-        private Menu DrawMenu;
+        private readonly Menu _drawMenu;
+        private List<SpellData> _skillShots; 
 
         public DrawManager()
         {
-            DrawMenu = VolatileMenu.AddSubMenu("Drawings", "drawings", "Volatile Drawings");
-            DrawMenu.Add("dmg", new CheckBox("Draw Volatile DamageIndicator"));
-            DrawMenu.Add("rl", new CheckBox("Draw Volatile RangeLines"));
-            DrawMenu.Add("recall", new CheckBox("Draw Recalls"));
+            _drawMenu = VolatileMenu.AddSubMenu("Drawings", "drawings", "Volatile Drawings");
+            _drawMenu.Add("dmg", new CheckBox("Draw Volatile DamageIndicator"));
+            _drawMenu.Add("rl", new CheckBox("Draw Volatile RangeLines(beta)"));
+            _drawMenu.Add("recall", new CheckBox("Draw Recalls"));
+            _drawMenu.Add("targ", new CheckBox("Draw Current Target"));
+            //_drawMenu.Add("ss", new CheckBox("Draw Enemy Skillshots"));
         }
 
         internal void UpdateValues()
@@ -40,12 +45,6 @@ namespace VolatileAIO.Organs.Brain
 
         private void DrawDamageIndicator()
         {
-            var target = TargetManager.Target(1000, DamageType.Physical);
-            if (target != null)
-            {
-                new Circle {Color = Color.Cyan, Radius = 100, BorderWidth = 2f}.Draw(target.Position);
-            }
-
             const int width = 103;
             const int height = 9;
             foreach (var enemy in EntityManager.Heroes.Enemies)
@@ -100,6 +99,39 @@ namespace VolatileAIO.Organs.Brain
             Drawing.DrawCircle(cursor, 40, Color.Aqua);
         }
 
+        protected override void Volatile_ProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
+        {
+            if (!sender.IsEnemy || !_drawMenu["ss"].Cast<CheckBox>().CurrentValue) return;
+            if (SpellDatabase.Spells.Any(s => s.ChampionName == sender.Name && args.Slot == s.Slot))
+            {
+                _skillShots.Add(SpellDatabase.Spells.Find(s => s.ChampionName == sender.Name && args.Slot == s.Slot));
+                
+            }
+        }
+
+        protected override void Volative_OnDraw(EventArgs args)
+        {
+            if (_drawMenu["rl"].Cast<CheckBox>().CurrentValue)
+                DrawRangeLines();
+            if (_drawMenu["targ"].Cast<CheckBox>().CurrentValue)
+                DrawTarget();
+            /*if (_drawMenu["ss"].Cast<CheckBox>().CurrentValue)
+                DrawSkillshots();*/
+        }
+
+        private void DrawSkillshots()
+        {
+        }
+
+        private static void DrawTarget()
+        {
+            var target = TargetManager.Target(1200, DamageType.Physical);
+            if (target != null)
+            {
+                new Circle { Color = Color.Cyan, Radius = 100, BorderWidth = 2f }.Draw(target.Position);
+            }
+        }
+
         protected override void Volative_OnDrawEnd(EventArgs args)
         {
             if (!_initialized)
@@ -107,12 +139,10 @@ namespace VolatileAIO.Organs.Brain
                 UpdateValues();
                 return;
             }
-            if (DrawMenu["dmg"].Cast<CheckBox>().CurrentValue)
+            if (_drawMenu["dmg"].Cast<CheckBox>().CurrentValue)
                 DrawDamageIndicator();
-            if (DrawMenu["recall"].Cast<CheckBox>().CurrentValue)
+            if (_drawMenu["recall"].Cast<CheckBox>().CurrentValue)
                 DrawRecalls();
-            if (DrawMenu["rl"].Cast<CheckBox>().CurrentValue)
-                DrawRangeLines();
             if (VolatileMenu["debug"].Cast<CheckBox>().CurrentValue)
             {
                 DrawDebug();

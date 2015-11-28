@@ -1,20 +1,10 @@
 ﻿namespace VolatileAIO.Organs.Brain
 {
-    #region LICENSE
-
-    /*
-     MEC.cs is partly taken from L$.Common :^)
-     L$.Common is "free" software and has been redistributed and modified, enjoy.
-    */
-
-    #endregion
-
     #region
 
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
     using SharpDX;
 
     #endregion
@@ -24,28 +14,10 @@
     /// </summary>
     public static class MEC
     {
-        // For debugging.
-
-        /// <summary>
-        /// The minimum maximum corners
-        /// </summary>
         public static Vector2[] g_MinMaxCorners;
-
-        /// <summary>
-        /// The minimum maximum box
-        /// </summary>
         public static RectangleF g_MinMaxBox;
-
-        /// <summary>
-        /// The non culled points
-        /// </summary>
         public static Vector2[] g_NonCulledPoints;
 
-        /// <summary>
-        /// Returns the mininimum enclosing circle from a list of points.
-        /// </summary>
-        /// <param name="points">The points.</param>
-        /// <returns>MecCircle.</returns>
         public static MecCircle GetMec(List<Vector2> points)
         {
             var center = new Vector2();
@@ -56,16 +28,6 @@
             return new MecCircle(center, radius);
         }
 
-        // Find the points nearest the upper left, upper right,
-        // lower left, and lower right corners.
-        /// <summary>
-        /// Gets the minimum maximum corners.
-        /// </summary>
-        /// <param name="points">The points.</param>
-        /// <param name="ul">The ul.</param>
-        /// <param name="ur">The ur.</param>
-        /// <param name="ll">The ll.</param>
-        /// <param name="lr">The lr.</param>
         private static void GetMinMaxCorners(List<Vector2> points,
             ref Vector2 ul,
             ref Vector2 ur,
@@ -103,11 +65,6 @@
         }
 
         // Find a box that fits inside the MinMax quadrilateral.
-        /// <summary>
-        /// Gets the minimum maximum box.
-        /// </summary>
-        /// <param name="points">The points.</param>
-        /// <returns>RectangleF.</returns>
         private static RectangleF GetMinMaxBox(List<Vector2> points)
         {
             // Find the MinMax quadrilateral.
@@ -143,13 +100,7 @@
             g_MinMaxBox = result; // For debugging.
             return result;
         }
-
-        /// <summary>
-        /// Culls points out of the convex hull that lie inside the trapezoid defined by the vertices with smallest and largest
-        /// X and Y coordinates.
-        /// </summary>
-        /// <param name="points">The points.</param>
-        /// <returns>Points that are not culled.</returns>
+       
         private static List<Vector2> HullCull(List<Vector2> points)
         {
             // Find a culling box.
@@ -166,12 +117,7 @@
             results.CopyTo(g_NonCulledPoints); // For debugging.
             return results;
         }
-
-        /// <summary>
-        /// Makes the convex hull.
-        /// </summary>
-        /// <param name="points">The points.</param>
-        /// <returns>Points that make up a polygon's convex hull..</returns>
+        
         public static List<Vector2> MakeConvexHull(List<Vector2> points)
         {
             // Cull.
@@ -237,24 +183,7 @@
 
             return hull;
         }
-
-        /// <summary>
-        /// Return a number that gives the ordering of angles
-        /// WRST horizontal from the point(x1, y1) to(x2, y2).
-        /// In other words, AngleValue(x1, y1, x2, y2) is not
-        /// the angle, but if:
-        ///     Angle(x1, y1, x2, y2) > Angle(x1, y1, x2, y2)
-        /// then
-        ///     AngleValue(x1, y1, x2, y2) > AngleValue(x1, y1, x2, y2)
-        /// this angle is greater than the angle for another set
-        /// of points,) this number for
-        /// This function is dy / (dy + dx).
-        /// </summary>
-        /// <param name="x1">The x1.</param>
-        /// <param name="y1">The y1.</param>
-        /// <param name="x2">The x2.</param>
-        /// <param name="y2">The y2.</param>
-        /// <returns>A number that gives the ordering of angles</returns>
+        
         private static float AngleValue(float x1, float y1, float x2, float y2)
         {
             float t;
@@ -282,13 +211,7 @@
             }
             return t*90;
         }
-
-        /// <summary>
-        /// Finds the minimal bounding circle.
-        /// </summary>
-        /// <param name="points">The points.</param>
-        /// <param name="center">The center.</param>
-        /// <param name="radius">The radius.</param>
+        
         public static void FindMinimalBoundingCircle(List<Vector2> points, out Vector2 center, out float radius)
         {
             // Find the convex hull.
@@ -360,17 +283,7 @@
                 radius = (float) Math.Sqrt(best_radius2);
             }
         }
-
-        /// <summary>
-        /// Encloses the points in a circle.
-        /// </summary>
-        /// <param name="center">The center.</param>
-        /// <param name="radius2">The radius2.</param>
-        /// <param name="points">The points.</param>
-        /// <param name="skip1">The skip1.</param>
-        /// <param name="skip2">The skip2.</param>
-        /// <param name="skip3">The skip3.</param>
-        /// <returns><c>true</c> if the indicated circle encloses all of the points, <c>false</c> otherwise.</returns>
+        
         private static bool CircleEnclosesPoints(Vector2 center,
             float radius2,
             List<Vector2> points,
@@ -383,15 +296,7 @@
                 let dy = center.Y - point.Y
                 select dx*dx + dy*dy).All(test_radius2 => !(test_radius2 > radius2));
         }
-
-        /// <summary>
-        /// Finds the circle through the three points.
-        /// </summary>
-        /// <param name="a">a.</param>
-        /// <param name="b">The b.</param>
-        /// <param name="c">The c.</param>
-        /// <param name="center">The center.</param>
-        /// <param name="radius2">The radius2.</param>
+        
         private static void FindCircle(Vector2 a, Vector2 b, Vector2 c, out Vector2 center, out float radius2)
         {
             // Get the perpendicular bisector of (x1, y1) and (x2, y2).
@@ -415,27 +320,12 @@
             var dy = cy - a.Y;
             radius2 = dx*dx + dy*dy;
         }
-
-        /// <summary>
-        /// Represetns a MecCircle
-        /// </summary>
+        
         public struct MecCircle
         {
-            /// <summary>
-            /// The center
-            /// </summary>
             public Vector2 Center;
-
-            /// <summary>
-            /// The radius
-            /// </summary>
             public float Radius;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="MecCircle"/> struct.
-            /// </summary>
-            /// <param name="center">The center.</param>
-            /// <param name="radius">The radius.</param>
+            
             public MecCircle(Vector2 center, float radius)
             {
                 Center = center;

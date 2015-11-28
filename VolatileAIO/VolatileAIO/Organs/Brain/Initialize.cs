@@ -53,7 +53,6 @@ namespace VolatileAIO.Organs.Brain
                     s =>
                         string.Equals(s.ChampionName, Player.ChampionName, StringComparison.CurrentCultureIgnoreCase) &&
                         s.Slot == SpellSlot.R);
-
             switch (q)
             {
                 case Type.Active:

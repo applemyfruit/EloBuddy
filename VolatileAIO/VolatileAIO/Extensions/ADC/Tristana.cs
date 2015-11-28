@@ -282,7 +282,7 @@ namespace VolatileAIO.Extensions.ADC
 
         protected override void Volatile_OnInterruptable(Obj_AI_Base sender, Interrupter.InterruptableSpellEventArgs args)
         {
-            if (!SpellMenu["int"].Cast<CheckBox>().CurrentValue || args.DangerLevel<DangerLevel.High || sender.Distance(Player)>R.Range) return;
+            if (!SpellMenu["int"].Cast<CheckBox>().CurrentValue || args.DangerLevel<DangerLevel.Medium || sender.Distance(Player)>R.Range) return;
             R.Cast(sender);
         }
 

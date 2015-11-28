@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EloBuddy;
 using EloBuddy.SDK.Enumerations;
+using SpellData = VolatileAIO.Organs.Brain.Data.SpellData;
 
 namespace VolatileAIO.Organs._Test
 {
@@ -4068,6 +4069,8 @@ namespace VolatileAIO.Organs._Test
 
             #endregion Zyra
         }
+
+
 
         public static SpellData GetByName(string spellName)
         {

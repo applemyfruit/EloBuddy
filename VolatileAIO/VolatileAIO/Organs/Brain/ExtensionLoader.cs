@@ -17,8 +17,9 @@ namespace VolatileAIO.Organs.Brain
         public static readonly Dictionary<string, State> ExtensionState = new Dictionary<string, State>()
         {
             {"Alistar", State.FullyDeveloped },
+            {"Annie", State.BeingOptimized },
             {"Blitzcrank", State.FullyDeveloped },
-            {"Cassiopeia", State.PartDeveloped },
+            {"Cassiopeia", State.Outdated },
             {"Evelynn", State.PartDeveloped },
             {"Ezreal", State.BeingOptimized },
             {"Tristana", State.BeingOptimized }
@@ -48,6 +49,10 @@ namespace VolatileAIO.Organs.Brain
             {
                 case "alistar":
                     new Alistar();
+                    _loaded = true;
+                    break;
+                case "annie":
+                    new Annie();
                     _loaded = true;
                     break;
                 case "blitzcrank":

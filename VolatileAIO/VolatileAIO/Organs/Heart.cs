@@ -57,7 +57,7 @@ namespace VolatileAIO.Organs
                 StartHeartBeat();
         }
 
-        private void StartHeartBeat()
+        private static void StartHeartBeat()
         {
             Bootstrap.Init(null);
             Hacks.RenderWatermark = false;
@@ -103,6 +103,8 @@ namespace VolatileAIO.Organs
             Initiated.Play();
             Activator = new Activator();
             _championProfiles = new ChampionProfiles();
+            if (!AutoLeveler.PrioritiesAreSet() && AutoLeveler.AutoLevelMenu["autolevel"].Cast<CheckBox>().CurrentValue) Chat.Print("Auto-Leveler: Priorities not Set!");
+            if (!ManaManager.PrioritiesAreSet() && ManaManager.MmMenu["manamanager"].Cast<CheckBox>().CurrentValue) Chat.Print("Mana Manager: Priorities not Set!");
         }
 
         #region privatevoid
@@ -142,6 +144,7 @@ namespace VolatileAIO.Organs
         
         private void Drawing_OnDraw(EventArgs args)
         {
+            if (Player.IsDead) return;
             Volative_OnDraw(args);
         }
         private void OrbwalkerOnOnPostAttack(AttackableUnit target, EventArgs args)

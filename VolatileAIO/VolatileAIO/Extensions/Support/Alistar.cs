@@ -48,7 +48,7 @@ namespace VolatileAIO.Extensions.Support
 
             SpellMenu.AddGroupLabel("R Settings");
             SpellMenu.Add("user", new CheckBox("Use R", false));
-            SpellMenu.Add("ramount", new Slider("Enemies in range", 2, 1, 5));
+            SpellMenu.Add("ramount", new Slider("Enemies in range", 3, 1, 5));
             SpellMenu.Add("rhealth", new Slider("Max %HP to ult", 50));
         }
 
@@ -77,7 +77,21 @@ namespace VolatileAIO.Extensions.Support
             FlashQ();
             if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Combo) Combo();
             if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Harass) Harass();
+            if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.JungleClear) JungleClear();
             AutoCast();
+        }
+
+        private void JungleClear()
+        {
+            if (
+                MinionManager.GetMinions(Player.Position, _q.Range*(float) 1.5, MinionTypes.All, MinionTeam.Neutral)
+                    .Any() &&
+                MinionManager.GetMinions(Player.Position, _q.Range, MinionTypes.All, MinionTeam.Neutral).Count ==
+                MinionManager.GetMinions(Player.Position, _q.Range*(float) 1.5, MinionTypes.All, MinionTeam.Neutral)
+                    .Count)
+            {
+                _q.Cast();
+            }
         }
 
         private static void FlashQ()
@@ -93,7 +107,8 @@ namespace VolatileAIO.Extensions.Support
                         .Select(champ => Prediction.Position.PredictUnitPosition(champ, _q.CastDelay))
                         .ToList();
                 var location = CastManager.GetOptimizedCircleLocation(champs, _q.Range, _flash.SData.CastRange);
-                Player.Spellbook.CastSpell(_flash.Slot, location.Position.To3DWorld());
+                Player.Spellbook.CastSpell(_flash.Slot,
+                    location.ChampsHit > 1 ? location.Position.To3DWorld() : target.Position);
                 _q.Cast();
             }
             else if (SpellMenu["flashqhap"].Cast<KeyBind>().CurrentValue)
@@ -160,7 +175,7 @@ namespace VolatileAIO.Extensions.Support
             if (_w.IsReady() && _q.IsReady() && SpellMenu["wqtc"].Cast<CheckBox>().CurrentValue)
             {
                 var target = TargetManager.Target(_w, DamageType.Magical);
-                if (target != null && target.IsValidTarget(_w.Range) &&
+                if (target != null && target.IsValidTarget(_w.Range*(float)0.95) &&
                     Player.Mana > (ManaManager.GetMana(SpellSlot.Q) + ManaManager.GetMana(SpellSlot.W))
                     && TickManager.NoLag(2))
                 {

@@ -49,7 +49,8 @@ namespace VolatileAIO.Extensions.ADC
             SpellMenu.AddGroupLabel("Q Settings");
             SpellMenu.Add("qtc", new CheckBox("Use Q in Combo"));
             SpellMenu.Add("qth", new CheckBox("Use Q in Harass"));
-            SpellMenu.Add("useQTL", new CheckBox("Use Q in farm"));
+            SpellMenu.Add("qtl", new CheckBox("Use Q in Laneclear"));
+            SpellMenu.Add("qtlh", new CheckBox("Use Q in Lasthit"));
             SpellMenu.Add("qonvery", new CheckBox("Auto Q on Very High Hitchance"));
             SpellMenu.Add("qonimmo", new CheckBox("Auto Q on Immobile Targets"));
             SpellMenu.Add("qstack1", new CheckBox("Stack Tear in Fountain"));
@@ -84,6 +85,7 @@ namespace VolatileAIO.Extensions.ADC
             if (Player.IsDead) return;
             AutoCastSpells();
             Stack();
+            LastHit();
             if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Combo)
             {
                 Combo();
@@ -96,11 +98,29 @@ namespace VolatileAIO.Extensions.ADC
             {
                 LaneClear();
             }
+            else if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.LastHit)
+            {
+                LastHit();
+            }
+        }
+
+        private void LastHit()
+        {
+            if (SpellMenu["qtlh"].Cast<CheckBox>().CurrentValue &&
+                MinionManager.GetMinions(Player.Position, Q.Range)
+                    .Any(
+                        m =>
+                            m.Distance(Player) < Q.Range &&
+                            Prediction.Health.GetPrediction(m, Q.CastDelay + (Q.Speed*(int) m.Distance(Player))) <
+                            Player.GetSpellDamage(m, SpellSlot.Q)))
+            {
+                CastManager.Cast.Line.Farm(Q);
+            }
         }
 
         private static void LaneClear()
         {
-            if (SpellMenu["UseQTL"].Cast<CheckBox>().CurrentValue)
+            if (SpellMenu["qtl"].Cast<CheckBox>().CurrentValue)
             {
                 CastManager.Cast.Line.Farm(Q);
             }
@@ -256,6 +276,8 @@ namespace VolatileAIO.Extensions.ADC
                 W.Cast(ally);
             }
         }
+
+
 
         private static void CastSpellLogic(bool useQ = false, bool useW = false, bool useE = false,
             AIHeroClient target = null)

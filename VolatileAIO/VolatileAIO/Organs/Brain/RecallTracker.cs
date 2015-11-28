@@ -7,6 +7,7 @@ using EloBuddy.SDK.Enumerations;
 using EloBuddy.SDK.Events;
 using EloBuddy.SDK.Menu;
 using EloBuddy.SDK.Menu.Values;
+// ReSharper disable ConvertPropertyToExpressionBody
 
 namespace VolatileAIO.Organs.Brain
 {

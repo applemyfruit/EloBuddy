@@ -1,7 +1,8 @@
 ﻿using EloBuddy;
 using EloBuddy.SDK.Enumerations;
+// ReSharper disable ConvertPropertyToExpressionBody
 
-namespace VolatileAIO.Organs._Test
+namespace VolatileAIO.Organs.Brain.Data
 {
     public class SpellData
     {

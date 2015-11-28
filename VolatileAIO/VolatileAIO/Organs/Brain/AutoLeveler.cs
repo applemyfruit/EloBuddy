@@ -38,7 +38,7 @@ namespace VolatileAIO.Organs.Brain
             Player.Spellbook.LevelSpell(_four);
         }
 
-        private static bool PrioritiesAreSet()
+        internal static bool PrioritiesAreSet()
         {
             if (AutoLevelMenu["s2"].Cast<Slider>().CurrentValue == AutoLevelMenu["s3"].Cast<Slider>().CurrentValue)
                 return false;

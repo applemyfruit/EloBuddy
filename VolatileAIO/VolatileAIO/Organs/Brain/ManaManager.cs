@@ -25,7 +25,7 @@ namespace VolatileAIO.Organs.Brain
             return spell.Level > 0 ? spell.SData.ManaCostArray[spell.Level] : 0;
         }
 
-        private static bool PrioritiesAreSet()
+        internal static bool PrioritiesAreSet()
         {
             if (MmMenu["s2"].Cast<Slider>().CurrentValue == MmMenu["s3"].Cast<Slider>().CurrentValue)
                 return false;

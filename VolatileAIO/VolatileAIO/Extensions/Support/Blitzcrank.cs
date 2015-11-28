@@ -51,11 +51,13 @@ namespace VolatileAIO.Extensions.Support
 
             SpellMenu.AddGroupLabel("W Settings");
             SpellMenu.Add("wtc", new CheckBox("Use W in Combo", false));
+            SpellMenu.Add("wtj", new CheckBox("Use W to clear jungle", false));
             SpellMenu.Add("wtpush", new CheckBox("Use W to push towers and clear wards faster"));
 
             SpellMenu.AddGroupLabel("E Settings");
             SpellMenu.Add("etc", new CheckBox("Use E in Combo"));
             SpellMenu.Add("eth", new CheckBox("Use E in Harass"));
+            SpellMenu.Add("etj", new CheckBox("Use E to clear jungle", false));
             SpellMenu.Add("etpush", new CheckBox("Use E to push towers and clear wards faster"));
 
             SpellMenu.AddGroupLabel("R Settings");
@@ -116,6 +118,17 @@ namespace VolatileAIO.Extensions.Support
                     E.Cast();
                 }
                 if (SpellMenu["wtpush"].Cast<CheckBox>().CurrentValue && W.IsReady())
+                {
+                    W.Cast();
+                }
+            }
+            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.JungleClear) && MinionManager.GetMinions(Player.Position, 400, MinionTypes.All, MinionTeam.Neutral).Any())
+            {
+                if (SpellMenu["etj"].Cast<CheckBox>().CurrentValue && E.IsReady())
+                {
+                    E.Cast();
+                }
+                if (SpellMenu["wtj"].Cast<CheckBox>().CurrentValue && W.IsReady())
                 {
                     W.Cast();
                 }
