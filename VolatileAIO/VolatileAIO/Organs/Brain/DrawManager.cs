@@ -101,12 +101,12 @@ namespace VolatileAIO.Organs.Brain
 
         protected override void Volatile_ProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
-            if (!sender.IsEnemy || !_drawMenu["ss"].Cast<CheckBox>().CurrentValue) return;
+           /* if (!sender.IsEnemy || !_drawMenu["ss"].Cast<CheckBox>().CurrentValue) return;
             if (SpellDatabase.Spells.Any(s => s.ChampionName == sender.Name && args.Slot == s.Slot))
             {
                 _skillShots.Add(SpellDatabase.Spells.Find(s => s.ChampionName == sender.Name && args.Slot == s.Slot));
                 
-            }
+            }*/
         }
 
         protected override void Volative_OnDraw(EventArgs args)

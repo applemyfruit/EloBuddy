@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using EloBuddy;
 using EloBuddy.SDK;
@@ -10,20 +11,35 @@ using VolatileAIO.Extensions.Support;
 
 namespace VolatileAIO.Organs.Brain
 {
-    public class ExtensionLoader
+    internal class ExtensionLoader
     {
         private static bool _loaded;
 
-        public static readonly Dictionary<string, State> ExtensionState = new Dictionary<string, State>()
+        readonly internal List<Champion> _champions = new List<Champion>
+            {
+                new Champion("Alistar", State.FullyDeveloped, "turkey"),
+                new Champion("Annie", State.FullyDeveloped, "Bloodimir"),
+                new Champion("Blitzcrank", State.FullyDeveloped, "turkey"),
+                new Champion("Cassiopeia", State.Outdated, "turkey"),
+                new Champion("Evelynn", State.BeingOptimized, "Bloodimir"),
+                new Champion("Ezreal", State.FullyDeveloped, "turkey"),
+                new Champion("Tristana", State.FullyDeveloped, "turkey")
+            };
+
+        internal struct Champion
         {
-            {"Alistar", State.FullyDeveloped },
-            {"Annie", State.BeingOptimized },
-            {"Blitzcrank", State.FullyDeveloped },
-            {"Cassiopeia", State.Outdated },
-            {"Evelynn", State.PartDeveloped },
-            {"Ezreal", State.BeingOptimized },
-            {"Tristana", State.BeingOptimized }
-        };
+            internal string Name;
+            internal State State;
+            internal string Developer;
+
+            public Champion(string name, State state, string developer)
+            {
+                Developer = developer;
+                State = state;
+                Name = name;
+            }
+
+        }
 
         public enum State
         {
@@ -35,16 +51,20 @@ namespace VolatileAIO.Organs.Brain
 
         private void WelcomeChat()
         {
-            Chat.Print("<font color = \"#00FF00\">Succesfully loaded Extension: </font><font color = \"#FFFF00\">" + ObjectManager.Player.ChampionName + "</font>");
-            State state;
-            ExtensionState.TryGetValue(ObjectManager.Player.ChampionName, out state);
-            if ((int)state<3) Chat.Print("<font color = \"#FFCC00\">Please note:</font> <font color = \"#FFFF00\">" + ObjectManager.Player.ChampionName + "</font><font color = \"#FFCC00\"> is still </font>!<font color = \"#800000\">" + Enum.GetName(state.GetType(),state)+"</font>!");
+            Chat.Print("<font color = \"#00FF00\">Succesfully loaded Extension: </font><font color = \"#FFFF00\">" +
+                       ObjectManager.Player.ChampionName + "</font>");
+            var state = _champions.Find(c => c.Name == ObjectManager.Player.ChampionName).State;
+            if ((int) state < 3)
+                Chat.Print("<font color = \"#FFCC00\">Please note:</font> <font color = \"#FFFF00\">" +
+                           ObjectManager.Player.ChampionName +
+                           "</font><font color = \"#FFCC00\"> is still </font>!<font color = \"#800000\">" +
+                           Enum.GetName(state.GetType(), state) + "</font>!");
         }
 
         public ExtensionLoader()
         {
             if (_loaded) return;
-            if (ExtensionState.ContainsKey(ObjectManager.Player.ChampionName)) WelcomeChat();
+            if (_champions.Any(c=>c.Name==ObjectManager.Player.ChampionName)) WelcomeChat();
             switch (ObjectManager.Player.ChampionName.ToLower())
             {
                 case "alistar":
@@ -76,7 +96,8 @@ namespace VolatileAIO.Organs.Brain
                     _loaded = true;
                     break;
                 default:
-                    Chat.Print("<font color = \"#740000\">Volatile AIO</font> doesn't support " + ObjectManager.Player.ChampionName + " yet.");
+                    Chat.Print("<font color = \"#740000\">Volatile AIO</font> doesn't support " +
+                               ObjectManager.Player.ChampionName + " yet.");
                     break;
             }
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Media;
 using EloBuddy;
 using EloBuddy.SDK;
@@ -17,6 +18,7 @@ namespace VolatileAIO.Organs
         public static Menu VolatileMenu;
         protected static Menu HackMenu;
         protected static Menu TargetMenu;
+        public static ExtensionLoader ExtensionLoader;
         public static AutoLeveler AutoLeveler;
         public static ManaManager ManaManager;
         public static DrawManager DrawManager;
@@ -63,8 +65,8 @@ namespace VolatileAIO.Organs
             Hacks.RenderWatermark = false;
             Chat.Print(
                 "Starting <font color = \"#740000\">Volatile AIO</font> <font color = \"#B87F7F\">Heart.cs</font>:");
-
             VolatileMenu = MainMenu.AddMenu("V." + Player.ChampionName, "volatilemenu", "Volatile " + Player.ChampionName);
+            ExtensionLoader = new ExtensionLoader();
 
             //InfoBoard
             VolatileMenu.AddGroupLabel("Heart.cs");
@@ -78,19 +80,19 @@ namespace VolatileAIO.Organs
             VolatileMenu.AddLabel("I hope you'll like it.");
             VolatileMenu.AddSeparator();
             VolatileMenu.AddGroupLabel("Supported Champions:");
-            foreach (var champion in ExtensionLoader.ExtensionState)
+            foreach (var champion in ExtensionLoader._champions)
             {
-                var label = champion.Key;
-                for (var i = champion.Key.Length; i < 20; i++)
+                var label = champion.Name + " by " + champion.Developer;
+                for (var i = champion.Name.Length; i < 20; i++)
                     label += " ";
-                label += "Status: " + champion.Value;
+                label += "Status: " + champion.State;
                 VolatileMenu.AddLabel(label);
             }
             VolatileMenu.AddSeparator();
             VolatileMenu.AddLabel("AIO Options:");
             VolatileMenu.Add("debug", new CheckBox("Debug", false));
             VolatileMenu.Add("welcome", new CheckBox("Play 'initiated' sound", false));
-            new ExtensionLoader();
+            if (ExtensionLoader._champions.All(c => c.Name != Player.ChampionName)) return;
             TargetMenu = VolatileMenu.AddSubMenu("Target Manager", "targetmenu", "Volatile TargetManager");
             TargetMenu.Add("chosenignores", new CheckBox("Ignore all other champions if Selected Target", false));
             ManaManager = new ManaManager();
@@ -100,11 +102,14 @@ namespace VolatileAIO.Organs
             SkinManager.Initialize();
             RecallTracker = new RecallTracker();
             if (VolatileMenu["welcome"].Cast<CheckBox>().CurrentValue)
-            Initiated.Play();
+                Initiated.Play();
             Activator = new Activator();
             _championProfiles = new ChampionProfiles();
-            if (!AutoLeveler.PrioritiesAreSet() && AutoLeveler.AutoLevelMenu["autolevel"].Cast<CheckBox>().CurrentValue) Chat.Print("Auto-Leveler: Priorities not Set!");
-            if (!ManaManager.PrioritiesAreSet() && ManaManager.MmMenu["manamanager"].Cast<CheckBox>().CurrentValue) Chat.Print("Mana Manager: Priorities not Set!");
+            if (!AutoLeveler.PrioritiesAreSet() &&
+                AutoLeveler.AutoLevelMenu["autolevel"].Cast<CheckBox>().CurrentValue)
+                Chat.Print("Auto-Leveler: Priorities not Set!");
+            if (!ManaManager.PrioritiesAreSet() && ManaManager.MmMenu["manamanager"].Cast<CheckBox>().CurrentValue)
+                Chat.Print("Mana Manager: Priorities not Set!");
         }
 
         #region privatevoid
