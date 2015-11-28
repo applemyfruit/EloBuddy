@@ -23,6 +23,7 @@ namespace VolatileAIO.Organs.Brain
                 new Champion("Cassiopeia", State.Outdated, "turkey"),
                 new Champion("Evelynn", State.BeingOptimized, "Bloodimir"),
                 new Champion("Ezreal", State.FullyDeveloped, "turkey"),
+                new Champion("Morgana", State.FullyDeveloped, "Bloodimir"),
                 new Champion("Tristana", State.FullyDeveloped, "turkey")
             };
 
