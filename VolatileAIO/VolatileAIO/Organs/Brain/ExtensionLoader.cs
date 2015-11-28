@@ -92,6 +92,10 @@ namespace VolatileAIO.Organs.Brain
                     new Ezreal();
                     _loaded = true;
                     break;
+                case "morgana":
+                    new Morgana();
+                    _loaded = true;
+                    break;
                 case "tristana":
                     new Tristana();
                     _loaded = true;
