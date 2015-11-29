@@ -82,10 +82,8 @@ namespace VolatileAIO.Extensions.ADC
 
         protected override void Volatile_OnHeartBeat(EventArgs args)
         {
-            if (Player.IsDead) return;
             AutoCastSpells();
             Stack();
-            LastHit();
             if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Combo)
             {
                 Combo();

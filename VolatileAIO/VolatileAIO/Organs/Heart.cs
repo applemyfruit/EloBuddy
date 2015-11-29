@@ -24,7 +24,6 @@ namespace VolatileAIO.Organs
         public static DrawManager DrawManager;
         public static RecallTracker RecallTracker;
         public static Activator Activator;
-        private static readonly SoundPlayer Initiated = new SoundPlayer(Properties.Resources.Initiated);
         private static ChampionProfiles _championProfiles;
 
         protected Heart()
@@ -80,7 +79,7 @@ namespace VolatileAIO.Organs
             VolatileMenu.AddLabel("I hope you'll like it.");
             VolatileMenu.AddSeparator();
             VolatileMenu.AddGroupLabel("Supported Champions:");
-            foreach (var champion in ExtensionLoader._champions)
+            foreach (var champion in ExtensionLoader.Champions)
             {
                 var label = champion.Name + " by " + champion.Developer;
                 for (var i = champion.Name.Length; i < 20; i++)
@@ -91,8 +90,7 @@ namespace VolatileAIO.Organs
             VolatileMenu.AddSeparator();
             VolatileMenu.AddLabel("AIO Options:");
             VolatileMenu.Add("debug", new CheckBox("Debug", false));
-            VolatileMenu.Add("welcome", new CheckBox("Play 'initiated' sound", false));
-            if (ExtensionLoader._champions.All(c => c.Name != Player.ChampionName)) return;
+            if (ExtensionLoader.Champions.All(c => c.Name != Player.ChampionName)) return;
             TargetMenu = VolatileMenu.AddSubMenu("Target Manager", "targetmenu", "Volatile TargetManager");
             TargetMenu.Add("chosenignores", new CheckBox("Ignore all other champions if Selected Target", false));
             ManaManager = new ManaManager();
@@ -101,8 +99,6 @@ namespace VolatileAIO.Organs
             HackMenu = VolatileMenu.AddSubMenu("Hacks", "hacks", "Volatile Hacks");
             SkinManager.Initialize();
             RecallTracker = new RecallTracker();
-            if (VolatileMenu["welcome"].Cast<CheckBox>().CurrentValue)
-                Initiated.Play();
             Activator = new Activator();
             _championProfiles = new ChampionProfiles();
             if (!AutoLeveler.PrioritiesAreSet() &&

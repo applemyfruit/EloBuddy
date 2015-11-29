@@ -14,7 +14,7 @@ namespace VolatileAIO.Organs.Brain
 {
     internal class CastManager : Heart
     {
-        private static bool _isAutoAttacking;
+        internal static bool IsAutoAttacking;
 
         internal struct OptimizedLocation
         {
@@ -40,7 +40,7 @@ namespace VolatileAIO.Organs.Brain
                         (spell.Slot != SpellSlot.E || !TickManager.NoLag(3)) &&
                         (spell.Slot != SpellSlot.R || !TickManager.NoLag(4))) return;
 
-                    if (!spell.IsReady() || _isAutoAttacking) return;
+                    if (!spell.IsReady() || IsAutoAttacking) return;
 
                     AIHeroClient target;
                     if (targetHero == null)
@@ -64,7 +64,7 @@ namespace VolatileAIO.Organs.Brain
                         (spell.Slot != SpellSlot.E || !TickManager.NoLag(3)) &&
                         (spell.Slot != SpellSlot.R || !TickManager.NoLag(4)))
                         return;
-                    if (!spell.IsReady() || _isAutoAttacking) return;
+                    if (!spell.IsReady() || IsAutoAttacking) return;
 
                     var minions =
                         MinionManager.GetMinions(Player.ServerPosition, spell.Range + spell.Radius)
@@ -88,7 +88,7 @@ namespace VolatileAIO.Organs.Brain
                         (spell.Slot != SpellSlot.W || !TickManager.NoLag(2)) &&
                         (spell.Slot != SpellSlot.E || !TickManager.NoLag(3)) &&
                         (spell.Slot != SpellSlot.R || !TickManager.NoLag(4))) return;
-                    if (!spell.IsReady() || _isAutoAttacking) return;
+                    if (!spell.IsReady() || IsAutoAttacking) return;
 
                     var minions =
                         MinionManager.GetMinions(Player.ServerPosition, spell.Range + spell.Radius)
@@ -114,7 +114,7 @@ namespace VolatileAIO.Organs.Brain
                         (spell.Slot != SpellSlot.R || !TickManager.NoLag(4)))
                         return;
 
-                    if (!spell.IsReady() || _isAutoAttacking) return;
+                    if (!spell.IsReady() || IsAutoAttacking) return;
 
                     AIHeroClient target;
                     if (targetHero == null)
@@ -141,12 +141,12 @@ namespace VolatileAIO.Organs.Brain
 
         protected override void Volatile_OnPostAttack(AttackableUnit target, EventArgs args)
         {
-            _isAutoAttacking = false;
+            IsAutoAttacking = false;
         }
 
         protected override void Volatile_OnPreAttack(AttackableUnit target, Orbwalker.PreAttackArgs args)
         {
-            _isAutoAttacking = true;
+            IsAutoAttacking = true;
         }
 
         public static OptimizedLocation GetOptimizedCircleLocation(List<Vector2> champPositions,

@@ -81,14 +81,14 @@ namespace VolatileAIO.Extensions.Support
             AutoCast();
         }
 
-        private void JungleClear()
+        private static void JungleClear()
         {
             if (
                 MinionManager.GetMinions(Player.Position, _q.Range*(float) 1.5, MinionTypes.All, MinionTeam.Neutral)
                     .Any() &&
                 MinionManager.GetMinions(Player.Position, _q.Range, MinionTypes.All, MinionTeam.Neutral).Count ==
                 MinionManager.GetMinions(Player.Position, _q.Range*(float) 1.5, MinionTypes.All, MinionTeam.Neutral)
-                    .Count)
+                    .Count && !CastManager.IsAutoAttacking)
             {
                 _q.Cast();
             }

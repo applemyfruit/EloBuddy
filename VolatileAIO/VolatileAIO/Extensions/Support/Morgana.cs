@@ -114,6 +114,7 @@ namespace VolatileAIO.Extensions.Support
             W = (Spell.Skillshot) PlayerData.Spells[1];
             E = (Spell.Targeted) PlayerData.Spells[2];
             R = (Spell.Active) PlayerData.Spells[3];
+            W.AllowedCollisionCount = int.MaxValue;
             Talisman = new Item((int) ItemId.Talisman_of_Ascension);
             Randuin = new Item((int) ItemId.Randuins_Omen);
             Zhonia = new Item((int) ItemId.Zhonyas_Hourglass);
