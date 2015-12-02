@@ -4,11 +4,13 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using EloBuddy;
 using EloBuddy.SDK;
-using EloBuddy.SDK.Enumerations;
 using EloBuddy.SDK.Menu.Values;
 using EloBuddy.SDK.Utils;
 using SharpDX;
 using SharpDX.Multimedia;
+using EloBuddy.SDK.Enumerations;
+using HitChance = EloBuddy.SDK.Enumerations.HitChance;
+using Prediction = EloBuddy.SDK.Prediction;
 
 namespace VolatileAIO.Organs.Brain
 {
@@ -51,36 +53,91 @@ namespace VolatileAIO.Organs.Brain
 
                     if (target == null) return;
 
-                    if (!target.IsValidTarget(spell.Range) || spell.GetPrediction(target).HitChance < hitChance)
-                        return;
+                    if (!VolatileMenu["vpred"].Cast<CheckBox>().CurrentValue)
+                    {
+                        if (!target.IsValidTarget(spell.Range) || spell.GetPrediction(target).HitChance < hitChance)
+                            return;
 
-                    spell.Cast(spell.GetPrediction(target).CastPosition);
+                        spell.Cast(spell.GetPrediction(target).CastPosition);
+                    }
+                    /*else
+                    {
+                        var CoreType2 = SkillshotType.SkillshotLine;
+                        bool aoe2 = false;
+                        if ((int) spell.Type == (int) SkillshotType.SkillshotCircle)
+                        {
+                            CoreType2 = SkillshotType.SkillshotCircle;
+                            aoe2 = true;
+                        }
+                        if (spell.Width > 80 && spell.AllowedCollisionCount < 100)
+                            aoe2 = true;
+                        var predInput2 = new PredictionInput
+                        {
+                            Aoe = aoe2,
+                            Collision = spell.AllowedCollisionCount < 100,
+                            Speed = spell.Speed,
+                            Delay = spell.CastDelay,
+                            Range = spell.Range,
+                            From = Player.ServerPosition,
+                            Radius = spell.Radius,
+                            Unit = target,
+                            Type = CoreType2
+                        };
+                        var poutput2 = Test.TopSecret.Prediction.GetPrediction(predInput2);
+                        //var poutput2 = spell.GetPrediction(target);
+                        Chat.Print(spell.Slot+" "+predInput2.Collision+poutput2.Hitchance);
+                        if (spell.Speed != float.MaxValue && CollisionYasuo(Player.ServerPosition, poutput2.CastPosition))
+                            return;
+
+                        if (VolatileMenu["vpred2"].Cast<Slider>().CurrentValue == 0)
+                        {
+                            if (poutput2.Hitchance >= Test.TopSecret.HitChance.VeryHigh)
+                                spell.Cast(poutput2.CastPosition);
+                            else if (predInput2.Aoe && poutput2.AoeTargetsHitCount > 1 &&
+                                     poutput2.Hitchance >= Test.TopSecret.HitChance.High)
+                            {
+                                spell.Cast(poutput2.CastPosition);
+                            }
+
+                        }
+                        else if (VolatileMenu["vpred2"].Cast<Slider>().CurrentValue == 1)
+                        {
+                            if (poutput2.Hitchance >= Test.TopSecret.HitChance.High)
+                                spell.Cast(poutput2.CastPosition);
+
+                        }
+                        else if (VolatileMenu["vpred2"].Cast<Slider>().CurrentValue == 2)
+                        {
+                            if (poutput2.Hitchance >= Test.TopSecret.HitChance.Medium)
+                                spell.Cast(poutput2.CastPosition);
+                        }
+                    }*/
                 }
 
-                internal static void Farm(Spell.Skillshot spell, int minHit = 1)
-                {
-                    if ((spell.Slot != SpellSlot.Q || !TickManager.NoLag(1)) &&
-                        (spell.Slot != SpellSlot.W || !TickManager.NoLag(2)) &&
-                        (spell.Slot != SpellSlot.E || !TickManager.NoLag(3)) &&
-                        (spell.Slot != SpellSlot.R || !TickManager.NoLag(4)))
-                        return;
-                    if (!spell.IsReady() || IsAutoAttacking) return;
 
-                    var minions =
-                        MinionManager.GetMinions(Player.ServerPosition, spell.Range + spell.Radius)
-                            .Select(
-                                minion =>
-                                    Prediction.Position.PredictUnitPosition(minion,
-                                        (int) (spell.CastDelay + (Player.Distance(minion)/spell.Speed))))
-                            .ToList();
+            internal static void Farm(Spell.Skillshot spell, int minHit = 1)
+            {
+                if ((spell.Slot != SpellSlot.Q || !TickManager.NoLag(1)) &&
+                    (spell.Slot != SpellSlot.W || !TickManager.NoLag(2)) &&
+                    (spell.Slot != SpellSlot.E || !TickManager.NoLag(3)) &&
+                    (spell.Slot != SpellSlot.R || !TickManager.NoLag(4)))
+                    return;
+                if (!spell.IsReady() || IsAutoAttacking) return;
 
-                    if (MinionManager.GetBestLineFarmLocation(minions, spell.Width, spell.Range).MinionsHit >= minHit)
-                        spell.Cast(
-                            MinionManager.GetBestLineFarmLocation(minions, spell.Width, spell.Range).Position.To3D());
-                }
+                var minions =
+                    MinionManager.GetMinions(Player.ServerPosition, spell.Range + spell.Radius).Select(
+                            minion =>
+                                Prediction.Position.PredictUnitPosition(minion,
+                                    (int)(spell.CastDelay + (Player.Distance(minion) / spell.Speed))))
+                        .ToList();
+
+                if (MinionManager.GetBestLineFarmLocation(minions, spell.Width, spell.Range).MinionsHit >= minHit)
+                    spell.Cast(
+                        MinionManager.GetBestLineFarmLocation(minions, spell.Width, spell.Range).Position.To3D());
             }
+        }
 
-            internal class Circle
+        internal class Circle
             {
                 internal static void Farm(Spell.Skillshot spell, int minHit = 1)
                 {
@@ -163,7 +220,7 @@ namespace VolatileAIO.Organs.Brain
 
             if (champPositions.Count == 0)
             {
-                return new OptimizedLocation(result, champsHit);
+                return new CastManager.OptimizedLocation(result, champsHit);
             }
             
             if (champPositions.Count <= useMECMax)
@@ -178,7 +235,7 @@ namespace VolatileAIO.Organs.Brain
                         if (circle.Radius <= width && circle.Center.Distance(startPos, true) <= range)
                         {
                             champsHit = subGroup.Count;
-                            return new OptimizedLocation(circle.Center, champsHit);
+                            return new CastManager.OptimizedLocation(circle.Center, champsHit);
                         }
                     }
                 }

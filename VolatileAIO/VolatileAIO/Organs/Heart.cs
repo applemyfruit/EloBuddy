@@ -90,6 +90,8 @@ namespace VolatileAIO.Organs
             VolatileMenu.AddSeparator();
             VolatileMenu.AddLabel("AIO Options:");
             VolatileMenu.Add("debug", new CheckBox("Debug", false));
+            VolatileMenu.Add("vpred", new CheckBox("Super Secret Option", false));
+            //VolatileMenu.Add("vpred2", new Slider("Super Ultra Secret Dont Even Look", 0, 0, 2));
             if (ExtensionLoader.Champions.All(c => c.Name != Player.ChampionName)) return;
             TargetMenu = VolatileMenu.AddSubMenu("Target Manager", "targetmenu", "Volatile TargetManager");
             TargetMenu.Add("chosenignores", new CheckBox("Ignore all other champions if Selected Target", false));

@@ -20,7 +20,7 @@ namespace VolatileAIO.Extensions.ADC
 
         public static Spell.Skillshot Q;
         public static Spell.Skillshot W;
-        public static Spell.Active E;
+        public static Spell.Skillshot E;
         public static Spell.Skillshot R;
 
         public static Menu SpellMenu;
@@ -34,7 +34,7 @@ namespace VolatileAIO.Extensions.ADC
             PlayerData.Spells = new Initialize().Spells(Initialize.Type.Skillshot, Initialize.Type.Skillshot, Initialize.Type.Active, Initialize.Type.Skillshot);
             Q = (Spell.Skillshot)PlayerData.Spells[0];
             W = (Spell.Skillshot)PlayerData.Spells[1];
-            E = (Spell.Active)PlayerData.Spells[2];
+            E = new Spell.Skillshot(SpellSlot.E, (uint) Player.Spellbook.Spells.Find(s=> s.Slot == SpellSlot.E).SData.CastRange, SkillShotType.Circular);
             R = (Spell.Skillshot)PlayerData.Spells[3];
             W.AllowedCollisionCount = int.MaxValue;
             R.AllowedCollisionCount = int.MaxValue;
@@ -112,7 +112,12 @@ namespace VolatileAIO.Extensions.ADC
                             Prediction.Health.GetPrediction(m, Q.CastDelay + (Q.Speed*(int) m.Distance(Player))) <
                             Player.GetSpellDamage(m, SpellSlot.Q)))
             {
-                CastManager.Cast.Line.Farm(Q);
+                Q.Cast(MinionManager.GetMinions(Player.Position, Q.Range)
+                    .Where(
+                        m =>
+                            m.Distance(Player) < Q.Range &&
+                            Prediction.Health.GetPrediction(m, Q.CastDelay + (Q.Speed * (int)m.Distance(Player))) <
+                            Player.GetSpellDamage(m, SpellSlot.Q)).OrderByDescending(m=>Q.GetPrediction(m).HitChance).First());
             }
         }
 

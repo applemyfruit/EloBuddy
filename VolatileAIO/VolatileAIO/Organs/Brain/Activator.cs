@@ -448,7 +448,7 @@ namespace VolatileAIO.Organs.Brain
             Interrupter.InterruptableSpellEventArgs args)
         {
             if (args.DangerLevel != DangerLevel.High) return;
-            if (!SummonersMenu["exhaust2"].Cast<CheckBox>().CurrentValue) return;
+            if (_exhaust == SpellSlot.Unknown || !SummonersMenu["exhaust2"].Cast<CheckBox>().CurrentValue) return;
             foreach (
                 var enemy in
                     EntityManager.Heroes.Enemies.Where(
