@@ -271,6 +271,20 @@ namespace VolatileAIO.Extensions.Mid
                     if (emergency != null)
                         CastManager.Cast.Circle.Optimized(R, DamageType.Magical, (int) R.Range, 1, HitChance.High,
                             emergency);
+                else if (Player.HasBuff("pyromania_particle"))
+                {
+                    if (EntityManager.Heroes.Enemies.Count(e => e.Distance(Player) < R.Range + R.Radius) <
+                    2 || !TickManager.NoLag(4) ||
+                    !R.IsReady())
+                            return;
+                        var champs =
+                            EntityManager.Heroes.Enemies.Where(e => e.Distance(Player) < R.Range + R.Radius)
+                                .Select(champ => Prediction.Position.PredictUnitPosition(champ, R.CastDelay))
+                                .ToList();
+                        var location = CastManager.GetOptimizedCircleLocation(champs, R.Radius, R.Range + R.Radius);
+                        if (location.ChampsHit < 2) return;
+                        R.Cast(location.Position.To3D());
+                    }
             }
         }
 

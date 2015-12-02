@@ -161,7 +161,7 @@ namespace VolatileAIO.Extensions.Mid
             {
                 CastManager.Cast.Circle.Farm(W, 3);
             }
-            if (SpellMenu["eth"].Cast<CheckBox>().CurrentValue && TickManager.NoLag(3))
+            if (SpellMenu["etl"].Cast<CheckBox>().CurrentValue && TickManager.NoLag(3))
             {
                 var minionlist = EntityManager.MinionsAndMonsters.EnemyMinions.Where(
                     m => m.Distance(Player) < E.Range && m.HasBuff("brandablaze")).ToList();

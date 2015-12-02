@@ -38,7 +38,6 @@ namespace VolatileAIO.Extensions.ADC
             R = (Spell.Skillshot)PlayerData.Spells[3];
             W.AllowedCollisionCount = int.MaxValue;
             R.AllowedCollisionCount = int.MaxValue;
-
             InitializeMenu();
         }
 

@@ -7,6 +7,7 @@ using EloBuddy.SDK.Enumerations;
 using EloBuddy.SDK.Events;
 using EloBuddy.SDK.Menu;
 using EloBuddy.SDK.Menu.Values;
+using SharpDX;
 using VolatileAIO.Organs;
 using VolatileAIO.Organs.Brain;
 using VolatileAIO.Organs.Brain.Data;
@@ -90,18 +91,14 @@ namespace VolatileAIO.Extensions.ADC
                             e => e.IsValidTarget(Player.Distance(e)) && e.HasBuff("TristanaECharge"));
                     Orbwalker.ForcedTarget = target;
                 }
-                else
-                {
-                    Orbwalker.ForcedTarget = null;
-                }
             }
             if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Combo)
                 Combo();
             if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Harass)
                 Harass();
-            if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.LaneClear)
+            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LaneClear))
                 LaneClear();
-            if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.JungleClear)
+            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.JungleClear))
                 JungleClear();
             if (TickManager.NoLag(0))
             {
@@ -142,39 +139,35 @@ namespace VolatileAIO.Extensions.ADC
                 if (turret != null)
                     E.Cast(turret);
             }
-            var minions = MinionManager.GetMinions(
-                ObjectManager.Player.ServerPosition,
-                E.Range,
-                MinionTypes.All,
-                MinionTeam.NotAlly,
-                MinionOrderTypes.MaxHealth);
-            if (minions.Count <= 0) return;
-            if (minions.Count <= 0)
+            var minionlist = EntityManager.MinionsAndMonsters.EnemyMinions.Where(
+                m => m.Distance(Player) < E.Range).ToList();
+            if (SpellMenu["etl"].Cast<CheckBox>().CurrentValue && TickManager.NoLag(3))
             {
-                return;
-            }
-
-            if (E.IsReady() && SpellMenu["etl"].Cast<CheckBox>().CurrentValue && minions.Count > 2)
-            {
-                foreach (var minion in
-                    ObjectManager.Get<Obj_AI_Minion>()
-                        .Where(minion => minion.IsValidTarget(Player.AttackRange)))
+                if (
+                    minionlist.Count() > 3)
                 {
-                    E.Cast(minion);
+                    var avgpos = new Vector3((from minion in minionlist select minion.Position.X).Average(),
+                        (from minion in minionlist select minion.Position.Y).Average(),
+                        (from minion in minionlist select minion.Position.Z).Average());
+                    var etarget =
+                        minionlist
+                            .OrderBy(m => m.Distance(avgpos))
+                            .First();
+                    E.Cast(etarget);
                 }
             }
 
             var eminion =
-                minions.Find(x => x.HasBuff("TristanaECharge") && x.IsValidTarget(Player.AttackRange));
-
+                minionlist.FirstOrDefault(x => x.HasBuff("TristanaECharge") && x.IsValidTarget());
             if (eminion != null)
             {
+                Chat.Print(eminion.Name);
                 Orbwalker.ForcedTarget = eminion;
             }
 
             if (Q.IsReady() && SpellMenu["qtl"].Cast<CheckBox>().CurrentValue)
             {
-                var eMob = minions.FindAll(x => x.IsValidTarget() && x.HasBuff("TristanaECharge"));
+                var eMob = minionlist.FindAll(x => x.IsValidTarget() && x.HasBuff("TristanaECharge"));
                 if (eMob.Any())
                 {
                     Q.Cast();
