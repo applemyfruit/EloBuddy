@@ -154,9 +154,9 @@ namespace VolatileAIO.Organs.Brain
                                     Prediction.Position.PredictUnitPosition(minion,
                                         (int) (spell.CastDelay + (Player.Distance(minion)/spell.Speed))))
                             .ToList();
-
-                    if (MinionManager.GetBestCircularFarmLocation(minions, spell.Width, spell.Range).MinionsHit >=
-                        minHit)
+                    
+                    if (MinionManager.GetBestCircularFarmLocation(minions, spell.Width, spell.Range).MinionsHit <
+                        minHit) return;
                         spell.Cast(
                             MinionManager.GetBestCircularFarmLocation(minions, spell.Width, spell.Range).Position.To3D());
                 }

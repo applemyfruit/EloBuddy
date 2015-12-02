@@ -28,7 +28,6 @@ namespace VolatileAIO.Extensions.Support
         public static Spell.Skillshot W;
         public static Spell.Targeted E;
         public static Spell.Active R;
-        public static Item Talisman, Zhonia, Randuin;
         public static Menu SpellMenu;
 
         public Morgana()
@@ -47,12 +46,13 @@ namespace VolatileAIO.Extensions.Support
         {
             SpellMenu = VolatileMenu.AddSubMenu("Spell Menu", "spellmenu");
 
-            SpellMenu.AddGroupLabel("Combo Settings");
+            SpellMenu.AddGroupLabel("Q Settings");
             SpellMenu.Add("qtc", new CheckBox("Use Q in Combo"));
             SpellMenu.Add("qth", new CheckBox("Use Q in Harass"));
-            SpellMenu.Add("wtc", new CheckBox("Use W in Combo"));
+            SpellMenu.Add("intq", new CheckBox("Interrupt Spells with Q"));
+            SpellMenu.Add("qtlh", new CheckBox("Last Hit with Q"));
+            SpellMenu.Add("peel", new CheckBox("Peel from Melee Champions"));
             SpellMenu.Add("qonimmo", new CheckBox("Auto Q on Immobile Targets"));
-            SpellMenu.Add("wonimmo", new CheckBox("Auto W on Immobile Targets"));
             SpellMenu.AddLabel("Never Bind");
             foreach (var hero in EntityManager.Heroes.Enemies)
             {
@@ -61,12 +61,18 @@ namespace VolatileAIO.Extensions.Support
                         ? new CheckBox(hero.ChampionName)
                         : new CheckBox(hero.ChampionName, false));
             }
+
+            SpellMenu.AddGroupLabel("W Settings");
+            SpellMenu.Add("wtc", new CheckBox("Use W in Combo"));
+            SpellMenu.Add("wonimmo", new CheckBox("Auto W on Immobile Targets"));
+
             SpellMenu.AddGroupLabel("E Settings");
             SpellMenu.Add("autoe", new CheckBox("Auto E"));
             foreach (var obj in ObjectManager.Get<AIHeroClient>().Where(obj => obj.Team == Player.Team))
             {
                 SpellMenu.Add("shield" + obj.ChampionName.ToLower(), new CheckBox("Shield " + obj.ChampionName));
             }
+            SpellMenu.Add("antigapcloser", new CheckBox("Anti Gapcloser E"));
 
             SpellMenu.AddGroupLabel("R Settings");
             SpellMenu.Add("rtks", new CheckBox("Use R Finisher", false));
@@ -77,14 +83,6 @@ namespace VolatileAIO.Extensions.Support
 
             SpellMenu.AddGroupLabel("Other Settings");
             SpellMenu.Add("support", new CheckBox("Support Mode (Disable Minion Hit)", false));
-            SpellMenu.Add("antigapcloser", new CheckBox("Anti Gapcloser E"));
-            SpellMenu.Add("talisman", new CheckBox("Smart Talisman"));
-            SpellMenu.Add("randuin", new CheckBox("Smart Randuin"));
-            SpellMenu.Add("szhonya", new CheckBox("Smart Zhonya"));
-            SpellMenu.AddSeparator();
-            SpellMenu.Add("intq", new CheckBox("Interrupt Spells with Q"));
-            SpellMenu.Add("peel", new CheckBox("Peel from Melee Champions"));
-            SpellMenu.Add("LHQ", new CheckBox("Last Hit with Q"));
         }
 
         private static void Morgana_OnComboModeChanged(ValueBase<int> sender, ValueBase<int>.ValueChangeArgs args)
@@ -115,18 +113,12 @@ namespace VolatileAIO.Extensions.Support
             E = (Spell.Targeted) PlayerData.Spells[2];
             R = (Spell.Active) PlayerData.Spells[3];
             W.AllowedCollisionCount = int.MaxValue;
-            Talisman = new Item((int) ItemId.Talisman_of_Ascension);
-            Randuin = new Item((int) ItemId.Randuins_Omen);
-            Zhonia = new Item((int) ItemId.Zhonyas_Hourglass);
         }
 
         protected override void Volatile_OnHeartBeat(EventArgs args)
         {
             AutoCast();
-            if (SpellMenu["randuin"].Cast<CheckBox>().CurrentValue) RanduinU();
-            if (SpellMenu["talisman"].Cast<CheckBox>().CurrentValue) Ascension();
             if (SpellMenu["peel"].Cast<CheckBox>().CurrentValue) Peel();
-            if (SpellMenu["szhonya"].Cast<CheckBox>().CurrentValue) ZhonyaU();
             if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Combo) Combo();
             if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Harass) Harass();
             if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.LastHit) LastHitB();
@@ -231,54 +223,6 @@ namespace VolatileAIO.Extensions.Support
             }
         }
 
-        private static void Ascension()
-        {
-            if (Talisman.IsReady() && Talisman.IsOwned())
-            {
-                var ascension = SpellMenu["talisman"].Cast<CheckBox>().CurrentValue;
-                if (ascension && Player.HealthPercent <= 15 && Player.CountEnemiesInRange(800) >= 1 ||
-                    Player.CountEnemiesInRange(Q.Range) >= 3)
-                {
-                    Talisman.Cast();
-                }
-            }
-        }
-
-        private static void RanduinU()
-        {
-            if (Randuin.IsReady() && Randuin.IsOwned())
-            {
-                var randuin = SpellMenu["randuin"].Cast<CheckBox>().CurrentValue;
-                if (randuin && Player.HealthPercent <= 15 && Player.CountEnemiesInRange(Randuin.Range) >= 1 ||
-                    Player.CountEnemiesInRange(Randuin.Range) >= 2)
-                {
-                    Randuin.Cast();
-                }
-            }
-        }
-
-        private static void ZhonyaU()
-        {
-            var zhoniaon = SpellMenu["szhonya"].Cast<CheckBox>().CurrentValue;
-
-            if (zhoniaon && Zhonia.IsReady() && Zhonia.IsOwned())
-            {
-                if (Player.CountEnemiesInRange(R.Range) >= 3)
-                {
-                    R.Cast();
-                    Zhonia.Cast();
-                }
-                else
-                {
-                    if (Zhonia.IsReady() && Zhonia.IsOwned() && Player.HealthPercent <= 10 &&
-                        Player.CountEnemiesInRange(E.Range) >= 1)
-                    {
-                        Zhonia.Cast();
-                    }
-                }
-            }
-        }
-
         private static void Harass()
         {
             if (!Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Harass)) return;
@@ -355,7 +299,7 @@ namespace VolatileAIO.Extensions.Support
 
         public static void LastHitB()
         {
-            var qcheck = SpellMenu["LHQ"].Cast<CheckBox>().CurrentValue;
+            var qcheck = SpellMenu["qtlh"].Cast<CheckBox>().CurrentValue;
             var qready = Q.IsReady();
             if (qcheck && qready)
             {

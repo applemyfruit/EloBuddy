@@ -25,7 +25,8 @@ namespace VolatileAIO.Organs.Brain
                 new Champion("Evelynn", State.BeingOptimized, "Bloodimir"),
                 new Champion("Ezreal", State.FullyDeveloped, "turkey"),
                 new Champion("Morgana", State.FullyDeveloped, "Bloodimir"),
-                new Champion("Tristana", State.FullyDeveloped, "turkey")
+                new Champion("Tristana", State.FullyDeveloped, "turkey"),
+                new Champion("Ziggs", State.BeingOptimized, "Bloodimir")
             };
 
         internal struct Champion
@@ -103,6 +104,10 @@ namespace VolatileAIO.Organs.Brain
                     break;
                 case "tristana":
                     new Tristana();
+                    _loaded = true;
+                    break;
+                case "ziggs":
+                    new Ziggs();
                     _loaded = true;
                     break;
                 default:

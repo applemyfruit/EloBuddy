@@ -32,20 +32,23 @@ namespace VolatileAIO.Extensions.Mid
 
         private static GameObject TibbersObject { get; set; }
 
-        private static Vector3 MousePos
-        {
-            get { return Game.CursorPos; }
-        }
-
         private static void InitializeMenu()
         {
             SpellMenu = VolatileMenu.AddSubMenu("Spell Menu", "spellmenu");
 
-            SpellMenu.AddGroupLabel("Combo Settings");
+            SpellMenu.AddGroupLabel("Q Settings");
             SpellMenu.Add("qtc", new CheckBox("Use Q in Combo"));
-            SpellMenu.Add("wtc", new CheckBox("Use W in Combo"));
-            SpellMenu.Add("rtc", new CheckBox("Use R in Combo"));
             SpellMenu.Add("qth", new CheckBox("Use Q in Harass"));
+            SpellMenu.Add("qtlh", new CheckBox("Use Q in Lasthit"));
+
+            SpellMenu.AddGroupLabel("W Settings");
+            SpellMenu.Add("wtc", new CheckBox("Use W in Combo"));
+
+            SpellMenu.AddGroupLabel("E Settings");
+            SpellMenu.Add("autoe", new CheckBox("Auto E", false));
+
+            SpellMenu.AddGroupLabel("R Settings");
+            SpellMenu.Add("rtc", new CheckBox("Use R in Combo"));
             SpellMenu.Add("pilot", new CheckBox("Auto Pilot Tibbers"));
             SpellMenu.AddSeparator();
             SpellMenu.Add("flashr", new KeyBind("Flash R (Target Priority)", false, KeyBind.BindTypes.HoldActive, 'T'));
@@ -54,8 +57,6 @@ namespace VolatileAIO.Extensions.Mid
             SpellMenu.Add("framount", new Slider("Minimum enemies hit to Flash R (HAP)", 2, 1, 5));
 
             SpellMenu.AddGroupLabel("Other Settings");
-            SpellMenu.Add("LHQ", new CheckBox("Last Hit with Q"));
-            SpellMenu.Add("autoe", new CheckBox("Auto E", false));
             SpellMenu.Add("autostack", new CheckBox("Auto Stack", false));
             SpellMenu.Add("estack", new CheckBox("Use E to Stack"));
             SpellMenu.Add("wstack", new CheckBox("Use W to Stack"));
@@ -138,13 +139,13 @@ namespace VolatileAIO.Extensions.Mid
 
             if (stackw && W.IsReady())
             {
-                W.Cast(MousePos);
+                W.Cast(Game.CursorPos);
             }
         }
 
         private static void Flee()
         {
-            Orbwalker.MoveTo(MousePos);
+            Orbwalker.MoveTo(Game.CursorPos);
             E.Cast();
         }
 
@@ -210,7 +211,7 @@ namespace VolatileAIO.Extensions.Mid
 
         public static void LastHitB()
         {
-            var qcheck = SpellMenu["LHQ"].Cast<CheckBox>().CurrentValue;
+            var qcheck = SpellMenu["qtlh"].Cast<CheckBox>().CurrentValue;
             var qready = Q.IsReady();
             if (!qcheck || !qready) return;
             var minion = (Obj_AI_Minion) MinionLh(GameObjectType.obj_AI_Minion, AttackSpell.Q);

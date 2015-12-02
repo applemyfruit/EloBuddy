@@ -69,6 +69,7 @@
     <Compile Include="Extensions\Mid\Annie.cs" />
     <Compile Include="Extensions\Mid\Brand.cs" />
     <Compile Include="Extensions\Mid\Cassiopeia.cs" />
+    <Compile Include="Extensions\Mid\Ziggs.cs" />
     <Compile Include="Extensions\Support\Alistar.cs" />
     <Compile Include="Extensions\Support\Blitzcrank.cs" />
     <Compile Include="Extensions\Support\Morgana.cs" />
