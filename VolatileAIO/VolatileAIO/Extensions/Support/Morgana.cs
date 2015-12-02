@@ -51,7 +51,6 @@ namespace VolatileAIO.Extensions.Support
             SpellMenu.Add("qth", new CheckBox("Use Q in Harass"));
             SpellMenu.Add("intq", new CheckBox("Interrupt Spells with Q"));
             SpellMenu.Add("qtlh", new CheckBox("Last Hit with Q"));
-            SpellMenu.Add("peel", new CheckBox("Peel from Melee Champions"));
             SpellMenu.Add("qonimmo", new CheckBox("Auto Q on Immobile Targets"));
             SpellMenu.AddLabel("Never Bind");
             foreach (var hero in EntityManager.Heroes.Enemies)
@@ -118,7 +117,6 @@ namespace VolatileAIO.Extensions.Support
         protected override void Volatile_OnHeartBeat(EventArgs args)
         {
             AutoCast();
-            if (SpellMenu["peel"].Cast<CheckBox>().CurrentValue) Peel();
             if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Combo) Combo();
             if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Harass) Harass();
             if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.LastHit) LastHitB();
@@ -161,33 +159,10 @@ namespace VolatileAIO.Extensions.Support
         protected override void Volatile_OnInterruptable(Obj_AI_Base sender,
             Interrupter.InterruptableSpellEventArgs args)
         {
-            var intTarget = TargetSelector.GetTarget(Q.Range, DamageType.Magical);
-            {
                 if (Q.IsReady() && sender.IsValidTarget(Q.Range) && SpellMenu["intq"].Cast<CheckBox>().CurrentValue)
-                    Q.Cast(intTarget.ServerPosition);
-            }
+                    Q.Cast(sender);
         }
-
-        private static void Peel()
-        {
-            if (SpellMenu["peel"].Cast<CheckBox>().CurrentValue)
-            {
-                foreach (var pos in from enemy in ObjectManager.Get<Obj_AI_Base>()
-                    where
-                        enemy.IsValidTarget() &&
-                        enemy.Distance(ObjectManager.Player) <=
-                        enemy.BoundingRadius + enemy.AttackRange + ObjectManager.Player.BoundingRadius &&
-                        enemy.IsMelee
-                    let direction =
-                        (enemy.ServerPosition.To2D() - ObjectManager.Player.ServerPosition.To2D()).Normalized()
-                    let pos = ObjectManager.Player.ServerPosition.To2D()
-                    select pos + Math.Min(200, Math.Max(50, enemy.Distance(ObjectManager.Player)/2))*direction)
-                {
-                    Q.Cast(pos.To3D());
-                }
-            }
-        }
-
+        
         protected override void Volatile_AntiGapcloser(AIHeroClient sender, Gapcloser.GapcloserEventArgs a)
         {
             var agapcloser = SpellMenu["antigapcloser"].Cast<CheckBox>().CurrentValue;

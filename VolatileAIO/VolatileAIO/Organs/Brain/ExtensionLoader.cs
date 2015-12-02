@@ -26,7 +26,7 @@ namespace VolatileAIO.Organs.Brain
                 new Champion("Ezreal", State.FullyDeveloped, "turkey"),
                 new Champion("Morgana", State.FullyDeveloped, "Bloodimir"),
                 new Champion("Tristana", State.FullyDeveloped, "turkey"),
-                new Champion("Ziggs", State.BeingOptimized, "Bloodimir")
+                new Champion("Ziggs", State.FullyDeveloped, "Bloodimir")
             };
 
         internal struct Champion
