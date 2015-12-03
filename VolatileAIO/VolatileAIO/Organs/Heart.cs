@@ -8,6 +8,7 @@ using EloBuddy.SDK.Menu;
 using EloBuddy.SDK.Menu.Values;
 using SharpDX;
 using VolatileAIO.Organs.Brain;
+using VolatileAIO.Organs.Brain.Test2;
 using Activator = VolatileAIO.Organs.Brain.Activator;
 
 namespace VolatileAIO.Organs
@@ -90,7 +91,7 @@ namespace VolatileAIO.Organs
             VolatileMenu.AddSeparator();
             VolatileMenu.AddLabel("AIO Options:");
             VolatileMenu.Add("debug", new CheckBox("Debug", false));
-            VolatileMenu.Add("vpred", new CheckBox("Super Secret Option", false));
+            //VolatileMenu.Add("vorb", new CheckBox("Super Secret Option", false)).OnValueChange += Secret_OnValueChange; ;
             //VolatileMenu.Add("vpred2", new Slider("Super Ultra Secret Dont Even Look", 0, 0, 2));
             if (ExtensionLoader.Champions.All(c => c.Name != Player.ChampionName)) return;
             TargetMenu = VolatileMenu.AddSubMenu("Target Manager", "targetmenu", "Volatile TargetManager");
@@ -111,6 +112,31 @@ namespace VolatileAIO.Organs
         }
 
         #region privatevoid
+
+        private static void Secret_OnValueChange(ValueBase<bool> sender, ValueBase<bool>.ValueChangeArgs args)
+        {
+            OrbHandler();
+        }
+
+        private static void OrbHandler()
+        {
+            if (VolatileMenu["vorb"].Cast<CheckBox>().CurrentValue)
+            {
+                Orbwalker.DisableMovement = true;
+                Orbwalker.DisableAttacking = true;
+                //VW.Enabled(true);
+                MainMenu.GetMenu("Orbwalker").DisplayName = "EBORB Disabled";
+                MainMenu.GetMenu("orb").DisplayName = "V.Orb Enabled";
+            }
+            else
+            {
+                Orbwalker.DisableMovement = false;
+                Orbwalker.DisableAttacking = false;
+                //VW.Enabled(false);
+                MainMenu.GetMenu("Orbwalker").DisplayName = "EBORB Enabled";
+                MainMenu.GetMenu("orb").DisplayName = "V.Orb Disabled";
+            }
+        }
 
         private void Game_OnDisconnect(EventArgs args)
         {
@@ -358,7 +384,7 @@ namespace VolatileAIO.Organs
             Vector3 vec3 = (hero.Team == GameObjectTeam.Order)
                 ? new Vector3(363, 426, 182)
                 : new Vector3(14340, 14390, 172);
-            var map = EloBuddy.Game.MapId;
+            var map = Game.MapId;
             if (map == GameMapId.SummonersRift)
             {
                 fountainRange = 1102500; //1050 * 1050

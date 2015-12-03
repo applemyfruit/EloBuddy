@@ -161,7 +161,7 @@ namespace VolatileAIO.Extensions.Mid
         private static void Peel()
         {
             if (!SpellMenu["peel"].Cast<CheckBox>().CurrentValue) return;
-            foreach (var pos in from enemy in ObjectManager.Get<Obj_AI_Base>()
+            foreach (var pos in from enemy in EntityManager.Heroes.Enemies
                 where
                     enemy.IsValidTarget() &&
                     enemy.Distance(Player) <=
@@ -175,7 +175,7 @@ namespace VolatileAIO.Extensions.Mid
                 W.Cast(pos.To3D());
             }
             if (Player.HealthPercent <= 13)
-                foreach (var pos in from enemy in ObjectManager.Get<Obj_AI_Base>()
+                foreach (var pos in from enemy in EntityManager.Heroes.Enemies
                     where
                         enemy.IsValidTarget() &&
                         enemy.Distance(Player) <=

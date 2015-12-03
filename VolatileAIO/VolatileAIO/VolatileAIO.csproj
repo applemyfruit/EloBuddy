@@ -87,6 +87,10 @@
     <Compile Include="Organs\Brain\RecallTracker.cs" />
     <Compile Include="Organs\Brain\SkinManager.cs" />
     <Compile Include="Organs\Brain\TargetManager.cs" />
+    <Compile Include="Organs\Brain\Test2\HealthPrediction.cs" />
+    <Compile Include="Organs\Brain\Test2\MathUtils.cs" />
+    <Compile Include="Organs\Brain\Test2\Vector2Extensions.cs" />
+    <Compile Include="Organs\Brain\Test2\Volkswagen.cs" />
     <Compile Include="Organs\Brain\TickManager.cs" />
     <Compile Include="Organs\Brain\ExtensionLoader.cs" />
     <Compile Include="Extensions\ADC\Ezreal.cs" />

@@ -53,13 +53,10 @@ namespace VolatileAIO.Organs.Brain
 
                     if (target == null) return;
 
-                    if (!VolatileMenu["vpred"].Cast<CheckBox>().CurrentValue)
-                    {
-                        if (!target.IsValidTarget(spell.Range) || spell.GetPrediction(target).HitChance < hitChance)
-                            return;
+                    if (!target.IsValidTarget(spell.Range) || spell.GetPrediction(target).HitChance < hitChance)
+                        return;
 
-                        spell.Cast(spell.GetPrediction(target).CastPosition);
-                    }
+                    spell.Cast(spell.GetPrediction(target).CastPosition);
                     /*else
                     {
                         var CoreType2 = SkillshotType.SkillshotLine;
@@ -115,7 +112,7 @@ namespace VolatileAIO.Organs.Brain
                 }
 
 
-            internal static void Farm(Spell.Skillshot spell, int minHit = 1)
+                internal static void Farm(Spell.Skillshot spell, int minHit = 1)
             {
                 if ((spell.Slot != SpellSlot.Q || !TickManager.NoLag(1)) &&
                     (spell.Slot != SpellSlot.W || !TickManager.NoLag(2)) &&
