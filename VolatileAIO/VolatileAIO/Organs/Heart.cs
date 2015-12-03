@@ -76,10 +76,9 @@ namespace VolatileAIO.Organs
             if (!Directory.Exists(ChampionProfiles.VolatileDir))
                 Directory.CreateDirectory(ChampionProfiles.VolatileDir);
             if (!File.Exists(Path.Combine(
-                    ChampionProfiles.VolatileDir, "Volatile.json")))
+                ChampionProfiles.VolatileDir, "Volatile.json")))
                 SaveSettings(false);
-            else 
-            if (LoadSettings())
+            else if (LoadSettings())
             {
                 UsingVorb = true;
                 Volkswagen.AddToMenu();
@@ -88,7 +87,8 @@ namespace VolatileAIO.Organs
             {
                 UsingVorb = false;
             }
-            VolatileMenu = MainMenu.AddMenu("V." + Player.ChampionName, "volatilemenu", "Volatile " + Player.ChampionName);
+            VolatileMenu = MainMenu.AddMenu("V." + Player.ChampionName, "volatilemenu",
+                "Volatile " + Player.ChampionName);
             ExtensionLoader = new ExtensionLoader();
 
             //InfoBoard
@@ -114,8 +114,10 @@ namespace VolatileAIO.Organs
             VolatileMenu.AddSeparator();
             VolatileMenu.AddLabel("AIO Options:");
             VolatileMenu.Add("debug", new CheckBox("Debug", false));
-            VolatileMenu.Add("golf", new CheckBox("Use Volatile Orbwalker", false)).OnValueChange += Secret_OnValueChange; 
-            VolatileMenu.AddLabel("*Orbwalker requires reload. Press f5 to reload, and please turn off EB Orbwalker Drawings");
+            VolatileMenu.Add("golf", new CheckBox("Use Volatile Orbwalker", false)).OnValueChange +=
+                Secret_OnValueChange;
+            VolatileMenu.AddLabel(
+                "*Orbwalker requires reload. Press f5 to reload, and please turn off EB Orbwalker Drawings");
             //VolatileMenu.Add("vpred2", new Slider("Super Ultra Secret Dont Even Look", 0, 0, 2));
             if (ExtensionLoader.Champions.All(c => c.Name != Player.ChampionName)) return;
             TargetMenu = VolatileMenu.AddSubMenu("Target Manager", "targetmenu", "Volatile TargetManager");
@@ -186,7 +188,7 @@ namespace VolatileAIO.Organs
 
         private void Obj_AI_Base_OnLevelUp(Obj_AI_Base sender, Obj_AI_BaseLevelUpEventArgs args)
         {
-            Volatile_OnLevelUp(sender,args);
+            Volatile_OnLevelUp(sender, args);
         }
 
         private void OnUpdateDeathChecker(EventArgs args)
@@ -201,12 +203,13 @@ namespace VolatileAIO.Organs
             if (Player.IsDead) return;
             Volative_OnDrawEnd(args);
         }
-        
+
         private void Drawing_OnDraw(EventArgs args)
         {
             if (Player.IsDead) return;
             Volative_OnDraw(args);
         }
+
         private void OrbwalkerOnOnPostAttack(AttackableUnit target, EventArgs args)
         {
             Volatile_OnPostAttack(target, args);
@@ -275,7 +278,7 @@ namespace VolatileAIO.Organs
                 TargetManager.SetChosenTarget(args);
                 if (VolatileMenu["debug"].Cast<CheckBox>().CurrentValue)
                 {
-                    Chat.Print(Game.CursorPos2D.X+","+Game.CursorPos2D.Y);
+                    Chat.Print(Game.CursorPos2D.X + "," + Game.CursorPos2D.Y);
                 }
             }
         }
@@ -441,10 +444,8 @@ namespace VolatileAIO.Organs
 
         private struct VSettings
         {
-            [JsonProperty(PropertyName = "UseOrb")]
-            public readonly bool UseOrb;
-            [JsonProperty(PropertyName = "Version")]
-            public readonly double Version;
+            [JsonProperty(PropertyName = "UseOrb")] public readonly bool UseOrb;
+            [JsonProperty(PropertyName = "Version")] public readonly double Version;
 
             public VSettings(bool useorb, double version)
             {
@@ -457,7 +458,7 @@ namespace VolatileAIO.Organs
         private static bool LoadSettings()
         {
             var json = File.ReadAllText(Path.Combine(
-                    ChampionProfiles.VolatileDir, "Volatile.json"));
+                ChampionProfiles.VolatileDir, "Volatile.json"));
             var profile = JsonConvert.DeserializeObject<VSettings>(json);
             return profile.UseOrb;
         }
@@ -468,7 +469,7 @@ namespace VolatileAIO.Organs
             var profile = new VSettings(UseOrb, 1.0);
             var json = JsonConvert.SerializeObject(profile);
             if (File.Exists(Path.Combine(
-                    ChampionProfiles.VolatileDir, "Volatile.json")))
+                ChampionProfiles.VolatileDir, "Volatile.json")))
             {
                 File.Delete(Path.Combine(
                     ChampionProfiles.VolatileDir, "Volatile.json"));
@@ -477,7 +478,7 @@ namespace VolatileAIO.Organs
             {
             }
             using (var sw = new StreamWriter(Path.Combine(
-                    ChampionProfiles.VolatileDir, "Volatile.json")))
+                ChampionProfiles.VolatileDir, "Volatile.json")))
             {
                 sw.Write(json);
             }
@@ -485,51 +486,32 @@ namespace VolatileAIO.Organs
 
         protected static bool ComboActive()
         {
-            if (UsingVorb)
-            {
-                return MainMenu.GetMenu("orb")["com"].Cast<KeyBind>().CurrentValue;
-            }
-            else
-            {
-                return Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Combo;
-            }
+            return UsingVorb
+                ? MainMenu.GetMenu("orb")["com"].Cast<KeyBind>().CurrentValue
+                : Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo);
         }
 
         protected static bool HarassActive()
         {
-            if (UsingVorb)
-            {
-                return MainMenu.GetMenu("orb")["mix"].Cast<KeyBind>().CurrentValue;
-            }
-            else
-            {
-                return Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Harass;
-            }
+            return UsingVorb
+                ? MainMenu.GetMenu("orb")["mix"].Cast<KeyBind>().CurrentValue
+                : Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Harass);
         }
 
         protected static bool LaneClearActive()
         {
-            if (UsingVorb)
-            {
-                return MainMenu.GetMenu("orb")["lan"].Cast<KeyBind>().CurrentValue;
-            }
-            else
-            {
-                return Orbwalker.ActiveModesFlags.HasFlag(Volkswagen.Mode.LaneClear);
-            }
+            return UsingVorb
+                ? MainMenu.GetMenu("orb")["lan"].Cast<KeyBind>().CurrentValue
+                : Orbwalker.ActiveModesFlags.HasFlag(Volkswagen.Mode.LaneClear);
         }
 
         protected static bool LastHitActive()
         {
-            if (UsingVorb)
-            {
-                return MainMenu.GetMenu("orb")["las"].Cast<KeyBind>().CurrentValue;
-            }
-            else
-            {
-                return Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.LastHit;
-            }
+            return UsingVorb
+                ? MainMenu.GetMenu("orb")["las"].Cast<KeyBind>().CurrentValue
+                : Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LastHit);
         }
+
         #endregion
     }
 }
