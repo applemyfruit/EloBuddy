@@ -515,7 +515,7 @@ namespace VolatileAIO.Organs
             }
             else
             {
-                return Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.LaneClear;
+                return Orbwalker.ActiveModesFlags.HasFlag(Volkswagen.Mode.LaneClear);
             }
         }
 
