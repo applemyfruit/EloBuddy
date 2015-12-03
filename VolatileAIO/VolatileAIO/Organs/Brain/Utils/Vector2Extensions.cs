@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using EloBuddy.SDK;
 using SharpDX;
 
-namespace VolatileAIO.Organs.Brain.Test.TopSecret
+namespace VolatileAIO.Organs.Brain.Utils
 {
     public static class Vector2Extensions
     {
