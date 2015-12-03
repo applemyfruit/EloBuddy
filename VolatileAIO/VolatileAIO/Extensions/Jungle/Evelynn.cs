@@ -78,7 +78,7 @@ namespace VolatileAIO.Extensions.Jungle
         {
             if (Player.IsDead) return;
             AutoCastSpells();
-            if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Combo)
+            if (ComboActive())
             {
                 Combo();
             }

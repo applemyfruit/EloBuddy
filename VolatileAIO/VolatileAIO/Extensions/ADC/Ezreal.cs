@@ -10,7 +10,7 @@ using SharpDX;
 using VolatileAIO.Organs;
 using VolatileAIO.Organs.Brain;
 using VolatileAIO.Organs.Brain.Data;
-using VolatileAIO.Organs._Test;
+using VolatileAIO.Organs.Brain.Utils;
 
 namespace VolatileAIO.Extensions.ADC
 {
@@ -83,19 +83,19 @@ namespace VolatileAIO.Extensions.ADC
         {
             AutoCastSpells();
             Stack();
-            if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Combo)
+            if (ComboActive())
             {
                 Combo();
             }
-            else if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Harass)
+            else if (HarassActive())
             {
                 Harass();
             }
-            else if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LaneClear))
+            else if (LaneClearActive())
             {
                 LaneClear();
             }
-            else if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.LastHit)
+            else if (LastHitActive())
             {
                 LastHit();
             }
@@ -279,7 +279,14 @@ namespace VolatileAIO.Extensions.ADC
             }
         }
 
-
+        protected override void Volatile_VWAfterAttack(AttackableUnit unit, AttackableUnit target)
+        {
+            if (!W.IsReady() || !SpellMenu["wtopush"].Cast<CheckBox>().CurrentValue || !target.IsStructure()) return;
+            foreach (var ally in EntityManager.Heroes.Allies.Where(ally => !ally.IsMe && ally.IsAlly && ally.Distance(Player.Position) < W.Range))
+            {
+                W.Cast(ally);
+            }
+        }
 
         private static void CastSpellLogic(bool useQ = false, bool useW = false, bool useE = false,
             AIHeroClient target = null)

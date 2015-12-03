@@ -3,20 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using EloBuddy;
 using EloBuddy.SDK.Enumerations;
-using SpellData = VolatileAIO.Organs.Brain.Data.SpellData;
 
-namespace VolatileAIO.Organs._Test
+namespace VolatileAIO.Organs.Brain.Data
 {
     public static class SpellDatabase
     {
-        public static List<SpellData> Spells = new List<SpellData>();
+        public static List<SkillShot> Spells = new List<SkillShot>();
 
         static SpellDatabase()
         {
             #region Aatrox
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Aatrox",
                     SpellName = "AatroxQ",
@@ -34,7 +33,7 @@ namespace VolatileAIO.Organs._Test
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Aatrox",
                     SpellName = "AatroxE",
@@ -56,7 +55,7 @@ namespace VolatileAIO.Organs._Test
             #region Ahri
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Ahri",
                     SpellName = "AhriOrbofDeception",
@@ -76,11 +75,11 @@ namespace VolatileAIO.Organs._Test
                     MissileSpellName = "AhriOrbMissile",
                     CanBeRemoved = true,
                     ForceRemove = true,
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Ahri",
                     SpellName = "AhriOrbReturn",
@@ -101,11 +100,11 @@ namespace VolatileAIO.Organs._Test
                     CanBeRemoved = true,
                     ForceRemove = true,
                     MissileSpellName = "AhriOrbReturn",
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Ahri",
                     SpellName = "AhriSeduce",
@@ -124,8 +123,8 @@ namespace VolatileAIO.Organs._Test
                     CollisionObjects =
                         new[]
                         {
-                            SpellData.CollisionObjectTypes.Champions, SpellData.CollisionObjectTypes.Minion,
-                            SpellData.CollisionObjectTypes.YasuoWall
+                            SkillShot.CollisionObjectTypes.Champions, SkillShot.CollisionObjectTypes.Minion,
+                            SkillShot.CollisionObjectTypes.YasuoWall
                         }
                 });
 
@@ -134,7 +133,7 @@ namespace VolatileAIO.Organs._Test
             #region Amumu
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Amumu",
                     SpellName = "BandageToss",
@@ -153,13 +152,13 @@ namespace VolatileAIO.Organs._Test
                     CollisionObjects =
                         new[]
                         {
-                            SpellData.CollisionObjectTypes.Champions, SpellData.CollisionObjectTypes.Minion,
-                            SpellData.CollisionObjectTypes.YasuoWall
+                            SkillShot.CollisionObjectTypes.Champions, SkillShot.CollisionObjectTypes.Minion,
+                            SkillShot.CollisionObjectTypes.YasuoWall
                         }
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Amumu",
                     SpellName = "CurseoftheSadMummy",
@@ -181,7 +180,7 @@ namespace VolatileAIO.Organs._Test
             #region Anivia
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Anivia",
                     SpellName = "FlashFrost",
@@ -197,7 +196,7 @@ namespace VolatileAIO.Organs._Test
                     IsDangerous = true,
                     MissileSpellName = "FlashFrostSpell",
                     CanBeRemoved = true,
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             #endregion Anivia
@@ -205,7 +204,7 @@ namespace VolatileAIO.Organs._Test
             #region Annie
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Annie",
                     SpellName = "Incinerate",
@@ -223,7 +222,7 @@ namespace VolatileAIO.Organs._Test
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Annie",
                     SpellName = "InfernalGuardian",
@@ -245,7 +244,7 @@ namespace VolatileAIO.Organs._Test
             #region Ashe
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Ashe",
                     SpellName = "Volley",
@@ -266,13 +265,13 @@ namespace VolatileAIO.Organs._Test
                     CollisionObjects =
                         new[]
                         {
-                            SpellData.CollisionObjectTypes.Champions, SpellData.CollisionObjectTypes.YasuoWall,
-                            SpellData.CollisionObjectTypes.Minion
+                            SkillShot.CollisionObjectTypes.Champions, SkillShot.CollisionObjectTypes.YasuoWall,
+                            SkillShot.CollisionObjectTypes.Minion
                         }
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Ashe",
                     SpellName = "EnchantedCrystalArrow",
@@ -289,7 +288,7 @@ namespace VolatileAIO.Organs._Test
                     MissileSpellName = "EnchantedCrystalArrow",
                     CanBeRemoved = true,
                     CollisionObjects =
-                        new[] {SpellData.CollisionObjectTypes.Champions, SpellData.CollisionObjectTypes.YasuoWall}
+                        new[] {SkillShot.CollisionObjectTypes.Champions, SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             #endregion Ashe
@@ -297,7 +296,7 @@ namespace VolatileAIO.Organs._Test
             #region Bard
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Bard",
                     SpellName = "BardQ",
@@ -314,11 +313,11 @@ namespace VolatileAIO.Organs._Test
                     MissileSpellName = "BardQMissile",
                     CanBeRemoved = true,
                     CollisionObjects =
-                        new[] {SpellData.CollisionObjectTypes.Champions, SpellData.CollisionObjectTypes.YasuoWall}
+                        new[] {SkillShot.CollisionObjectTypes.Champions, SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Bard",
                     SpellName = "BardR",
@@ -340,7 +339,7 @@ namespace VolatileAIO.Organs._Test
             #region Blatzcrink
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Blitzcrank",
                     SpellName = "RocketGrab",
@@ -359,13 +358,13 @@ namespace VolatileAIO.Organs._Test
                     CollisionObjects =
                         new[]
                         {
-                            SpellData.CollisionObjectTypes.Champions, SpellData.CollisionObjectTypes.Minion,
-                            SpellData.CollisionObjectTypes.YasuoWall
+                            SkillShot.CollisionObjectTypes.Champions, SkillShot.CollisionObjectTypes.Minion,
+                            SkillShot.CollisionObjectTypes.YasuoWall
                         }
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Blitzcrank",
                     SpellName = "StaticField",
@@ -387,7 +386,7 @@ namespace VolatileAIO.Organs._Test
             #region Brand
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Brand",
                     SpellName = "BrandBlaze",
@@ -406,13 +405,13 @@ namespace VolatileAIO.Organs._Test
                     CollisionObjects =
                         new[]
                         {
-                            SpellData.CollisionObjectTypes.Champions, SpellData.CollisionObjectTypes.Minion,
-                            SpellData.CollisionObjectTypes.YasuoWall
+                            SkillShot.CollisionObjectTypes.Champions, SkillShot.CollisionObjectTypes.Minion,
+                            SkillShot.CollisionObjectTypes.YasuoWall
                         }
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Brand",
                     SpellName = "BrandFissure",
@@ -434,7 +433,7 @@ namespace VolatileAIO.Organs._Test
             #region Braum
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Braum",
                     SpellName = "BraumQ",
@@ -453,13 +452,13 @@ namespace VolatileAIO.Organs._Test
                     CollisionObjects =
                         new[]
                         {
-                            SpellData.CollisionObjectTypes.Champions, SpellData.CollisionObjectTypes.Minion,
-                            SpellData.CollisionObjectTypes.YasuoWall
+                            SkillShot.CollisionObjectTypes.Champions, SkillShot.CollisionObjectTypes.Minion,
+                            SkillShot.CollisionObjectTypes.YasuoWall
                         }
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Braum",
                     SpellName = "BraumRWrapper",
@@ -474,7 +473,7 @@ namespace VolatileAIO.Organs._Test
                     DangerValue = 4,
                     IsDangerous = true,
                     MissileSpellName = "braumrmissile",
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             #endregion Braum
@@ -482,7 +481,7 @@ namespace VolatileAIO.Organs._Test
             #region Caitlyn
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Caitlyn",
                     SpellName = "CaitlynPiltoverPeacemaker",
@@ -497,11 +496,11 @@ namespace VolatileAIO.Organs._Test
                     DangerValue = 2,
                     IsDangerous = false,
                     MissileSpellName = "CaitlynPiltoverPeacemaker",
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Caitlyn",
                     SpellName = "CaitlynEntrapment",
@@ -520,8 +519,8 @@ namespace VolatileAIO.Organs._Test
                     CollisionObjects =
                         new[]
                         {
-                            SpellData.CollisionObjectTypes.Champions, SpellData.CollisionObjectTypes.Minion,
-                            SpellData.CollisionObjectTypes.YasuoWall
+                            SkillShot.CollisionObjectTypes.Champions, SkillShot.CollisionObjectTypes.Minion,
+                            SkillShot.CollisionObjectTypes.YasuoWall
                         }
                 });
 
@@ -530,7 +529,7 @@ namespace VolatileAIO.Organs._Test
             #region Cassiopeia
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Cassiopeia",
                     SpellName = "CassiopeiaNoxiousBlast",
@@ -548,7 +547,7 @@ namespace VolatileAIO.Organs._Test
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Cassiopeia",
                     SpellName = "CassiopeiaMiasma",
@@ -566,7 +565,7 @@ namespace VolatileAIO.Organs._Test
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Cassiopeia",
                     SpellName = "CassiopeiaPetrifyingGaze",
@@ -588,7 +587,7 @@ namespace VolatileAIO.Organs._Test
             #region Chogath
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Chogath",
                     SpellName = "Rupture",
@@ -610,7 +609,7 @@ namespace VolatileAIO.Organs._Test
             #region Corki
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Corki",
                     SpellName = "PhosphorusBomb",
@@ -625,11 +624,11 @@ namespace VolatileAIO.Organs._Test
                     DangerValue = 2,
                     IsDangerous = false,
                     MissileSpellName = "PhosphorusBombMissile",
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Corki",
                     SpellName = "MissileBarrage",
@@ -648,13 +647,13 @@ namespace VolatileAIO.Organs._Test
                     CollisionObjects =
                         new[]
                         {
-                            SpellData.CollisionObjectTypes.Champions, SpellData.CollisionObjectTypes.Minion,
-                            SpellData.CollisionObjectTypes.YasuoWall
+                            SkillShot.CollisionObjectTypes.Champions, SkillShot.CollisionObjectTypes.Minion,
+                            SkillShot.CollisionObjectTypes.YasuoWall
                         }
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Corki",
                     SpellName = "MissileBarrage2",
@@ -673,8 +672,8 @@ namespace VolatileAIO.Organs._Test
                     CollisionObjects =
                         new[]
                         {
-                            SpellData.CollisionObjectTypes.Champions, SpellData.CollisionObjectTypes.Minion,
-                            SpellData.CollisionObjectTypes.YasuoWall
+                            SkillShot.CollisionObjectTypes.Champions, SkillShot.CollisionObjectTypes.Minion,
+                            SkillShot.CollisionObjectTypes.YasuoWall
                         }
                 });
 
@@ -683,7 +682,7 @@ namespace VolatileAIO.Organs._Test
             #region Darius
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Darius",
                     SpellName = "DariusCleave",
@@ -703,7 +702,7 @@ namespace VolatileAIO.Organs._Test
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Darius",
                     SpellName = "DariusAxeGrabCone",
@@ -725,7 +724,7 @@ namespace VolatileAIO.Organs._Test
             #region DrMundo
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "DrMundo",
                     SpellName = "InfectedCleaverMissileCast",
@@ -744,8 +743,8 @@ namespace VolatileAIO.Organs._Test
                     CollisionObjects =
                         new[]
                         {
-                            SpellData.CollisionObjectTypes.Champions, SpellData.CollisionObjectTypes.Minion,
-                            SpellData.CollisionObjectTypes.YasuoWall
+                            SkillShot.CollisionObjectTypes.Champions, SkillShot.CollisionObjectTypes.Minion,
+                            SkillShot.CollisionObjectTypes.YasuoWall
                         }
                 });
 
@@ -754,7 +753,7 @@ namespace VolatileAIO.Organs._Test
             #region Draven
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Draven",
                     SpellName = "DravenDoubleShot",
@@ -770,11 +769,11 @@ namespace VolatileAIO.Organs._Test
                     IsDangerous = true,
                     MissileSpellName = "DravenDoubleShotMissile",
                     CanBeRemoved = true,
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Draven",
                     SpellName = "DravenRCast",
@@ -789,7 +788,7 @@ namespace VolatileAIO.Organs._Test
                     DangerValue = 5,
                     IsDangerous = true,
                     MissileSpellName = "DravenR",
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             #endregion Draven
@@ -797,7 +796,7 @@ namespace VolatileAIO.Organs._Test
             #region Ekko
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Ekko",
                     SpellName = "EkkoQ",
@@ -814,11 +813,11 @@ namespace VolatileAIO.Organs._Test
                     MissileSpellName = "ekkoqmis",
                     CanBeRemoved = true,
                     CollisionObjects =
-                        new[] {SpellData.CollisionObjectTypes.Champions, SpellData.CollisionObjectTypes.YasuoWall}
+                        new[] {SkillShot.CollisionObjectTypes.Champions, SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Ekko",
                     SpellName = "EkkoW",
@@ -838,7 +837,7 @@ namespace VolatileAIO.Organs._Test
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Ekko",
                     SpellName = "EkkoR",
@@ -862,7 +861,7 @@ namespace VolatileAIO.Organs._Test
             #region Elise
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Elise",
                     SpellName = "EliseHumanE",
@@ -881,8 +880,8 @@ namespace VolatileAIO.Organs._Test
                     CollisionObjects =
                         new[]
                         {
-                            SpellData.CollisionObjectTypes.Champions, SpellData.CollisionObjectTypes.Minion,
-                            SpellData.CollisionObjectTypes.YasuoWall
+                            SkillShot.CollisionObjectTypes.Champions, SkillShot.CollisionObjectTypes.Minion,
+                            SkillShot.CollisionObjectTypes.YasuoWall
                         }
                 });
 
@@ -891,7 +890,7 @@ namespace VolatileAIO.Organs._Test
             #region Evelynn
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Evelynn",
                     SpellName = "EvelynnR",
@@ -913,7 +912,7 @@ namespace VolatileAIO.Organs._Test
             #region Ezreal
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Ezreal",
                     SpellName = "EzrealMysticShot",
@@ -933,14 +932,14 @@ namespace VolatileAIO.Organs._Test
                     CollisionObjects =
                         new[]
                         {
-                            SpellData.CollisionObjectTypes.Champions, SpellData.CollisionObjectTypes.Minion,
-                            SpellData.CollisionObjectTypes.YasuoWall
+                            SkillShot.CollisionObjectTypes.Champions, SkillShot.CollisionObjectTypes.Minion,
+                            SkillShot.CollisionObjectTypes.YasuoWall
                         },
                     Id = 229
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Ezreal",
                     SpellName = "EzrealEssenceFlux",
@@ -955,11 +954,11 @@ namespace VolatileAIO.Organs._Test
                     DangerValue = 2,
                     IsDangerous = false,
                     MissileSpellName = "EzrealEssenceFluxMissile",
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Ezreal",
                     SpellName = "EzrealTrueshotBarrage",
@@ -974,7 +973,7 @@ namespace VolatileAIO.Organs._Test
                     DangerValue = 3,
                     IsDangerous = true,
                     MissileSpellName = "EzrealTrueshotBarrage",
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall},
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall},
                     Id = 245
                 });
 
@@ -983,7 +982,7 @@ namespace VolatileAIO.Organs._Test
             #region Fiora
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Fiora",
                     SpellName = "FioraW",
@@ -998,7 +997,7 @@ namespace VolatileAIO.Organs._Test
                     DangerValue = 2,
                     IsDangerous = false,
                     MissileSpellName = "FioraWMissile",
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             #endregion Fiora
@@ -1006,7 +1005,7 @@ namespace VolatileAIO.Organs._Test
             #region Fizz
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Fizz",
                     SpellName = "FizzMarinerDoom",
@@ -1022,7 +1021,7 @@ namespace VolatileAIO.Organs._Test
                     IsDangerous = true,
                     MissileSpellName = "FizzMarinerDoomMissile",
                     CollisionObjects =
-                        new[] {SpellData.CollisionObjectTypes.Champions, SpellData.CollisionObjectTypes.YasuoWall},
+                        new[] {SkillShot.CollisionObjectTypes.Champions, SkillShot.CollisionObjectTypes.YasuoWall},
                     CanBeRemoved = true
                 });
 
@@ -1031,7 +1030,7 @@ namespace VolatileAIO.Organs._Test
             #region Galio
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Galio",
                     SpellName = "GalioResoluteSmite",
@@ -1049,7 +1048,7 @@ namespace VolatileAIO.Organs._Test
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Galio",
                     SpellName = "GalioRighteousGust",
@@ -1064,11 +1063,11 @@ namespace VolatileAIO.Organs._Test
                     DangerValue = 2,
                     IsDangerous = false,
                     MissileSpellName = "GalioRighteousGust",
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Galio",
                     SpellName = "GalioIdolOfDurand",
@@ -1090,7 +1089,7 @@ namespace VolatileAIO.Organs._Test
             #region Gnar
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Gnar",
                     SpellName = "GnarQ",
@@ -1110,11 +1109,11 @@ namespace VolatileAIO.Organs._Test
                     CanBeRemoved = true,
                     ForceRemove = true,
                     MissileSpellName = "gnarqmissile",
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Gnar",
                     SpellName = "GnarQReturn",
@@ -1136,11 +1135,11 @@ namespace VolatileAIO.Organs._Test
                     MissileSpellName = "GnarQMissileReturn",
                     DisableFowDetection = false,
                     DisabledByDefault = true,
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Gnar",
                     SpellName = "GnarBigQ",
@@ -1155,11 +1154,11 @@ namespace VolatileAIO.Organs._Test
                     DangerValue = 2,
                     IsDangerous = false,
                     MissileSpellName = "GnarBigQMissile",
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Gnar",
                     SpellName = "GnarBigW",
@@ -1177,7 +1176,7 @@ namespace VolatileAIO.Organs._Test
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Gnar",
                     SpellName = "GnarE",
@@ -1195,7 +1194,7 @@ namespace VolatileAIO.Organs._Test
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Gnar",
                     SpellName = "GnarBigE",
@@ -1213,7 +1212,7 @@ namespace VolatileAIO.Organs._Test
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Gnar",
                     SpellName = "GnarR",
@@ -1235,7 +1234,7 @@ namespace VolatileAIO.Organs._Test
             #region Gragas
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Gragas",
                     SpellName = "GragasQ",
@@ -1256,7 +1255,7 @@ namespace VolatileAIO.Organs._Test
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Gragas",
                     SpellName = "GragasE",
@@ -1274,11 +1273,11 @@ namespace VolatileAIO.Organs._Test
                     CanBeRemoved = true,
                     ExtraRange = 300,
                     CollisionObjects =
-                        new[] {SpellData.CollisionObjectTypes.Champions, SpellData.CollisionObjectTypes.Minion}
+                        new[] {SkillShot.CollisionObjectTypes.Champions, SkillShot.CollisionObjectTypes.Minion}
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Gragas",
                     SpellName = "GragasR",
@@ -1293,7 +1292,7 @@ namespace VolatileAIO.Organs._Test
                     DangerValue = 5,
                     IsDangerous = true,
                     MissileSpellName = "GragasRBoom",
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             #endregion Gragas
@@ -1301,7 +1300,7 @@ namespace VolatileAIO.Organs._Test
             #region Graves
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Graves",
                     SpellName = "GravesClusterShot",
@@ -1316,13 +1315,13 @@ namespace VolatileAIO.Organs._Test
                     DangerValue = 2,
                     IsDangerous = false,
                     MissileSpellName = "GravesClusterShotAttack",
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall},
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall},
                     MultipleNumber = 3,
                     MultipleAngle = 15*(float) Math.PI/180
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Graves",
                     SpellName = "GravesChargeShot",
@@ -1340,8 +1339,8 @@ namespace VolatileAIO.Organs._Test
                     CollisionObjects =
                         new[]
                         {
-                            SpellData.CollisionObjectTypes.Champions, SpellData.CollisionObjectTypes.Minion,
-                            SpellData.CollisionObjectTypes.YasuoWall
+                            SkillShot.CollisionObjectTypes.Champions, SkillShot.CollisionObjectTypes.Minion,
+                            SkillShot.CollisionObjectTypes.YasuoWall
                         }
                 });
 
@@ -1350,7 +1349,7 @@ namespace VolatileAIO.Organs._Test
             #region Heimerdinger
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Heimerdinger",
                     SpellName = "Heimerdingerwm",
@@ -1365,11 +1364,11 @@ namespace VolatileAIO.Organs._Test
                     DangerValue = 2,
                     IsDangerous = false,
                     MissileSpellName = "HeimerdingerWAttack2",
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Heimerdinger",
                     SpellName = "HeimerdingerE",
@@ -1384,7 +1383,7 @@ namespace VolatileAIO.Organs._Test
                     DangerValue = 2,
                     IsDangerous = false,
                     MissileSpellName = "heimerdingerespell",
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             #endregion Heimerdinger
@@ -1392,7 +1391,7 @@ namespace VolatileAIO.Organs._Test
             #region Irelia
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Irelia",
                     SpellName = "IreliaTranscendentBlades",
@@ -1407,7 +1406,7 @@ namespace VolatileAIO.Organs._Test
                     DangerValue = 2,
                     IsDangerous = false,
                     MissileSpellName = "IreliaTranscendentBlades",
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             #endregion Irelia
@@ -1415,7 +1414,7 @@ namespace VolatileAIO.Organs._Test
             #region Janna
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Janna",
                     SpellName = "JannaQ",
@@ -1430,7 +1429,7 @@ namespace VolatileAIO.Organs._Test
                     DangerValue = 2,
                     IsDangerous = false,
                     MissileSpellName = "HowlingGaleSpell",
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             #endregion Janna
@@ -1438,7 +1437,7 @@ namespace VolatileAIO.Organs._Test
             #region JarvanIV
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "JarvanIV",
                     SpellName = "JarvanIVDragonStrike",
@@ -1455,7 +1454,7 @@ namespace VolatileAIO.Organs._Test
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "JarvanIV",
                     SpellName = "JarvanIVEQ",
@@ -1472,7 +1471,7 @@ namespace VolatileAIO.Organs._Test
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "JarvanIV",
                     SpellName = "JarvanIVDemacianStandard",
@@ -1494,7 +1493,7 @@ namespace VolatileAIO.Organs._Test
             #region Jayce
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Jayce",
                     SpellName = "jayceshockblast",
@@ -1513,13 +1512,13 @@ namespace VolatileAIO.Organs._Test
                     CollisionObjects =
                         new[]
                         {
-                            SpellData.CollisionObjectTypes.Champions, SpellData.CollisionObjectTypes.Minion,
-                            SpellData.CollisionObjectTypes.YasuoWall
+                            SkillShot.CollisionObjectTypes.Champions, SkillShot.CollisionObjectTypes.Minion,
+                            SkillShot.CollisionObjectTypes.YasuoWall
                         }
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Jayce",
                     SpellName = "JayceQAccel",
@@ -1538,8 +1537,8 @@ namespace VolatileAIO.Organs._Test
                     CollisionObjects =
                         new[]
                         {
-                            SpellData.CollisionObjectTypes.Champions, SpellData.CollisionObjectTypes.Minion,
-                            SpellData.CollisionObjectTypes.YasuoWall
+                            SkillShot.CollisionObjectTypes.Champions, SkillShot.CollisionObjectTypes.Minion,
+                            SkillShot.CollisionObjectTypes.YasuoWall
                         }
                 });
 
@@ -1548,7 +1547,7 @@ namespace VolatileAIO.Organs._Test
             #region Jinx
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Jinx",
                     SpellName = "JinxW",
@@ -1567,13 +1566,13 @@ namespace VolatileAIO.Organs._Test
                     CollisionObjects =
                         new[]
                         {
-                            SpellData.CollisionObjectTypes.Champions, SpellData.CollisionObjectTypes.Minion,
-                            SpellData.CollisionObjectTypes.YasuoWall
+                            SkillShot.CollisionObjectTypes.Champions, SkillShot.CollisionObjectTypes.Minion,
+                            SkillShot.CollisionObjectTypes.YasuoWall
                         }
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Jinx",
                     SpellName = "JinxR",
@@ -1590,7 +1589,7 @@ namespace VolatileAIO.Organs._Test
                     MissileSpellName = "JinxR",
                     CanBeRemoved = true,
                     CollisionObjects =
-                        new[] {SpellData.CollisionObjectTypes.Champions, SpellData.CollisionObjectTypes.YasuoWall}
+                        new[] {SkillShot.CollisionObjectTypes.Champions, SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             #endregion Jinx
@@ -1598,7 +1597,7 @@ namespace VolatileAIO.Organs._Test
             #region Kalista
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Kalista",
                     SpellName = "KalistaMysticShot",
@@ -1618,8 +1617,8 @@ namespace VolatileAIO.Organs._Test
                     CollisionObjects =
                         new[]
                         {
-                            SpellData.CollisionObjectTypes.Champions, SpellData.CollisionObjectTypes.Minion,
-                            SpellData.CollisionObjectTypes.YasuoWall
+                            SkillShot.CollisionObjectTypes.Champions, SkillShot.CollisionObjectTypes.Minion,
+                            SkillShot.CollisionObjectTypes.YasuoWall
                         }
                 });
 
@@ -1628,7 +1627,7 @@ namespace VolatileAIO.Organs._Test
             #region Karma
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Karma",
                     SpellName = "KarmaQ",
@@ -1647,13 +1646,13 @@ namespace VolatileAIO.Organs._Test
                     CollisionObjects =
                         new[]
                         {
-                            SpellData.CollisionObjectTypes.Champions, SpellData.CollisionObjectTypes.Minion,
-                            SpellData.CollisionObjectTypes.YasuoWall
+                            SkillShot.CollisionObjectTypes.Champions, SkillShot.CollisionObjectTypes.Minion,
+                            SkillShot.CollisionObjectTypes.YasuoWall
                         }
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Karma",
                     SpellName = "KarmaQMantra",
@@ -1672,8 +1671,8 @@ namespace VolatileAIO.Organs._Test
                     CollisionObjects =
                         new[]
                         {
-                            SpellData.CollisionObjectTypes.Champions, SpellData.CollisionObjectTypes.Minion,
-                            SpellData.CollisionObjectTypes.YasuoWall
+                            SkillShot.CollisionObjectTypes.Champions, SkillShot.CollisionObjectTypes.Minion,
+                            SkillShot.CollisionObjectTypes.YasuoWall
                         }
                 });
 
@@ -1682,7 +1681,7 @@ namespace VolatileAIO.Organs._Test
             #region Karthus
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Karthus",
                     SpellName = "KarthusLayWasteA2",
@@ -1710,7 +1709,7 @@ namespace VolatileAIO.Organs._Test
             #region Kassadin
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Kassadin",
                     SpellName = "RiftWalk",
@@ -1732,7 +1731,7 @@ namespace VolatileAIO.Organs._Test
             #region Kennen
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Kennen",
                     SpellName = "KennenShurikenHurlMissile1",
@@ -1751,8 +1750,8 @@ namespace VolatileAIO.Organs._Test
                     CollisionObjects =
                         new[]
                         {
-                            SpellData.CollisionObjectTypes.Champions, SpellData.CollisionObjectTypes.Minion,
-                            SpellData.CollisionObjectTypes.YasuoWall
+                            SkillShot.CollisionObjectTypes.Champions, SkillShot.CollisionObjectTypes.Minion,
+                            SkillShot.CollisionObjectTypes.YasuoWall
                         }
                 });
 
@@ -1761,7 +1760,7 @@ namespace VolatileAIO.Organs._Test
             #region Khazix
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Khazix",
                     SpellName = "KhazixW",
@@ -1783,13 +1782,13 @@ namespace VolatileAIO.Organs._Test
                     CollisionObjects =
                         new[]
                         {
-                            SpellData.CollisionObjectTypes.Champions, SpellData.CollisionObjectTypes.Minion,
-                            SpellData.CollisionObjectTypes.YasuoWall
+                            SkillShot.CollisionObjectTypes.Champions, SkillShot.CollisionObjectTypes.Minion,
+                            SkillShot.CollisionObjectTypes.YasuoWall
                         }
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Khazix",
                     SpellName = "KhazixE",
@@ -1811,7 +1810,7 @@ namespace VolatileAIO.Organs._Test
             #region Kogmaw
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Kogmaw",
                     SpellName = "KogMawQ",
@@ -1830,13 +1829,13 @@ namespace VolatileAIO.Organs._Test
                     CollisionObjects =
                         new[]
                         {
-                            SpellData.CollisionObjectTypes.Champions, SpellData.CollisionObjectTypes.Minion,
-                            SpellData.CollisionObjectTypes.YasuoWall
+                            SkillShot.CollisionObjectTypes.Champions, SkillShot.CollisionObjectTypes.Minion,
+                            SkillShot.CollisionObjectTypes.YasuoWall
                         }
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Kogmaw",
                     SpellName = "KogMawVoidOoze",
@@ -1851,11 +1850,11 @@ namespace VolatileAIO.Organs._Test
                     DangerValue = 2,
                     IsDangerous = false,
                     MissileSpellName = "KogMawVoidOozeMissile",
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Kogmaw",
                     SpellName = "KogMawLivingArtillery",
@@ -1877,7 +1876,7 @@ namespace VolatileAIO.Organs._Test
             #region Leblanc
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Leblanc",
                     SpellName = "LeblancSlide",
@@ -1895,7 +1894,7 @@ namespace VolatileAIO.Organs._Test
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Leblanc",
                     SpellName = "LeblancSlideM",
@@ -1913,7 +1912,7 @@ namespace VolatileAIO.Organs._Test
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Leblanc",
                     SpellName = "LeblancSoulShackle",
@@ -1932,13 +1931,13 @@ namespace VolatileAIO.Organs._Test
                     CollisionObjects =
                         new[]
                         {
-                            SpellData.CollisionObjectTypes.Champions, SpellData.CollisionObjectTypes.Minion,
-                            SpellData.CollisionObjectTypes.YasuoWall
+                            SkillShot.CollisionObjectTypes.Champions, SkillShot.CollisionObjectTypes.Minion,
+                            SkillShot.CollisionObjectTypes.YasuoWall
                         }
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Leblanc",
                     SpellName = "LeblancSoulShackleM",
@@ -1957,8 +1956,8 @@ namespace VolatileAIO.Organs._Test
                     CollisionObjects =
                         new[]
                         {
-                            SpellData.CollisionObjectTypes.Champions, SpellData.CollisionObjectTypes.Minion,
-                            SpellData.CollisionObjectTypes.YasuoWall
+                            SkillShot.CollisionObjectTypes.Champions, SkillShot.CollisionObjectTypes.Minion,
+                            SkillShot.CollisionObjectTypes.YasuoWall
                         }
                 });
 
@@ -1967,7 +1966,7 @@ namespace VolatileAIO.Organs._Test
             #region LeeSin
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "LeeSin",
                     SpellName = "BlindMonkQOne",
@@ -1986,8 +1985,8 @@ namespace VolatileAIO.Organs._Test
                     CollisionObjects =
                         new[]
                         {
-                            SpellData.CollisionObjectTypes.Champions, SpellData.CollisionObjectTypes.Minion,
-                            SpellData.CollisionObjectTypes.YasuoWall
+                            SkillShot.CollisionObjectTypes.Champions, SkillShot.CollisionObjectTypes.Minion,
+                            SkillShot.CollisionObjectTypes.YasuoWall
                         }
                 });
 
@@ -1996,7 +1995,7 @@ namespace VolatileAIO.Organs._Test
             #region Leona
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Leona",
                     SpellName = "LeonaZenithBlade",
@@ -2012,11 +2011,11 @@ namespace VolatileAIO.Organs._Test
                     IsDangerous = true,
                     TakeClosestPath = true,
                     MissileSpellName = "LeonaZenithBladeMissile",
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Leona",
                     SpellName = "LeonaSolarFlare",
@@ -2038,7 +2037,7 @@ namespace VolatileAIO.Organs._Test
             #region Lissandra
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Lissandra",
                     SpellName = "LissandraQ",
@@ -2053,11 +2052,11 @@ namespace VolatileAIO.Organs._Test
                     DangerValue = 2,
                     IsDangerous = false,
                     MissileSpellName = "LissandraQMissile",
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Lissandra",
                     SpellName = "LissandraQShards",
@@ -2072,11 +2071,11 @@ namespace VolatileAIO.Organs._Test
                     DangerValue = 2,
                     IsDangerous = false,
                     MissileSpellName = "lissandraqshards",
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Lissandra",
                     SpellName = "LissandraE",
@@ -2091,7 +2090,7 @@ namespace VolatileAIO.Organs._Test
                     DangerValue = 2,
                     IsDangerous = false,
                     MissileSpellName = "LissandraEMissile",
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             #endregion Lulu
@@ -2099,7 +2098,7 @@ namespace VolatileAIO.Organs._Test
             #region Lucian
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Lucian",
                     SpellName = "LucianQ",
@@ -2117,7 +2116,7 @@ namespace VolatileAIO.Organs._Test
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Lucian",
                     SpellName = "LucianW",
@@ -2135,7 +2134,7 @@ namespace VolatileAIO.Organs._Test
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Lucian",
                     SpellName = "LucianRMis",
@@ -2160,7 +2159,7 @@ namespace VolatileAIO.Organs._Test
             #region Lulu
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Lulu",
                     SpellName = "LuluQ",
@@ -2175,11 +2174,11 @@ namespace VolatileAIO.Organs._Test
                     DangerValue = 2,
                     IsDangerous = false,
                     MissileSpellName = "LuluQMissile",
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Lulu",
                     SpellName = "LuluQPix",
@@ -2194,7 +2193,7 @@ namespace VolatileAIO.Organs._Test
                     DangerValue = 2,
                     IsDangerous = false,
                     MissileSpellName = "LuluQMissileTwo",
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             #endregion Lulu
@@ -2202,7 +2201,7 @@ namespace VolatileAIO.Organs._Test
             #region Lux
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Lux",
                     SpellName = "LuxLightBinding",
@@ -2220,7 +2219,7 @@ namespace VolatileAIO.Organs._Test
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Lux",
                     SpellName = "LuxLightStrikeKugel",
@@ -2240,11 +2239,11 @@ namespace VolatileAIO.Organs._Test
                     DontCross = true,
                     CanBeRemoved = true,
                     DisabledByDefault = true,
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Lux",
                     SpellName = "LuxMaliceCannon",
@@ -2266,7 +2265,7 @@ namespace VolatileAIO.Organs._Test
             #region Malphite
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Malphite",
                     SpellName = "UFSlash",
@@ -2288,7 +2287,7 @@ namespace VolatileAIO.Organs._Test
             #region Malzahar
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Malzahar",
                     SpellName = "AlZaharCalloftheVoid",
@@ -2311,7 +2310,7 @@ namespace VolatileAIO.Organs._Test
             #region Morgana
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Morgana",
                     SpellName = "DarkBindingMissile",
@@ -2330,13 +2329,13 @@ namespace VolatileAIO.Organs._Test
                     CollisionObjects =
                         new[]
                         {
-                            SpellData.CollisionObjectTypes.Champions, SpellData.CollisionObjectTypes.Minion,
-                            SpellData.CollisionObjectTypes.YasuoWall
+                            SkillShot.CollisionObjectTypes.Champions, SkillShot.CollisionObjectTypes.Minion,
+                            SkillShot.CollisionObjectTypes.YasuoWall
                         }
                 });
 
             Spells.Add(
-                 new SpellData
+                 new SkillShot
                  {
                      ChampionName = "Morgana",
                      SpellName = "TormentedSoil",
@@ -2359,7 +2358,7 @@ namespace VolatileAIO.Organs._Test
             #region Nami
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Nami",
                     SpellName = "NamiQ",
@@ -2377,7 +2376,7 @@ namespace VolatileAIO.Organs._Test
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Nami",
                     SpellName = "NamiR",
@@ -2392,7 +2391,7 @@ namespace VolatileAIO.Organs._Test
                     DangerValue = 2,
                     IsDangerous = false,
                     MissileSpellName = "NamiRMissile",
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             #endregion Nami
@@ -2400,7 +2399,7 @@ namespace VolatileAIO.Organs._Test
             #region Nautilus
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Nautilus",
                     SpellName = "NautilusAnchorDrag",
@@ -2419,8 +2418,8 @@ namespace VolatileAIO.Organs._Test
                     CollisionObjects =
                         new[]
                         {
-                            SpellData.CollisionObjectTypes.Champions, SpellData.CollisionObjectTypes.Minion,
-                            SpellData.CollisionObjectTypes.YasuoWall
+                            SkillShot.CollisionObjectTypes.Champions, SkillShot.CollisionObjectTypes.Minion,
+                            SkillShot.CollisionObjectTypes.YasuoWall
                         }
                 });
 
@@ -2429,7 +2428,7 @@ namespace VolatileAIO.Organs._Test
             #region Nocturne
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Nocturne",
                     SpellName = "NocturneDuskbringer",
@@ -2442,7 +2441,7 @@ namespace VolatileAIO.Organs._Test
                     DangerValue = 2,
                     IsDangerous = false,
                     MissileSpellName = "NocturneDuskbringer",
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             #endregion Nocturne
@@ -2450,7 +2449,7 @@ namespace VolatileAIO.Organs._Test
             #region Nidalee
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Nidalee",
                     SpellName = "JavelinToss",
@@ -2469,8 +2468,8 @@ namespace VolatileAIO.Organs._Test
                     CollisionObjects =
                         new[]
                         {
-                            SpellData.CollisionObjectTypes.Champions, SpellData.CollisionObjectTypes.Minion,
-                            SpellData.CollisionObjectTypes.YasuoWall
+                            SkillShot.CollisionObjectTypes.Champions, SkillShot.CollisionObjectTypes.Minion,
+                            SkillShot.CollisionObjectTypes.YasuoWall
                         }
                 });
 
@@ -2479,7 +2478,7 @@ namespace VolatileAIO.Organs._Test
             #region Olaf
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Olaf",
                     SpellName = "OlafAxeThrowCast",
@@ -2496,7 +2495,7 @@ namespace VolatileAIO.Organs._Test
                     IsDangerous = false,
                     MissileSpellName = "olafaxethrow",
                     CanBeRemoved = true,
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             #endregion Olaf
@@ -2504,7 +2503,7 @@ namespace VolatileAIO.Organs._Test
             #region Orianna
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Orianna",
                     SpellName = "OriannasQ",
@@ -2519,11 +2518,11 @@ namespace VolatileAIO.Organs._Test
                     DangerValue = 2,
                     IsDangerous = false,
                     MissileSpellName = "orianaizuna",
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Orianna",
                     SpellName = "OriannaQend",
@@ -2538,11 +2537,11 @@ namespace VolatileAIO.Organs._Test
                     DangerValue = 2,
                     IsDangerous = false,
                     MissileSpellName = "",
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Orianna",
                     SpellName = "OrianaDissonanceCommand",
@@ -2561,7 +2560,7 @@ namespace VolatileAIO.Organs._Test
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Orianna",
                     SpellName = "OriannasE",
@@ -2576,11 +2575,11 @@ namespace VolatileAIO.Organs._Test
                     DangerValue = 2,
                     IsDangerous = false,
                     MissileSpellName = "orianaredact",
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Orianna",
                     SpellName = "OrianaDetonateCommand",
@@ -2603,7 +2602,7 @@ namespace VolatileAIO.Organs._Test
             #region Quinn
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Quinn",
                     SpellName = "QuinnQ",
@@ -2622,8 +2621,8 @@ namespace VolatileAIO.Organs._Test
                     CollisionObjects =
                         new[]
                         {
-                            SpellData.CollisionObjectTypes.Champions, SpellData.CollisionObjectTypes.Minion,
-                            SpellData.CollisionObjectTypes.YasuoWall
+                            SkillShot.CollisionObjectTypes.Champions, SkillShot.CollisionObjectTypes.Minion,
+                            SkillShot.CollisionObjectTypes.YasuoWall
                         }
                 });
 
@@ -2632,7 +2631,7 @@ namespace VolatileAIO.Organs._Test
             #region Rengar
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Rengar",
                     SpellName = "RengarE",
@@ -2651,8 +2650,8 @@ namespace VolatileAIO.Organs._Test
                     CollisionObjects =
                         new[]
                         {
-                            SpellData.CollisionObjectTypes.Champions, SpellData.CollisionObjectTypes.Minion,
-                            SpellData.CollisionObjectTypes.YasuoWall
+                            SkillShot.CollisionObjectTypes.Champions, SkillShot.CollisionObjectTypes.Minion,
+                            SkillShot.CollisionObjectTypes.YasuoWall
                         }
                 });
 
@@ -2661,7 +2660,7 @@ namespace VolatileAIO.Organs._Test
             #region RekSai
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "RekSai",
                     SpellName = "reksaiqburrowed",
@@ -2679,8 +2678,8 @@ namespace VolatileAIO.Organs._Test
                     CollisionObjects =
                         new[]
                         {
-                            SpellData.CollisionObjectTypes.Champions, SpellData.CollisionObjectTypes.Minion,
-                            SpellData.CollisionObjectTypes.YasuoWall
+                            SkillShot.CollisionObjectTypes.Champions, SkillShot.CollisionObjectTypes.Minion,
+                            SkillShot.CollisionObjectTypes.YasuoWall
                         }
                 });
 
@@ -2689,7 +2688,7 @@ namespace VolatileAIO.Organs._Test
             #region Riven
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Riven",
                     SpellName = "rivenizunablade",
@@ -2714,7 +2713,7 @@ namespace VolatileAIO.Organs._Test
             #region Rumble
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Rumble",
                     SpellName = "RumbleGrenade",
@@ -2733,13 +2732,13 @@ namespace VolatileAIO.Organs._Test
                     CollisionObjects =
                         new[]
                         {
-                            SpellData.CollisionObjectTypes.Champions, SpellData.CollisionObjectTypes.Minion,
-                            SpellData.CollisionObjectTypes.YasuoWall
+                            SkillShot.CollisionObjectTypes.Champions, SkillShot.CollisionObjectTypes.Minion,
+                            SkillShot.CollisionObjectTypes.YasuoWall
                         }
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Rumble",
                     SpellName = "RumbleCarpetBombM",
@@ -2756,7 +2755,7 @@ namespace VolatileAIO.Organs._Test
                     IsDangerous = false,
                     MissileSpellName = "RumbleCarpetBombMissile",
                     CanBeRemoved = false,
-                    CollisionObjects = new SpellData.CollisionObjectTypes[] {}
+                    CollisionObjects = new SkillShot.CollisionObjectTypes[] {}
                 });
 
             #endregion Rumble
@@ -2764,7 +2763,7 @@ namespace VolatileAIO.Organs._Test
             #region Ryze
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Ryze",
                     SpellName = "RyzeQ",
@@ -2783,13 +2782,13 @@ namespace VolatileAIO.Organs._Test
                     CollisionObjects =
                         new[]
                         {
-                            SpellData.CollisionObjectTypes.Champions, SpellData.CollisionObjectTypes.Minion,
-                            SpellData.CollisionObjectTypes.YasuoWall
+                            SkillShot.CollisionObjectTypes.Champions, SkillShot.CollisionObjectTypes.Minion,
+                            SkillShot.CollisionObjectTypes.YasuoWall
                         }
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Ryze",
                     SpellName = "ryzerq",
@@ -2808,8 +2807,8 @@ namespace VolatileAIO.Organs._Test
                     CollisionObjects =
                         new[]
                         {
-                            SpellData.CollisionObjectTypes.Champions, SpellData.CollisionObjectTypes.Minion,
-                            SpellData.CollisionObjectTypes.YasuoWall
+                            SkillShot.CollisionObjectTypes.Champions, SkillShot.CollisionObjectTypes.Minion,
+                            SkillShot.CollisionObjectTypes.YasuoWall
                         }
                 });
 
@@ -2818,7 +2817,7 @@ namespace VolatileAIO.Organs._Test
             #region Sejuani
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Sejuani",
                     SpellName = "SejuaniArcticAssault",
@@ -2837,13 +2836,13 @@ namespace VolatileAIO.Organs._Test
                     CollisionObjects =
                         new[]
                         {
-                            SpellData.CollisionObjectTypes.Champions, SpellData.CollisionObjectTypes.Minion,
-                            SpellData.CollisionObjectTypes.YasuoWall
+                            SkillShot.CollisionObjectTypes.Champions, SkillShot.CollisionObjectTypes.Minion,
+                            SkillShot.CollisionObjectTypes.YasuoWall
                         }
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Sejuani",
                     SpellName = "SejuaniGlacialPrisonStart",
@@ -2860,7 +2859,7 @@ namespace VolatileAIO.Organs._Test
                     MissileSpellName = "sejuaniglacialprison",
                     CanBeRemoved = true,
                     CollisionObjects =
-                        new[] {SpellData.CollisionObjectTypes.Champions, SpellData.CollisionObjectTypes.YasuoWall}
+                        new[] {SkillShot.CollisionObjectTypes.Champions, SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             #endregion Sejuani
@@ -2868,7 +2867,7 @@ namespace VolatileAIO.Organs._Test
             #region Sion
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Sion",
                     SpellName = "SionE",
@@ -2884,11 +2883,11 @@ namespace VolatileAIO.Organs._Test
                     IsDangerous = true,
                     MissileSpellName = "SionEMissile",
                     CollisionObjects =
-                        new[] {SpellData.CollisionObjectTypes.Champions, SpellData.CollisionObjectTypes.YasuoWall}
+                        new[] {SkillShot.CollisionObjectTypes.Champions, SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Sion",
                     SpellName = "SionR",
@@ -2903,7 +2902,7 @@ namespace VolatileAIO.Organs._Test
                     DangerValue = 3,
                     IsDangerous = true,
                     CollisionObjects =
-                        new[] {SpellData.CollisionObjectTypes.Champions}
+                        new[] {SkillShot.CollisionObjectTypes.Champions}
                 });
 
             #endregion Sion
@@ -2911,7 +2910,7 @@ namespace VolatileAIO.Organs._Test
             #region Soraka
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Soraka",
                     SpellName = "SorakaQ",
@@ -2926,7 +2925,7 @@ namespace VolatileAIO.Organs._Test
                     DangerValue = 2,
                     IsDangerous = false,
                     MissileSpellName = "",
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             #endregion Soraka
@@ -2934,7 +2933,7 @@ namespace VolatileAIO.Organs._Test
             #region Shen
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Shen",
                     SpellName = "ShenShadowDash",
@@ -2953,8 +2952,8 @@ namespace VolatileAIO.Organs._Test
                     CollisionObjects =
                         new[]
                         {
-                            SpellData.CollisionObjectTypes.Minion, SpellData.CollisionObjectTypes.Champions,
-                            SpellData.CollisionObjectTypes.YasuoWall
+                            SkillShot.CollisionObjectTypes.Minion, SkillShot.CollisionObjectTypes.Champions,
+                            SkillShot.CollisionObjectTypes.YasuoWall
                         }
                 });
 
@@ -2963,7 +2962,7 @@ namespace VolatileAIO.Organs._Test
             #region Shyvana
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Shyvana",
                     SpellName = "ShyvanaFireball",
@@ -2981,13 +2980,13 @@ namespace VolatileAIO.Organs._Test
                     CollisionObjects =
                         new[]
                         {
-                            SpellData.CollisionObjectTypes.Minion, SpellData.CollisionObjectTypes.Champions,
-                            SpellData.CollisionObjectTypes.YasuoWall
+                            SkillShot.CollisionObjectTypes.Minion, SkillShot.CollisionObjectTypes.Champions,
+                            SkillShot.CollisionObjectTypes.YasuoWall
                         }
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Shyvana",
                     SpellName = "ShyvanaTransformCast",
@@ -3010,7 +3009,7 @@ namespace VolatileAIO.Organs._Test
             #region Sivir
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Sivir",
                     SpellName = "SivirQReturn",
@@ -3027,11 +3026,11 @@ namespace VolatileAIO.Organs._Test
                     MissileSpellName = "SivirQMissileReturn",
                     DisableFowDetection = false,
                     MissileFollowsUnit = true,
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Sivir",
                     SpellName = "SivirQ",
@@ -3046,7 +3045,7 @@ namespace VolatileAIO.Organs._Test
                     DangerValue = 2,
                     IsDangerous = false,
                     MissileSpellName = "SivirQMissile",
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             #endregion Sivir
@@ -3054,7 +3053,7 @@ namespace VolatileAIO.Organs._Test
             #region Skarner
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Skarner",
                     SpellName = "SkarnerFracture",
@@ -3069,7 +3068,7 @@ namespace VolatileAIO.Organs._Test
                     DangerValue = 2,
                     IsDangerous = false,
                     MissileSpellName = "SkarnerFractureMissile",
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             #endregion Skarner
@@ -3077,7 +3076,7 @@ namespace VolatileAIO.Organs._Test
             #region Sona
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Sona",
                     SpellName = "SonaR",
@@ -3092,7 +3091,7 @@ namespace VolatileAIO.Organs._Test
                     DangerValue = 5,
                     IsDangerous = true,
                     MissileSpellName = "SonaR",
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             #endregion Sona
@@ -3100,7 +3099,7 @@ namespace VolatileAIO.Organs._Test
             #region Swain
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Swain",
                     SpellName = "SwainShadowGrasp",
@@ -3122,7 +3121,7 @@ namespace VolatileAIO.Organs._Test
             #region Syndra
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Syndra",
                     SpellName = "SyndraQ",
@@ -3140,7 +3139,7 @@ namespace VolatileAIO.Organs._Test
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Syndra",
                     SpellName = "syndrawcast",
@@ -3158,7 +3157,7 @@ namespace VolatileAIO.Organs._Test
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Syndra",
                     SpellName = "syndrae5",
@@ -3177,7 +3176,7 @@ namespace VolatileAIO.Organs._Test
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Syndra",
                     SpellName = "SyndraE",
@@ -3200,7 +3199,7 @@ namespace VolatileAIO.Organs._Test
             #region Talon
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Talon",
                     SpellName = "TalonRake",
@@ -3220,7 +3219,7 @@ namespace VolatileAIO.Organs._Test
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Talon",
                     SpellName = "TalonRakeReturn",
@@ -3244,7 +3243,7 @@ namespace VolatileAIO.Organs._Test
             #region Tahm Kench
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "TahmKench",
                     SpellName = "TahmKenchQ",
@@ -3263,8 +3262,8 @@ namespace VolatileAIO.Organs._Test
                     CollisionObjects =
                         new[]
                         {
-                            SpellData.CollisionObjectTypes.Minion, SpellData.CollisionObjectTypes.Champions,
-                            SpellData.CollisionObjectTypes.YasuoWall
+                            SkillShot.CollisionObjectTypes.Minion, SkillShot.CollisionObjectTypes.Champions,
+                            SkillShot.CollisionObjectTypes.YasuoWall
                         }
                 });
 
@@ -3273,7 +3272,7 @@ namespace VolatileAIO.Organs._Test
             #region Thresh
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Thresh",
                     SpellName = "ThreshQ",
@@ -3292,13 +3291,13 @@ namespace VolatileAIO.Organs._Test
                     CollisionObjects =
                         new[]
                         {
-                            SpellData.CollisionObjectTypes.Minion, SpellData.CollisionObjectTypes.Champions,
-                            SpellData.CollisionObjectTypes.YasuoWall
+                            SkillShot.CollisionObjectTypes.Minion, SkillShot.CollisionObjectTypes.Champions,
+                            SkillShot.CollisionObjectTypes.YasuoWall
                         }
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Thresh",
                     SpellName = "ThreshEFlay",
@@ -3321,7 +3320,7 @@ namespace VolatileAIO.Organs._Test
             #region Tristana
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Tristana",
                     SpellName = "RocketJump",
@@ -3343,7 +3342,7 @@ namespace VolatileAIO.Organs._Test
             #region Tryndamere
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Tryndamere",
                     SpellName = "slashCast",
@@ -3365,7 +3364,7 @@ namespace VolatileAIO.Organs._Test
             #region TwistedFate
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "TwistedFate",
                     SpellName = "WildCards",
@@ -3382,7 +3381,7 @@ namespace VolatileAIO.Organs._Test
                     MissileSpellName = "SealFateMissile",
                     MultipleNumber = 3,
                     MultipleAngle = 28*(float) Math.PI/180,
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             #endregion TwistedFate
@@ -3390,7 +3389,7 @@ namespace VolatileAIO.Organs._Test
             #region Twitch
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Twitch",
                     SpellName = "TwitchVenomCask",
@@ -3405,7 +3404,7 @@ namespace VolatileAIO.Organs._Test
                     DangerValue = 2,
                     IsDangerous = false,
                     MissileSpellName = "TwitchVenomCaskMissile",
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             #endregion Twitch
@@ -3413,7 +3412,7 @@ namespace VolatileAIO.Organs._Test
             #region Urgot
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Urgot",
                     SpellName = "UrgotHeatseekingLineMissile",
@@ -3432,7 +3431,7 @@ namespace VolatileAIO.Organs._Test
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Urgot",
                     SpellName = "UrgotPlasmaGrenade",
@@ -3454,7 +3453,7 @@ namespace VolatileAIO.Organs._Test
             #region Varus
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Varus",
                     SpellName = "VarusQMissilee",
@@ -3469,11 +3468,11 @@ namespace VolatileAIO.Organs._Test
                     DangerValue = 2,
                     IsDangerous = false,
                     MissileSpellName = "VarusQMissile",
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Varus",
                     SpellName = "VarusE",
@@ -3491,7 +3490,7 @@ namespace VolatileAIO.Organs._Test
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Varus",
                     SpellName = "VarusR",
@@ -3508,7 +3507,7 @@ namespace VolatileAIO.Organs._Test
                     MissileSpellName = "VarusRMissile",
                     CanBeRemoved = true,
                     CollisionObjects =
-                        new[] {SpellData.CollisionObjectTypes.Champions, SpellData.CollisionObjectTypes.YasuoWall}
+                        new[] {SkillShot.CollisionObjectTypes.Champions, SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             #endregion Varus
@@ -3516,7 +3515,7 @@ namespace VolatileAIO.Organs._Test
             #region Veigar
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Veigar",
                     SpellName = "VeigarBalefulStrike",
@@ -3531,11 +3530,11 @@ namespace VolatileAIO.Organs._Test
                     DangerValue = 2,
                     IsDangerous = false,
                     MissileSpellName = "VeigarBalefulStrikeMis",
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Veigar",
                     SpellName = "VeigarDarkMatter",
@@ -3557,7 +3556,7 @@ namespace VolatileAIO.Organs._Test
             #region Velkoz
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Velkoz",
                     SpellName = "VelkozQ",
@@ -3576,13 +3575,13 @@ namespace VolatileAIO.Organs._Test
                     CollisionObjects =
                         new[]
                         {
-                            SpellData.CollisionObjectTypes.Minion, SpellData.CollisionObjectTypes.Champions,
-                            SpellData.CollisionObjectTypes.YasuoWall
+                            SkillShot.CollisionObjectTypes.Minion, SkillShot.CollisionObjectTypes.Champions,
+                            SkillShot.CollisionObjectTypes.YasuoWall
                         }
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Velkoz",
                     SpellName = "VelkozQSplit",
@@ -3601,13 +3600,13 @@ namespace VolatileAIO.Organs._Test
                     CollisionObjects =
                         new[]
                         {
-                            SpellData.CollisionObjectTypes.Minion, SpellData.CollisionObjectTypes.Champions,
-                            SpellData.CollisionObjectTypes.YasuoWall
+                            SkillShot.CollisionObjectTypes.Minion, SkillShot.CollisionObjectTypes.Champions,
+                            SkillShot.CollisionObjectTypes.YasuoWall
                         }
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Velkoz",
                     SpellName = "VelkozW",
@@ -3625,7 +3624,7 @@ namespace VolatileAIO.Organs._Test
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Velkoz",
                     SpellName = "VelkozE",
@@ -3647,7 +3646,7 @@ namespace VolatileAIO.Organs._Test
             #region Vi
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Vi",
                     SpellName = "Vi-q",
@@ -3669,7 +3668,7 @@ namespace VolatileAIO.Organs._Test
             #region Viktor
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Viktor",
                     SpellName = "Laser",
@@ -3685,7 +3684,7 @@ namespace VolatileAIO.Organs._Test
                     IsDangerous = false,
                     MissileSpellName = "ViktorDeathRayMissile",
                     ExtraMissileNames = new[] {"viktoreaugmissile"},
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             #endregion Viktor
@@ -3693,7 +3692,7 @@ namespace VolatileAIO.Organs._Test
             #region Xerath
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Xerath",
                     SpellName = "xeratharcanopulse2",
@@ -3711,7 +3710,7 @@ namespace VolatileAIO.Organs._Test
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Xerath",
                     SpellName = "XerathArcaneBarrage2",
@@ -3729,7 +3728,7 @@ namespace VolatileAIO.Organs._Test
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Xerath",
                     SpellName = "XerathMageSpear",
@@ -3748,13 +3747,13 @@ namespace VolatileAIO.Organs._Test
                     CollisionObjects =
                         new[]
                         {
-                            SpellData.CollisionObjectTypes.Minion, SpellData.CollisionObjectTypes.Champions,
-                            SpellData.CollisionObjectTypes.YasuoWall
+                            SkillShot.CollisionObjectTypes.Minion, SkillShot.CollisionObjectTypes.Champions,
+                            SkillShot.CollisionObjectTypes.YasuoWall
                         }
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Xerath",
                     SpellName = "xerathrmissilewrapper",
@@ -3776,7 +3775,7 @@ namespace VolatileAIO.Organs._Test
             #region Yasuo
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Yasuo",
                     SpellName = "yasuoq2",
@@ -3795,7 +3794,7 @@ namespace VolatileAIO.Organs._Test
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Yasuo",
                     SpellName = "yasuoq3w",
@@ -3810,11 +3809,11 @@ namespace VolatileAIO.Organs._Test
                     DangerValue = 3,
                     IsDangerous = true,
                     MissileSpellName = "yasuoq3w",
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Yasuo",
                     SpellName = "yasuoq",
@@ -3837,7 +3836,7 @@ namespace VolatileAIO.Organs._Test
             #region Zac
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Zac",
                     SpellName = "ZacQ",
@@ -3859,7 +3858,7 @@ namespace VolatileAIO.Organs._Test
             #region Zed
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Zed",
                     SpellName = "ZedQ",
@@ -3876,7 +3875,7 @@ namespace VolatileAIO.Organs._Test
                     MissileSpellName = "zedshurikenmisone",
                     FromObjects = new[] {"Zed_Clone_idle.troy", "Zed_Clone_Idle.troy"},
                     ExtraMissileNames = new[] {"zedshurikenmistwo", "zedshurikenmisthree"},
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             #endregion Zed
@@ -3884,7 +3883,7 @@ namespace VolatileAIO.Organs._Test
             #region Ziggs
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Ziggs",
                     SpellName = "ZiggsQ",
@@ -3904,7 +3903,7 @@ namespace VolatileAIO.Organs._Test
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Ziggs",
                     SpellName = "ZiggsQBounce1",
@@ -3925,7 +3924,7 @@ namespace VolatileAIO.Organs._Test
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Ziggs",
                     SpellName = "ZiggsQBounce2",
@@ -3946,7 +3945,7 @@ namespace VolatileAIO.Organs._Test
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Ziggs",
                     SpellName = "ZiggsW",
@@ -3962,11 +3961,11 @@ namespace VolatileAIO.Organs._Test
                     IsDangerous = false,
                     MissileSpellName = "ZiggsW",
                     DisableFowDetection = true,
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Ziggs",
                     SpellName = "ZiggsE",
@@ -3985,7 +3984,7 @@ namespace VolatileAIO.Organs._Test
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Ziggs",
                     SpellName = "ZiggsR",
@@ -4008,7 +4007,7 @@ namespace VolatileAIO.Organs._Test
             #region Zilean
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Zilean",
                     SpellName = "ZileanQ",
@@ -4023,7 +4022,7 @@ namespace VolatileAIO.Organs._Test
                     DangerValue = 2,
                     IsDangerous = false,
                     MissileSpellName = "ZileanQMissile",
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             #endregion Zilean
@@ -4031,7 +4030,7 @@ namespace VolatileAIO.Organs._Test
             #region Zyra
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Zyra",
                     SpellName = "ZyraQFissure",
@@ -4049,7 +4048,7 @@ namespace VolatileAIO.Organs._Test
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Zyra",
                     SpellName = "ZyraGraspingRoots",
@@ -4064,11 +4063,11 @@ namespace VolatileAIO.Organs._Test
                     DangerValue = 3,
                     IsDangerous = true,
                     MissileSpellName = "ZyraGraspingRoots",
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             Spells.Add(
-                new SpellData
+                new SkillShot
                 {
                     ChampionName = "Zyra",
                     SpellName = "zyrapassivedeathmanager",
@@ -4083,7 +4082,7 @@ namespace VolatileAIO.Organs._Test
                     DangerValue = 3,
                     IsDangerous = true,
                     MissileSpellName = "zyrapassivedeathmanager",
-                    CollisionObjects = new[] {SpellData.CollisionObjectTypes.YasuoWall}
+                    CollisionObjects = new[] {SkillShot.CollisionObjectTypes.YasuoWall}
                 });
 
             #endregion Zyra
@@ -4091,7 +4090,7 @@ namespace VolatileAIO.Organs._Test
 
 
 
-        public static SpellData GetByName(string spellName)
+        public static SkillShot GetByName(string spellName)
         {
             spellName = spellName.ToLower();
             foreach (var spellData in Spells)
@@ -4105,7 +4104,7 @@ namespace VolatileAIO.Organs._Test
             return null;
         }
 
-        public static SpellData GetByMissileName(string missileSpellName)
+        public static SkillShot GetByMissileName(string missileSpellName)
         {
             missileSpellName = missileSpellName.ToLower();
             foreach (var spellData in Spells)
@@ -4120,7 +4119,7 @@ namespace VolatileAIO.Organs._Test
             return null;
         }
 
-        public static SpellData GetBySpeed(string ChampionName, int speed, int id = -1)
+        public static SkillShot GetBySpeed(string ChampionName, int speed, int id = -1)
         {
             foreach (var spellData in Spells)
             {

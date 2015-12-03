@@ -9,6 +9,7 @@ using SharpDX;
 using VolatileAIO.Organs;
 using VolatileAIO.Organs.Brain;
 using VolatileAIO.Organs.Brain.Data;
+using VolatileAIO.Organs.Brain.Utils;
 
 namespace VolatileAIO.Extensions.Mid
 {
@@ -74,24 +75,24 @@ namespace VolatileAIO.Extensions.Mid
         {
             AutoSpells();
 
-            switch (Orbwalker.ActiveModesFlags)
+            if (ComboActive())
             {
-                case Orbwalker.ActiveModes.Combo:
-                    Combo();
-                    break;
-                case Orbwalker.ActiveModes.Harass:
-                    Harass();
-                    break;
-                default:
-                    if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LaneClear))
-                    {
-                        LaneClear();
-                    }
-                    else if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.JungleClear))
-                    {
-                        JungleClear();
-                    }
-                    break;
+                Combo();
+            }
+            else if (HarassActive())
+            {
+                Harass();
+            }
+            else
+            {
+                if (LaneClearActive())
+                {
+                    LaneClear();
+                }
+                else if (LaneClearActive())
+                {
+                    JungleClear();
+                }
             }
         }
 

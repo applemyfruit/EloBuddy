@@ -31,7 +31,7 @@ using EloBuddy.SDK.Constants;
 
 #endregion
 
-namespace VolatileAIO.Organs.Brain.Test2
+namespace VolatileAIO.Organs.Brain.Utils
 {
     /// <summary>
     ///     This class allows you to calculate the health of units after a set time. Only works on minions and only taking into account the auto-attack damage.
@@ -140,7 +140,7 @@ namespace VolatileAIO.Organs.Brain.Test2
                 Environment.TickCount - Game.Ping / 2,
                 sender.AttackCastDelay * 1000,
                 sender.AttackDelay * 1000 - (sender is Obj_AI_Turret ? 70 : 0),
-                sender.IsMelee() ? int.MaxValue : (int)args.SData.MissileSpeed,
+                sender.IsMelee ? int.MaxValue : (int)args.SData.MissileSpeed,
                 (float)sender.GetAutoAttackDamage(target, true));
             ActiveAttacks.Add(sender.NetworkId, attackData);
         }

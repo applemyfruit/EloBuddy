@@ -11,7 +11,7 @@ using SharpDX;
 using VolatileAIO.Organs;
 using VolatileAIO.Organs.Brain;
 using VolatileAIO.Organs.Brain.Data;
-using VolatileAIO.Organs._Test;
+using VolatileAIO.Organs.Brain.Utils;
 using Color = System.Drawing.Color;
 
 namespace VolatileAIO.Extensions.Support
@@ -105,8 +105,8 @@ namespace VolatileAIO.Extensions.Support
         protected override void Volatile_OnHeartBeat(EventArgs args)
         {
             AutoCast();
-            if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Combo) Combo();
-            if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Harass) Harass();
+            if (ComboActive()) Combo();
+            if (HarassActive()) Harass();
         }
 
         protected override void Volatile_OnPostAttack(AttackableUnit target, EventArgs args)
@@ -122,7 +122,33 @@ namespace VolatileAIO.Extensions.Support
                     W.Cast();
                 }
             }
-            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.JungleClear) && MinionManager.GetMinions(Player.Position, 400, MinionTypes.All, MinionTeam.Neutral).Any())
+            if (LaneClearActive() && MinionManager.GetMinions(Player.Position, 400, MinionTypes.All, MinionTeam.Neutral).Any())
+            {
+                if (SpellMenu["etj"].Cast<CheckBox>().CurrentValue && E.IsReady())
+                {
+                    E.Cast();
+                }
+                if (SpellMenu["wtj"].Cast<CheckBox>().CurrentValue && W.IsReady())
+                {
+                    W.Cast();
+                }
+            }
+        }
+
+        protected override void Volatile_VWAfterAttack(AttackableUnit unit, AttackableUnit target)
+        {
+            if (target.IsWard() || target.IsStructure())
+            {
+                if (SpellMenu["etpush"].Cast<CheckBox>().CurrentValue && E.IsReady())
+                {
+                    E.Cast();
+                }
+                if (SpellMenu["wtpush"].Cast<CheckBox>().CurrentValue && W.IsReady())
+                {
+                    W.Cast();
+                }
+            }
+            if (LaneClearActive() && MinionManager.GetMinions(Player.Position, 400, MinionTypes.All, MinionTeam.Neutral).Any())
             {
                 if (SpellMenu["etj"].Cast<CheckBox>().CurrentValue && E.IsReady())
                 {

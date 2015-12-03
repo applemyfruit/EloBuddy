@@ -76,11 +76,11 @@ namespace VolatileAIO.Extensions.Mid
         protected override void Volatile_OnHeartBeat(EventArgs args)
         {
             FlashR();
-            if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Combo) Combo();
+            if (ComboActive()) Combo();
             MoveTibbers();
-            if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Harass) Harass();
+            if (HarassActive()) Harass();
             if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Flee) Flee();
-            if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.LastHit) LastHitB();
+            if (LastHitActive()) LastHitB();
             if (SpellMenu["autostack"].Cast<CheckBox>().CurrentValue) Pyromania();
         }
 

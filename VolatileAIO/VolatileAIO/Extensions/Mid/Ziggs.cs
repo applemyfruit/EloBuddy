@@ -94,13 +94,13 @@ namespace VolatileAIO.Extensions.Mid
 
         protected override void Volatile_OnHeartBeat(EventArgs args)
         {
-            if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Combo)
+            if (ComboActive())
                 Combo();
             if (SpellMenu["autoult"].Cast<CheckBox>().CurrentValue) AutoR();
             if (SpellMenu["peel"].Cast<CheckBox>().CurrentValue) Peel();
-            if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Harass) Harass();
+            if (HarassActive()) Harass();
             if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Flee) Flee();
-            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LaneClear)) LaneClear();
+            if (LaneClearActive()) LaneClear();
             Killsteal();
         }
 

@@ -13,6 +13,7 @@ using EloBuddy.SDK.Rendering;
 using SharpDX;
 using VolatileAIO.Organs;
 using VolatileAIO.Organs.Brain;
+using VolatileAIO.Organs.Brain.Cars;
 using VolatileAIO.Organs.Brain.Data;
 
 namespace VolatileAIO.Extensions.Support
@@ -117,9 +118,9 @@ namespace VolatileAIO.Extensions.Support
         protected override void Volatile_OnHeartBeat(EventArgs args)
         {
             AutoCast();
-            if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Combo) Combo();
-            if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Harass) Harass();
-            if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.LastHit) LastHitB();
+            if (ComboActive()) Combo();
+            if (HarassActive()) Harass();
+            if (LastHitActive()) LastHitB();
         }
 
         protected override void Volatile_ProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
@@ -182,10 +183,10 @@ namespace VolatileAIO.Extensions.Support
 
         protected override void Volatile_OnPreAttack(AttackableUnit target, Orbwalker.PreAttackArgs args)
         {
-            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LaneClear) ||
-                Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LastHit) ||
-                (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Harass) ||
-                 Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.JungleClear)))
+            if (LaneClearActive() ||
+                LastHitActive() ||
+                HarassActive() ||
+                 LaneClearActive())
             {
                 var t = target as Obj_AI_Minion;
                 if (t != null)
@@ -198,9 +199,27 @@ namespace VolatileAIO.Extensions.Support
             }
         }
 
+        protected override void Volatile_VWBeforeAttack(Volkswagen.BeforeAttackEventArgs args)
+        {
+            if (LaneClearActive() ||
+                LastHitActive() ||
+                HarassActive() ||
+                 LaneClearActive())
+            {
+                var t = args.Target as Obj_AI_Minion;
+                if (t != null)
+                {
+                    {
+                        if (SpellMenu["support"].Cast<CheckBox>().CurrentValue)
+                            args.Process = false;
+                    }
+                }
+            }
+        }
+
         private static void Harass()
         {
-            if (!Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Harass)) return;
+            if (!HarassActive()) return;
             var target = TargetManager.Target(Q, DamageType.Magical);
             if (SpellMenu["qth"].Cast<CheckBox>().CurrentValue &&
                 !SpellMenu["dontbind" + target.ChampionName.ToLower()].Cast<CheckBox>().CurrentValue &&

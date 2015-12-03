@@ -4,7 +4,6 @@ using EloBuddy.SDK;
 using VolatileAIO.Organs;
 using VolatileAIO.Organs.Brain;
 using VolatileAIO.Organs.Brain.Data;
-using VolatileAIO.Organs._Test;
 
 namespace VolatileAIO.Extensions.Mid
 {
@@ -34,11 +33,11 @@ namespace VolatileAIO.Extensions.Mid
 
         protected override void Volatile_OnHeartBeat(EventArgs args)
         {
-            if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Combo)
+            if (ComboActive())
             {
                 Combo();
             }
-            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LaneClear))
+            if (LaneClearActive())
             {
                 LaneClear();
             }

@@ -7,6 +7,7 @@ using EloBuddy.SDK.Menu.Values;
 using VolatileAIO.Organs;
 using VolatileAIO.Organs.Brain;
 using VolatileAIO.Organs.Brain.Data;
+using VolatileAIO.Organs.Brain.Utils;
 
 namespace VolatileAIO.Extensions.Support
 {
@@ -75,9 +76,9 @@ namespace VolatileAIO.Extensions.Support
         protected override void Volatile_OnHeartBeat(EventArgs args)
         {
             FlashQ();
-            if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Combo) Combo();
-            if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Harass) Harass();
-            if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.JungleClear) JungleClear();
+            if (ComboActive()) Combo();
+            if (HarassActive()) Harass();
+            if (LaneClearActive()) JungleClear();
             AutoCast();
         }
 

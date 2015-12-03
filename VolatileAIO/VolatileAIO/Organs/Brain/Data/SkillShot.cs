@@ -4,7 +4,7 @@ using EloBuddy.SDK.Enumerations;
 
 namespace VolatileAIO.Organs.Brain.Data
 {
-    public class SpellData
+    public class SkillShot
     {
         public enum CollisionObjectTypes
         {
@@ -13,7 +13,7 @@ namespace VolatileAIO.Organs.Brain.Data
             YasuoWall,
         }
 
-        public SpellData.CollisionObjectTypes[] CollisionObjects = { };
+        public SkillShot.CollisionObjectTypes[] CollisionObjects = { };
         public bool AddHitbox;
         public bool CanBeRemoved = false;
         public bool Centered;
@@ -56,9 +56,9 @@ namespace VolatileAIO.Organs.Brain.Data
         private int _radius;
         private int _range;
 
-        public SpellData() { }
+        public SkillShot() { }
 
-        public SpellData(string championName,
+        public SkillShot(string championName,
             string spellName,
             SpellSlot slot,
             SkillShotType type,
@@ -125,7 +125,7 @@ namespace VolatileAIO.Organs.Brain.Data
             {
                 for (int i = 0; i < CollisionObjects.Length; i++)
                 {
-                    if (CollisionObjects[i] == SpellData.CollisionObjectTypes.Champions || CollisionObjects[i] == SpellData.CollisionObjectTypes.Minion)
+                    if (CollisionObjects[i] == SkillShot.CollisionObjectTypes.Champions || CollisionObjects[i] == SkillShot.CollisionObjectTypes.Minion)
                         return true;
                 }
                 return false;

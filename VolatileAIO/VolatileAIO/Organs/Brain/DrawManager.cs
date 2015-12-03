@@ -10,9 +10,8 @@ using SharpDX;
 using VolatileAIO.Organs.Brain.Data;
 using System.Windows;
 using EloBuddy.SDK.Menu;
-using VolatileAIO.Organs._Test;
 using Color = System.Drawing.Color;
-using SpellData = VolatileAIO.Organs.Brain.Data.SpellData;
+using SkillShot = VolatileAIO.Organs.Brain.Data.SkillShot;
 
 namespace VolatileAIO.Organs.Brain
 {
@@ -21,7 +20,7 @@ namespace VolatileAIO.Organs.Brain
         private bool _initialized;
         private Spell.SpellBase _q, _w, _e, _r;
         private readonly Menu _drawMenu;
-        private List<SpellData> _skillShots; 
+        private List<SkillShot> _skillShots; 
 
         public DrawManager()
         {

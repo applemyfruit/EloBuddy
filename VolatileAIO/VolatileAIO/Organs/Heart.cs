@@ -1,14 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Media;
+using System.Security.Permissions;
 using EloBuddy;
 using EloBuddy.SDK;
 using EloBuddy.SDK.Events;
 using EloBuddy.SDK.Menu;
 using EloBuddy.SDK.Menu.Values;
+using Newtonsoft.Json;
 using SharpDX;
 using VolatileAIO.Organs.Brain;
-using VolatileAIO.Organs.Brain.Test2;
+using VolatileAIO.Organs.Brain.Cars;
 using Activator = VolatileAIO.Organs.Brain.Activator;
 
 namespace VolatileAIO.Organs
@@ -19,6 +23,7 @@ namespace VolatileAIO.Organs
         public static Menu VolatileMenu;
         protected static Menu HackMenu;
         protected static Menu TargetMenu;
+        protected static Volkswagen Golf;
         public static ExtensionLoader ExtensionLoader;
         public static AutoLeveler AutoLeveler;
         public static ManaManager ManaManager;
@@ -26,6 +31,7 @@ namespace VolatileAIO.Organs
         public static RecallTracker RecallTracker;
         public static Activator Activator;
         private static ChampionProfiles _championProfiles;
+        protected static bool UsingVorb;
 
         protected Heart()
         {
@@ -35,7 +41,9 @@ namespace VolatileAIO.Organs
             Drawing.OnDraw += Drawing_OnDraw;
             Interrupter.OnInterruptableSpell += OnInterruptableSpell;
             Orbwalker.OnPostAttack += OrbwalkerOnOnPostAttack;
+            Volkswagen.AfterAttack += Volkswagen_AfterAttack;
             Orbwalker.OnPreAttack += OrbwalkerOnOnPreAttack;
+            Volkswagen.BeforeAttack += Volkswagen_BeforeAttack;
             Gapcloser.OnGapcloser += OnGapcloser;
             GameObject.OnCreate += GameObjectOnOnCreate;
             GameObject.OnDelete += GameObjectOnOnDelete;
@@ -65,6 +73,21 @@ namespace VolatileAIO.Organs
             Hacks.RenderWatermark = false;
             Chat.Print(
                 "Starting <font color = \"#740000\">Volatile AIO</font> <font color = \"#B87F7F\">Heart.cs</font>:");
+            if (!Directory.Exists(ChampionProfiles.VolatileDir))
+                Directory.CreateDirectory(ChampionProfiles.VolatileDir);
+            if (!File.Exists(Path.Combine(
+                    ChampionProfiles.VolatileDir, "Volatile.json")))
+                SaveSettings(false);
+            else 
+            if (LoadSettings())
+            {
+                UsingVorb = true;
+                Volkswagen.AddToMenu();
+            }
+            else
+            {
+                UsingVorb = false;
+            }
             VolatileMenu = MainMenu.AddMenu("V." + Player.ChampionName, "volatilemenu", "Volatile " + Player.ChampionName);
             ExtensionLoader = new ExtensionLoader();
 
@@ -91,7 +114,8 @@ namespace VolatileAIO.Organs
             VolatileMenu.AddSeparator();
             VolatileMenu.AddLabel("AIO Options:");
             VolatileMenu.Add("debug", new CheckBox("Debug", false));
-            //VolatileMenu.Add("vorb", new CheckBox("Super Secret Option", false)).OnValueChange += Secret_OnValueChange; ;
+            VolatileMenu.Add("golf", new CheckBox("Use Volatile Orbwalker", false)).OnValueChange += Secret_OnValueChange; 
+            VolatileMenu.AddLabel("*Orbwalker requires reload. Press f5 to reload, and please turn off EB Orbwalker Drawings");
             //VolatileMenu.Add("vpred2", new Slider("Super Ultra Secret Dont Even Look", 0, 0, 2));
             if (ExtensionLoader.Champions.All(c => c.Name != Player.ChampionName)) return;
             TargetMenu = VolatileMenu.AddSubMenu("Target Manager", "targetmenu", "Volatile TargetManager");
@@ -109,33 +133,40 @@ namespace VolatileAIO.Organs
                 Chat.Print("Auto-Leveler: Priorities not Set!");
             if (!ManaManager.PrioritiesAreSet() && ManaManager.MmMenu["manamanager"].Cast<CheckBox>().CurrentValue)
                 Chat.Print("Mana Manager: Priorities not Set!");
+            OrbHandler();
         }
 
         #region privatevoid
 
         private static void Secret_OnValueChange(ValueBase<bool> sender, ValueBase<bool>.ValueChangeArgs args)
         {
-            OrbHandler();
+            SaveSettings(VolatileMenu["golf"].Cast<CheckBox>().CurrentValue);
         }
 
         private static void OrbHandler()
         {
-            if (VolatileMenu["vorb"].Cast<CheckBox>().CurrentValue)
+            if (LoadSettings())
             {
                 Orbwalker.DisableMovement = true;
                 Orbwalker.DisableAttacking = true;
-                //VW.Enabled(true);
-                MainMenu.GetMenu("Orbwalker").DisplayName = "EBORB Disabled";
-                MainMenu.GetMenu("orb").DisplayName = "V.Orb Enabled";
+                MainMenu.GetMenu("Orbwalker").DisplayName = "EBORB - Disabled";
+                MainMenu.GetMenu("orb").DisplayName = "VORB - Enabled";
             }
             else
             {
                 Orbwalker.DisableMovement = false;
                 Orbwalker.DisableAttacking = false;
-                //VW.Enabled(false);
-                MainMenu.GetMenu("Orbwalker").DisplayName = "EBORB Enabled";
-                MainMenu.GetMenu("orb").DisplayName = "V.Orb Disabled";
             }
+        }
+
+        private void Volkswagen_BeforeAttack(Volkswagen.BeforeAttackEventArgs args)
+        {
+            Volatile_VWBeforeAttack(args);
+        }
+
+        private void Volkswagen_AfterAttack(AttackableUnit unit, AttackableUnit target)
+        {
+            Volatile_VWAfterAttack(unit, target);
         }
 
         private void Game_OnDisconnect(EventArgs args)
@@ -262,6 +293,16 @@ namespace VolatileAIO.Organs
         #endregion
 
         #region virtualvoid
+
+        protected virtual void Volatile_VWBeforeAttack(Volkswagen.BeforeAttackEventArgs args)
+        {
+            //for extensions
+        }
+
+        protected virtual void Volatile_VWAfterAttack(AttackableUnit unit, AttackableUnit target)
+        {
+            //for extensions
+        }
 
         protected virtual void Volatile_OnDisconnect(EventArgs args)
         {
@@ -398,6 +439,97 @@ namespace VolatileAIO.Organs
             return hero != null && hero.IsValid;
         }
 
+        private struct VSettings
+        {
+            [JsonProperty(PropertyName = "UseOrb")]
+            public readonly bool UseOrb;
+            [JsonProperty(PropertyName = "Version")]
+            public readonly double Version;
+
+            public VSettings(bool useorb, double version)
+            {
+                UseOrb = useorb;
+                Version = version;
+            }
+        }
+
+        [SecurityPermission(SecurityAction.Assert, Unrestricted = true)]
+        private static bool LoadSettings()
+        {
+            var json = File.ReadAllText(Path.Combine(
+                    ChampionProfiles.VolatileDir, "Volatile.json"));
+            var profile = JsonConvert.DeserializeObject<VSettings>(json);
+            return profile.UseOrb;
+        }
+
+        [SecurityPermission(SecurityAction.Assert, Unrestricted = true)]
+        private static void SaveSettings(bool UseOrb)
+        {
+            var profile = new VSettings(UseOrb, 1.0);
+            var json = JsonConvert.SerializeObject(profile);
+            if (File.Exists(Path.Combine(
+                    ChampionProfiles.VolatileDir, "Volatile.json")))
+            {
+                File.Delete(Path.Combine(
+                    ChampionProfiles.VolatileDir, "Volatile.json"));
+            }
+            else
+            {
+            }
+            using (var sw = new StreamWriter(Path.Combine(
+                    ChampionProfiles.VolatileDir, "Volatile.json")))
+            {
+                sw.Write(json);
+            }
+        }
+
+        protected static bool ComboActive()
+        {
+            if (UsingVorb)
+            {
+                return MainMenu.GetMenu("orb")["com"].Cast<KeyBind>().CurrentValue;
+            }
+            else
+            {
+                return Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Combo;
+            }
+        }
+
+        protected static bool HarassActive()
+        {
+            if (UsingVorb)
+            {
+                return MainMenu.GetMenu("orb")["mix"].Cast<KeyBind>().CurrentValue;
+            }
+            else
+            {
+                return Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Harass;
+            }
+        }
+
+        protected static bool LaneClearActive()
+        {
+            if (UsingVorb)
+            {
+                return MainMenu.GetMenu("orb")["lan"].Cast<KeyBind>().CurrentValue;
+            }
+            else
+            {
+                return Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.LaneClear;
+            }
+        }
+
+        protected static bool LastHitActive()
+        {
+            if (UsingVorb)
+            {
+                return MainMenu.GetMenu("orb")["las"].Cast<KeyBind>().CurrentValue;
+            }
+            else
+            {
+                return Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.LastHit;
+            }
+        }
         #endregion
     }
 }

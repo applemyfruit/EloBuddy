@@ -5,7 +5,7 @@ using EloBuddy;
 using EloBuddy.SDK;
 using SharpDX;
 
-namespace VolatileAIO.Organs.Brain
+namespace VolatileAIO.Organs.Brain.Utils
 {
     public enum MinionOrderTypes
     {

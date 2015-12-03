@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EloBuddy;
 using EloBuddy.SDK;
-using VolatileAIO.Organs._Test;
+using VolatileAIO.Organs.Brain.Data;
 
 namespace VolatileAIO.Organs.Brain
 {

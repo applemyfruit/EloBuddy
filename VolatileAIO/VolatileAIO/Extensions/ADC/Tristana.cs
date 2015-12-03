@@ -10,8 +10,8 @@ using EloBuddy.SDK.Menu.Values;
 using SharpDX;
 using VolatileAIO.Organs;
 using VolatileAIO.Organs.Brain;
+using VolatileAIO.Organs.Brain.Cars;
 using VolatileAIO.Organs.Brain.Data;
-using VolatileAIO.Organs._Test;
 
 namespace VolatileAIO.Extensions.ADC
 {
@@ -81,8 +81,7 @@ namespace VolatileAIO.Extensions.ADC
 
         protected override void Volatile_OnHeartBeat(EventArgs args)
         {
-            if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Combo ||
-                Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Harass)
+            if (ComboActive() || HarassActive())
             {
                 if (SpellMenu["focuse"].Cast<CheckBox>().CurrentValue)
                 {
@@ -90,15 +89,16 @@ namespace VolatileAIO.Extensions.ADC
                         EntityManager.Heroes.Enemies.FirstOrDefault(
                             e => e.IsValidTarget(Player.Distance(e)) && e.HasBuff("TristanaECharge"));
                     Orbwalker.ForcedTarget = target;
+                    Volkswagen.ForcedTarget = target;
                 }
             }
-            if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Combo)
+            if (ComboActive())
                 Combo();
-            if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Harass)
+            if (HarassActive())
                 Harass();
-            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LaneClear))
+            if (LaneClearActive())
                 LaneClear();
-            if (Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.JungleClear))
+            if (LaneClearActive())
                 JungleClear();
             if (TickManager.NoLag(0))
             {
@@ -161,7 +161,6 @@ namespace VolatileAIO.Extensions.ADC
                 minionlist.FirstOrDefault(x => x.HasBuff("TristanaECharge") && x.IsValidTarget());
             if (eminion != null)
             {
-                Chat.Print(eminion.Name);
                 Orbwalker.ForcedTarget = eminion;
             }
 
@@ -257,7 +256,7 @@ namespace VolatileAIO.Extensions.ADC
             if (R.IsReady() && SpellMenu["rks"].Cast<CheckBox>().CurrentValue && TickManager.NoLag(4))
             {
                 if ((GetEDamage(target) + Player.GetSpellDamage(target, SpellSlot.R)) >
-                    Prediction.Health.GetPrediction(target, R.CastDelay) + 10)
+                    Prediction.Health.GetPrediction(target, R.CastDelay))
                 {
                     R.Cast(target);
                 }

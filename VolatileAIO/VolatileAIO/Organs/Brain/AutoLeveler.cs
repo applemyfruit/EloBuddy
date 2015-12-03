@@ -5,7 +5,6 @@ using EloBuddy.SDK;
 using EloBuddy.SDK.Menu;
 using EloBuddy.SDK.Menu.Values;
 using VolatileAIO.Organs.Brain.Data;
-using VolatileAIO.Organs._Test;
 
 namespace VolatileAIO.Organs.Brain
 {
