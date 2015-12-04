@@ -272,14 +272,15 @@ namespace VolatileAIO.Extensions.ADC
 
         protected override void Volatile_OnPostAttack(AttackableUnit target, EventArgs args)
         {
-            if (!W.IsReady() || !SpellMenu["wtopush"].Cast<CheckBox>().CurrentValue || !target.IsStructure()) return;
-            foreach (var ally in EntityManager.Heroes.Allies.Where(ally => !ally.IsMe && ally.IsAlly && ally.Distance(Player.Position) < W.Range))
-            {
-                W.Cast(ally);
-            }
+            PostAttackLogic(target);
         }
 
         protected override void Volatile_VWAfterAttack(AttackableUnit unit, AttackableUnit target)
+        {
+            PostAttackLogic(target);
+        }
+
+        private void PostAttackLogic(AttackableUnit target)
         {
             if (!W.IsReady() || !SpellMenu["wtopush"].Cast<CheckBox>().CurrentValue || !target.IsStructure()) return;
             foreach (var ally in EntityManager.Heroes.Allies.Where(ally => !ally.IsMe && ally.IsAlly && ally.Distance(Player.Position) < W.Range))

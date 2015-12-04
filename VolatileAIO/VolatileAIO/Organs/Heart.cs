@@ -486,30 +486,26 @@ namespace VolatileAIO.Organs
 
         protected static bool ComboActive()
         {
-            return UsingVorb
-                ? MainMenu.GetMenu("orb")["com"].Cast<KeyBind>().CurrentValue
-                : Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo);
+            if (UsingVorb) return MainMenu.GetMenu("orb")["com"].Cast<KeyBind>().CurrentValue;
+            else return Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Combo);
         }
 
         protected static bool HarassActive()
         {
-            return UsingVorb
-                ? MainMenu.GetMenu("orb")["mix"].Cast<KeyBind>().CurrentValue
-                : Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Harass);
+            if (UsingVorb) return MainMenu.GetMenu("orb")["mix"].Cast<KeyBind>().CurrentValue;
+            else return Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.Harass);
         }
 
         protected static bool LaneClearActive()
         {
-            return UsingVorb
-                ? MainMenu.GetMenu("orb")["lan"].Cast<KeyBind>().CurrentValue
-                : Orbwalker.ActiveModesFlags.HasFlag(Volkswagen.Mode.LaneClear);
+            if (UsingVorb) return MainMenu.GetMenu("orb")["lan"].Cast<KeyBind>().CurrentValue;
+            else return Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LaneClear);
         }
 
         protected static bool LastHitActive()
         {
-            return UsingVorb
-                ? MainMenu.GetMenu("orb")["las"].Cast<KeyBind>().CurrentValue
-                : Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LastHit);
+            if (UsingVorb) return MainMenu.GetMenu("orb")["las"].Cast<KeyBind>().CurrentValue;
+            else return Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LastHit);
         }
 
         #endregion
