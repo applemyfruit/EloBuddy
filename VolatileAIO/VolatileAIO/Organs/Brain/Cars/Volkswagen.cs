@@ -11,6 +11,8 @@ using EloBuddy.SDK.Rendering;
 using SharpDX;
 using VolatileAIO.Organs.Brain.Utils;
 using Color = System.Drawing.Color;
+using VPrediction = VolatileAIO.Organs.Brain.Utils.VPrediction;
+
 // ReSharper disable LocalizableElement
 
 namespace VolatileAIO.Organs.Brain.Cars
@@ -504,7 +506,7 @@ namespace VolatileAIO.Organs.Brain.Cars
                         {
                             if (around == null || around.IsDead || ene == null)
                                 continue;
-                            MathUtils.Polygon poly = MathUtils.getPolygonOn(sol, around, 50 + ene.BoundingRadius / 2, AzirSoliderRange + ene.BoundingRadius / 2);
+                            var poly = MathUtils.getPolygonOn(sol, around, 50 + ene.BoundingRadius / 2, AzirSoliderRange + ene.BoundingRadius / 2);
                             var posi = Prediction.Position.PredictUnitPosition(ene, (int)Player.AttackCastDelay);
                             try
                             {

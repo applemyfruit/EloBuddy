@@ -74,6 +74,7 @@
     <Compile Include="Extensions\Support\Blitzcrank.cs" />
     <Compile Include="Extensions\Support\Morgana.cs" />
     <Compile Include="Organs\Brain\Activator.cs" />
+    <Compile Include="Organs\Brain\Utils\VPrediction.cs" />
     <Compile Include="Organs\Brain\ChampionProfiles.cs" />
     <Compile Include="Organs\Brain\Data\CCDataBase.cs" />
     <Compile Include="Organs\Brain\Data\Targeted.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="Organs\Brain\Initialize.cs" />
     <Compile Include="Organs\Brain\AutoLeveler.cs" />
     <Compile Include="Organs\Brain\MEC.cs" />
+    <Compile Include="Organs\Brain\Utils\Dash.cs" />
     <Compile Include="Organs\Brain\Utils\MinionManager.cs" />
     <Compile Include="Organs\Brain\RecallTracker.cs" />
     <Compile Include="Organs\Brain\SkinManager.cs" />

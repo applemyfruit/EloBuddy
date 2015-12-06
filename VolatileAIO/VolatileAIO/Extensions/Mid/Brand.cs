@@ -10,6 +10,7 @@ using VolatileAIO.Organs;
 using VolatileAIO.Organs.Brain;
 using VolatileAIO.Organs.Brain.Data;
 using VolatileAIO.Organs.Brain.Utils;
+using HitChance = EloBuddy.SDK.Enumerations.HitChance;
 
 namespace VolatileAIO.Extensions.Mid
 {

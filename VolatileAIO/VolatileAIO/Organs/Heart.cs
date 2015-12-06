@@ -6,6 +6,7 @@ using System.Media;
 using System.Security.Permissions;
 using EloBuddy;
 using EloBuddy.SDK;
+using EloBuddy.SDK.Constants;
 using EloBuddy.SDK.Events;
 using EloBuddy.SDK.Menu;
 using EloBuddy.SDK.Menu.Values;
@@ -237,6 +238,16 @@ namespace VolatileAIO.Organs
 
         private void OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
+            if (!sender.IsEnemy || sender.IsMinion || args.SData.IsAutoAttack() || sender.Type != GameObjectType.AIHeroClient || Player.Distance(sender.ServerPosition) > 2000)
+                return;
+
+            if (args.SData.Name == "YasuoWMovingWall")
+            {
+                _yasuoWall.CastTime = Game.Time;
+                _yasuoWall.CastPosition = sender.Position.Extend(args.End, 400).To3D();
+                _yasuoWall.YasuoPosition = sender.Position;
+                _yasuoWall.WallLvl = sender.Spellbook.Spells[1].Level;
+            }
             Volatile_ProcessSpellCast(sender, args);
         }
 
@@ -506,6 +517,39 @@ namespace VolatileAIO.Organs
         {
             if (UsingVorb) return MainMenu.GetMenu("orb")["las"].Cast<KeyBind>().CurrentValue;
             else return Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LastHit);
+        }
+
+        class YasuoWall
+        {
+            public Vector3 YasuoPosition { get; set; }
+            public float CastTime { get; set; }
+            public Vector3 CastPosition { get; set; }
+            public float WallLvl { get; set; }
+
+            public YasuoWall()
+            {
+                CastTime = 0;
+            }
+        }
+
+        private static YasuoWall _yasuoWall = new YasuoWall();
+
+        public static bool CollisionYasuo(Vector3 from, Vector3 to)
+        {
+            if (Game.Time - _yasuoWall.CastTime > 4)
+                return false;
+
+            var level = _yasuoWall.WallLvl;
+            var wallWidth = (350 + 50 * level);
+            var wallDirection = (_yasuoWall.CastPosition.To2D() - _yasuoWall.YasuoPosition.To2D()).Normalized().Perpendicular();
+            var wallStart = _yasuoWall.CastPosition.To2D() + wallWidth / 2f * wallDirection;
+            var wallEnd = wallStart - wallWidth * wallDirection;
+
+            if (wallStart.Intersection(wallEnd, to.To2D(), from.To2D()).Intersects)
+            {
+                return true;
+            }
+            return false;
         }
 
         #endregion

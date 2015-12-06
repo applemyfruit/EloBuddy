@@ -39,6 +39,7 @@ namespace VolatileAIO.Extensions.Mid
             SpellMenu.AddGroupLabel("Q Settings");
             SpellMenu.Add("qtc", new CheckBox("Use Q in Combo"));
             SpellMenu.Add("qth", new CheckBox("Use Q in Harass"));
+            SpellMenu.Add("qtl", new CheckBox("Use Q in LaneClear"));
             SpellMenu.Add("qtlh", new CheckBox("Use Q in Lasthit"));
 
             SpellMenu.AddGroupLabel("W Settings");
@@ -80,7 +81,7 @@ namespace VolatileAIO.Extensions.Mid
             MoveTibbers();
             if (HarassActive()) Harass();
             if (Orbwalker.ActiveModesFlags == Orbwalker.ActiveModes.Flee) Flee();
-            if (LastHitActive()) LastHitB();
+            if (LastHitActive() || LaneClearActive()) LastHitB();
             if (SpellMenu["autostack"].Cast<CheckBox>().CurrentValue) Pyromania();
         }
 
@@ -211,7 +212,8 @@ namespace VolatileAIO.Extensions.Mid
 
         public static void LastHitB()
         {
-            var qcheck = SpellMenu["qtlh"].Cast<CheckBox>().CurrentValue;
+            var qcheck = (SpellMenu["qtlh"].Cast<CheckBox>().CurrentValue && LastHitActive()) ||
+                         (SpellMenu["qtl"].Cast<CheckBox>().CurrentValue && LaneClearActive());
             var qready = Q.IsReady();
             if (!qcheck || !qready) return;
             var minion = (Obj_AI_Minion) MinionLh(GameObjectType.obj_AI_Minion, AttackSpell.Q);
@@ -245,7 +247,7 @@ namespace VolatileAIO.Extensions.Mid
                     Player.Mana > (ManaManager.GetMana(SpellSlot.W))
                     && TickManager.NoLag(2))
                 {
-                    W.Cast(target.ServerPosition);
+                    W.Cast(W.GetPrediction(target).CastPosition);
                 }
             }
             else if (SpellMenu["qtc"].Cast<CheckBox>().CurrentValue && Q.IsReady() && TickManager.NoLag(1))

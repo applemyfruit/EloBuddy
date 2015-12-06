@@ -11,6 +11,7 @@ using VolatileAIO.Organs;
 using VolatileAIO.Organs.Brain;
 using VolatileAIO.Organs.Brain.Data;
 using VolatileAIO.Organs.Brain.Utils;
+using HitChance = EloBuddy.SDK.Enumerations.HitChance;
 
 namespace VolatileAIO.Extensions.ADC
 {
@@ -248,10 +249,10 @@ namespace VolatileAIO.Extensions.ADC
                 }
                 else if (Player.Mana > 0.95*Player.MaxMana && SpellMenu["qstack2"].Cast<CheckBox>().CurrentValue)
                 {
-                    if (TargetSelector.GetTarget(Q.Range, DamageType.Physical) != null)
+                    if (TargetManager.Target(Q, DamageType.Magical) != null)
                     {
-                        var t = TargetSelector.GetTarget(Q.Range, DamageType.Physical);
-                        Q.Cast(t.ServerPosition);
+                        var t = TargetManager.Target(Q, DamageType.Magical);
+                        Q.Cast(Q.GetPrediction(t).CastPosition);
                     }
                     Q.Cast(Player);
                 }

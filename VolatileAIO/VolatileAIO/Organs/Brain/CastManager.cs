@@ -58,60 +58,81 @@ namespace VolatileAIO.Organs.Brain
                         return;
 
                     spell.Cast(spell.GetPrediction(target).CastPosition);
-                    /*else
-                    {
-                        var CoreType2 = SkillshotType.SkillshotLine;
-                        bool aoe2 = false;
-                        if ((int) spell.Type == (int) SkillshotType.SkillshotCircle)
-                        {
-                            CoreType2 = SkillshotType.SkillshotCircle;
-                            aoe2 = true;
-                        }
-                        if (spell.Width > 80 && spell.AllowedCollisionCount < 100)
-                            aoe2 = true;
-                        var predInput2 = new PredictionInput
-                        {
-                            Aoe = aoe2,
-                            Collision = spell.AllowedCollisionCount < 100,
-                            Speed = spell.Speed,
-                            Delay = spell.CastDelay,
-                            Range = spell.Range,
-                            From = Player.ServerPosition,
-                            Radius = spell.Radius,
-                            Unit = target,
-                            Type = CoreType2
-                        };
-                        var poutput2 = Test.TopSecret.Prediction.GetPrediction(predInput2);
-                        //var poutput2 = spell.GetPrediction(target);
-                        Chat.Print(spell.Slot+" "+predInput2.Collision+poutput2.Hitchance);
-                        if (spell.Speed != float.MaxValue && CollisionYasuo(Player.ServerPosition, poutput2.CastPosition))
-                            return;
-
-                        if (VolatileMenu["vpred2"].Cast<Slider>().CurrentValue == 0)
-                        {
-                            if (poutput2.Hitchance >= Test.TopSecret.HitChance.VeryHigh)
-                                spell.Cast(poutput2.CastPosition);
-                            else if (predInput2.Aoe && poutput2.AoeTargetsHitCount > 1 &&
-                                     poutput2.Hitchance >= Test.TopSecret.HitChance.High)
-                            {
-                                spell.Cast(poutput2.CastPosition);
-                            }
-
-                        }
-                        else if (VolatileMenu["vpred2"].Cast<Slider>().CurrentValue == 1)
-                        {
-                            if (poutput2.Hitchance >= Test.TopSecret.HitChance.High)
-                                spell.Cast(poutput2.CastPosition);
-
-                        }
-                        else if (VolatileMenu["vpred2"].Cast<Slider>().CurrentValue == 2)
-                        {
-                            if (poutput2.Hitchance >= Test.TopSecret.HitChance.Medium)
-                                spell.Cast(poutput2.CastPosition);
-                        }
-                    }*/
                 }
 
+                internal static void NewPredTest(Spell.Skillshot spell, DamageType damageType,
+                    int range = 0, HitChance hitChance = HitChance.Medium, AIHeroClient targetHero = null)
+                {
+                    if ((spell.Slot != SpellSlot.Q || !TickManager.NoLag(1)) &&
+                        (spell.Slot != SpellSlot.W || !TickManager.NoLag(2)) &&
+                        (spell.Slot != SpellSlot.E || !TickManager.NoLag(3)) &&
+                        (spell.Slot != SpellSlot.R || !TickManager.NoLag(4)))
+                        return;
+
+                    if (!spell.IsReady() || IsAutoAttacking) return;
+
+                    AIHeroClient target;
+                    if (targetHero == null)
+                        target = range != 0
+                            ? TargetManager.Target(range, damageType)
+                            : TargetManager.Target(spell, damageType);
+                    else target = targetHero;
+
+                    if (target == null) return;
+
+                    if (!target.IsValidTarget(spell.Range) || spell.GetPrediction(target).HitChance < hitChance)
+                        return;
+
+                    var coreType2 = SkillshotType.SkillshotLine;
+                    bool aoe2 = false;
+                    if ((int)spell.Type == (int)SkillshotType.SkillshotCircle)
+                    {
+                        coreType2 = SkillshotType.SkillshotCircle;
+                        aoe2 = true;
+                    }
+                    if (spell.Width > 80 && spell.AllowedCollisionCount < 100)
+                        aoe2 = true;
+                    var predInput2 = new PredictionInput
+                    {
+                        Aoe = aoe2,
+                        Collision = spell.AllowedCollisionCount < 100,
+                        Speed = spell.Speed,
+                        Delay = spell.CastDelay,
+                        Range = spell.Range,
+                        From = Player.ServerPosition,
+                        Radius = spell.Radius,
+                        Unit = target,
+                        Type = coreType2
+                    };
+                    var poutput2 = VPrediction.GetPrediction(predInput2);
+                    //var poutput2 = spell.GetPrediction(target);
+                    Chat.Print(spell.Slot + " " + predInput2.Collision + poutput2.Hitchance);
+                    if (spell.Speed < float.MaxValue && CollisionYasuo(Player.ServerPosition, poutput2.CastPosition))
+                        return;
+
+                    if (VolatileMenu["vpred2"].Cast<Slider>().CurrentValue == 0)
+                    {
+                        if (poutput2.Hitchance >= Utils.HitChance.VeryHigh)
+                            spell.Cast(poutput2.CastPosition);
+                        else if (predInput2.Aoe && poutput2.AoeTargetsHitCount > 1 &&
+                                 poutput2.Hitchance >= Utils.HitChance.High)
+                        {
+                            spell.Cast(poutput2.CastPosition);
+                        }
+
+                    }
+                    else if (VolatileMenu["vpred2"].Cast<Slider>().CurrentValue == 1)
+                    {
+                        if (poutput2.Hitchance >= Utils.HitChance.High)
+                            spell.Cast(poutput2.CastPosition);
+
+                    }
+                    else if (VolatileMenu["vpred2"].Cast<Slider>().CurrentValue == 2)
+                    {
+                        if (poutput2.Hitchance >= Utils.HitChance.Medium)
+                            spell.Cast(poutput2.CastPosition);
+                    }
+                }
 
                 internal static void Farm(Spell.Skillshot spell, int minHit = 1)
             {
