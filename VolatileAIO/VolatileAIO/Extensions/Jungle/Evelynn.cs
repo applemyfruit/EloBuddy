@@ -272,8 +272,8 @@ namespace VolatileAIO.Extensions.Jungle
             SpellMenu.Add("asw", new CheckBox("Auto W to Remove Slow"));
 
             SpellMenu.AddGroupLabel("E Settings");
-            SpellMenu.Add("lce", new CheckBox("Use E to Laneclear"));
             SpellMenu.Add("etc", new CheckBox("Use E in Combo"));
+            SpellMenu.Add("lce", new CheckBox("Use E to Laneclear"));
 
             SpellMenu.AddGroupLabel("R Settings");
             SpellMenu.Add("rtc", new CheckBox("Use R in Combo"));

@@ -56,12 +56,11 @@ namespace VolatileAIO.Organs.Brain
 
                     if (!target.IsValidTarget(spell.Range) || spell.GetPrediction(target).HitChance < hitChance)
                         return;
-
                     spell.Cast(spell.GetPrediction(target).CastPosition);
                 }
 
                 internal static void NewPredTest(Spell.Skillshot spell, DamageType damageType,
-                    int range = 0, HitChance hitChance = HitChance.Medium, AIHeroClient targetHero = null)
+                    int range = 0, Utils.HitChance hitChance = Utils.HitChance.Medium, AIHeroClient targetHero = null)
                 {
                     if ((spell.Slot != SpellSlot.Q || !TickManager.NoLag(1)) &&
                         (spell.Slot != SpellSlot.W || !TickManager.NoLag(2)) &&
@@ -80,7 +79,7 @@ namespace VolatileAIO.Organs.Brain
 
                     if (target == null) return;
 
-                    if (!target.IsValidTarget(spell.Range) || spell.GetPrediction(target).HitChance < hitChance)
+                    if (!target.IsValidTarget(spell.Range))
                         return;
 
                     var coreType2 = SkillshotType.SkillshotLine;
@@ -110,7 +109,7 @@ namespace VolatileAIO.Organs.Brain
                     if (spell.Speed < float.MaxValue && CollisionYasuo(Player.ServerPosition, poutput2.CastPosition))
                         return;
 
-                    if (VolatileMenu["vpred2"].Cast<Slider>().CurrentValue == 0)
+                    if (hitChance == Utils.HitChance.VeryHigh)
                     {
                         if (poutput2.Hitchance >= Utils.HitChance.VeryHigh)
                             spell.Cast(poutput2.CastPosition);
@@ -121,13 +120,13 @@ namespace VolatileAIO.Organs.Brain
                         }
 
                     }
-                    else if (VolatileMenu["vpred2"].Cast<Slider>().CurrentValue == 1)
+                    else if (hitChance == Utils.HitChance.High)
                     {
                         if (poutput2.Hitchance >= Utils.HitChance.High)
                             spell.Cast(poutput2.CastPosition);
 
                     }
-                    else if (VolatileMenu["vpred2"].Cast<Slider>().CurrentValue == 2)
+                    else if (hitChance == Utils.HitChance.Medium)
                     {
                         if (poutput2.Hitchance >= Utils.HitChance.Medium)
                             spell.Cast(poutput2.CastPosition);

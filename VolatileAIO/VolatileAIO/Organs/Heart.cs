@@ -93,7 +93,6 @@ namespace VolatileAIO.Organs
             VolatileMenu = MainMenu.AddMenu("V." + Player.ChampionName, "volatilemenu",
                 "Volatile " + Player.ChampionName);
             ExtensionLoader = new ExtensionLoader();
-
             //InfoBoard
             VolatileMenu.AddGroupLabel("Heart.cs");
             VolatileMenu.AddLabel("\"I.. I'm alive.. I can feel my heart beating.\"");
@@ -122,14 +121,14 @@ namespace VolatileAIO.Organs
             VolatileMenu.AddLabel(
                 "*Orbwalker requires reload. Press f5 to reload, and please turn off EB Orbwalker Drawings");
             //VolatileMenu.Add("vpred2", new Slider("Super Ultra Secret Dont Even Look", 0, 0, 2));
-            if (ExtensionLoader.Champions.All(c => c.Name != Player.ChampionName)) return;
+            OrbHandler();
+            if (!ExtensionLoader.IncludesChampion(Player.ChampionName)) return;
             TargetMenu = VolatileMenu.AddSubMenu("Target Manager", "targetmenu", "Volatile TargetManager");
             TargetMenu.Add("chosenignores", new CheckBox("Ignore all other champions if Selected Target", false));
             ManaManager = new ManaManager();
             AutoLeveler = new AutoLeveler();
             DrawManager = new DrawManager();
-            // ReSharper disable once PossibleNullReferenceException
-            OnDraw.Invoke();
+            if (OnDraw != null) OnDraw.Invoke();
             Drawinit = true;
             HackMenu = VolatileMenu.AddSubMenu("Hacks", "hacks", "Volatile Hacks");
             SkinManager.Initialize();
@@ -141,7 +140,6 @@ namespace VolatileAIO.Organs
                 Chat.Print("Auto-Leveler: Priorities not Set!");
             if (!ManaManager.PrioritiesAreSet() && ManaManager.MmMenu["manamanager"].Cast<CheckBox>().CurrentValue)
                 Chat.Print("Mana Manager: Priorities not Set!");
-            OrbHandler();
         }
 
         #region privatevoid

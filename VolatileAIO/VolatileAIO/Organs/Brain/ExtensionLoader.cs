@@ -52,6 +52,11 @@ namespace VolatileAIO.Organs.Brain
             FullyDeveloped = 3,
         }
 
+        public bool IncludesChampion(string champ)
+        {
+            return Champions.Any(champs => champs.Name == champ);
+        }
+
         private void WelcomeChat()
         {
             Chat.Print("<font color = \"#00FF00\">Succesfully loaded Extension: </font><font color = \"#FFFF00\">" +

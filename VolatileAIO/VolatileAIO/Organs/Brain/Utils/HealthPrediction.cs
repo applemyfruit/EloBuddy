@@ -487,7 +487,7 @@ namespace VolatileAIO.Organs.Brain.Utils
         {
             DamagerSources.Remove(sender.NetworkId);
 
-            if (sender is MissileClient || sender is Obj_SpellMissile)
+            if (sender is MissileClient)
             {
                 if (ActiveDamageMakers.ContainsKey(sender.NetworkId))
                     ActiveDamageMakers.Remove(sender.NetworkId);
@@ -561,7 +561,6 @@ namespace VolatileAIO.Organs.Brain.Utils
         public static float GetLastHitPred(AttackableUnit unit, int msTime, bool ignoreAlmostDead = true)
         {
             var predDmg = 0f;
-            var predDmgPlus500Ms = 0f;
 
             foreach (var attacks in ActiveDamageMakers.Values)
             {
