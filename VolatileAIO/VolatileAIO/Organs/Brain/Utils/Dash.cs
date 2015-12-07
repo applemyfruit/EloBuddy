@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using EloBuddy;
 using EloBuddy.SDK;
 using SharpDX;
 
-namespace VolatileAIO.Organs.Brain.Test.TopSecret
+namespace VolatileAIO.Organs.Brain.Utils
 {
     public static class Dash
     {
@@ -112,7 +111,7 @@ namespace VolatileAIO.Organs.Brain.Test.TopSecret
         /// <returns>
         ///     The <see cref="bool" />.
         /// </returns>
-        public static bool IsDashing(this Obj_AI_Base unit)
+        public static bool UsingDash(this Obj_AI_Base unit)
         {
             DashArgs value;
             if (DetectedDashes.TryGetValue(unit.NetworkId, out value) && unit.Path.Length != 0)

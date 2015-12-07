@@ -4,8 +4,8 @@ using System.Linq;
 using EloBuddy;
 using EloBuddy.SDK;
 using EloBuddy.SDK.Constants;
+using EloBuddy.SDK.Events;
 using SharpDX;
-using VolatileAIO.Organs.Brain.Test.TopSecret;
 
 namespace VolatileAIO.Organs.Brain.Utils
 {

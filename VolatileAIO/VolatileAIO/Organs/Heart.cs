@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Media;
@@ -33,6 +34,7 @@ namespace VolatileAIO.Organs
         public static Activator Activator;
         private static ChampionProfiles _championProfiles;
         protected static bool UsingVorb;
+        protected static bool Drawinit;
 
         protected Heart()
         {
@@ -126,6 +128,9 @@ namespace VolatileAIO.Organs
             ManaManager = new ManaManager();
             AutoLeveler = new AutoLeveler();
             DrawManager = new DrawManager();
+            // ReSharper disable once PossibleNullReferenceException
+            OnDraw.Invoke();
+            Drawinit = true;
             HackMenu = VolatileMenu.AddSubMenu("Hacks", "hacks", "Volatile Hacks");
             SkinManager.Initialize();
             RecallTracker = new RecallTracker();
@@ -238,7 +243,8 @@ namespace VolatileAIO.Organs
 
         private void OnProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
-            if (!sender.IsEnemy || sender.IsMinion || args.SData.IsAutoAttack() || sender.Type != GameObjectType.AIHeroClient || Player.Distance(sender.ServerPosition) > 2000)
+            if (!sender.IsEnemy || sender.IsMinion || args.SData.IsAutoAttack() ||
+                sender.Type != GameObjectType.AIHeroClient || Player.Distance(sender.ServerPosition) > 2000)
                 return;
 
             if (args.SData.Name == "YasuoWMovingWall")
@@ -519,7 +525,7 @@ namespace VolatileAIO.Organs
             else return Orbwalker.ActiveModesFlags.HasFlag(Orbwalker.ActiveModes.LastHit);
         }
 
-        class YasuoWall
+        private class YasuoWall
         {
             public Vector3 YasuoPosition { get; set; }
             public float CastTime { get; set; }
@@ -540,10 +546,11 @@ namespace VolatileAIO.Organs
                 return false;
 
             var level = _yasuoWall.WallLvl;
-            var wallWidth = (350 + 50 * level);
-            var wallDirection = (_yasuoWall.CastPosition.To2D() - _yasuoWall.YasuoPosition.To2D()).Normalized().Perpendicular();
-            var wallStart = _yasuoWall.CastPosition.To2D() + wallWidth / 2f * wallDirection;
-            var wallEnd = wallStart - wallWidth * wallDirection;
+            var wallWidth = (350 + 50*level);
+            var wallDirection =
+                (_yasuoWall.CastPosition.To2D() - _yasuoWall.YasuoPosition.To2D()).Normalized().Perpendicular();
+            var wallStart = _yasuoWall.CastPosition.To2D() + wallWidth/2f*wallDirection;
+            var wallEnd = wallStart - wallWidth*wallDirection;
 
             if (wallStart.Intersection(wallEnd, to.To2D(), from.To2D()).Intersects)
             {
@@ -552,6 +559,16 @@ namespace VolatileAIO.Organs
             return false;
         }
 
+        public static bool ValidSpell(AIHeroClient target)
+        {
+            return !target.HasBuffOfType(BuffType.PhysicalImmunity) && !target.HasBuffOfType(BuffType.SpellImmunity) &&
+                   !target.IsZombie && !target.IsInvulnerable && !target.HasBuffOfType(BuffType.Invulnerability) &&
+                   !target.HasBuffOfType(BuffType.SpellShield) && target.IsValidTarget();
+        }
+
+        public static event OnDrawInit OnDraw;
+
+        public delegate void OnDrawInit();
         #endregion
     }
 }

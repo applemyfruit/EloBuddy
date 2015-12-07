@@ -19,16 +19,17 @@ namespace VolatileAIO.Organs.Brain
     {
         private bool _initialized;
         private Spell.SpellBase _q, _w, _e, _r;
-        private readonly Menu _drawMenu;
+        internal readonly Menu DrawMenu;
         private List<SkillShot> _skillShots; 
 
         public DrawManager()
         {
-            _drawMenu = VolatileMenu.AddSubMenu("Drawings", "drawings", "Volatile Drawings");
-            _drawMenu.Add("dmg", new CheckBox("Draw Volatile DamageIndicator"));
-            _drawMenu.Add("rl", new CheckBox("Draw Volatile RangeLines(beta)"));
-            _drawMenu.Add("recall", new CheckBox("Draw Recalls"));
-            _drawMenu.Add("targ", new CheckBox("Draw Current Target"));
+            DrawMenu = VolatileMenu.AddSubMenu("Drawings", "drawings", "Volatile Drawings");
+            DrawMenu.AddGroupLabel("AIO Drawings");
+            DrawMenu.Add("dmg", new CheckBox("Draw Volatile DamageIndicator"));
+            DrawMenu.Add("rl", new CheckBox("Draw Volatile RangeLines(beta)"));
+            DrawMenu.Add("recall", new CheckBox("Draw Recalls"));
+            DrawMenu.Add("targ", new CheckBox("Draw Current Target"));
             //_drawMenu.Add("ss", new CheckBox("Draw Enemy Skillshots"));
         }
 
@@ -110,9 +111,9 @@ namespace VolatileAIO.Organs.Brain
 
         protected override void Volative_OnDraw(EventArgs args)
         {
-            if (_drawMenu["rl"].Cast<CheckBox>().CurrentValue)
+            if (DrawMenu["rl"].Cast<CheckBox>().CurrentValue)
                 DrawRangeLines();
-            if (_drawMenu["targ"].Cast<CheckBox>().CurrentValue)
+            if (DrawMenu["targ"].Cast<CheckBox>().CurrentValue)
                 DrawTarget();
             /*if (_drawMenu["ss"].Cast<CheckBox>().CurrentValue)
                 DrawSkillshots();*/
@@ -138,9 +139,9 @@ namespace VolatileAIO.Organs.Brain
                 UpdateValues();
                 return;
             }
-            if (_drawMenu["dmg"].Cast<CheckBox>().CurrentValue)
+            if (DrawMenu["dmg"].Cast<CheckBox>().CurrentValue)
                 DrawDamageIndicator();
-            if (_drawMenu["recall"].Cast<CheckBox>().CurrentValue)
+            if (DrawMenu["recall"].Cast<CheckBox>().CurrentValue)
                 DrawRecalls();
             if (VolatileMenu["debug"].Cast<CheckBox>().CurrentValue)
             {

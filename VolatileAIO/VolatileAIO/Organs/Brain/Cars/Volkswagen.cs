@@ -11,6 +11,7 @@ using EloBuddy.SDK.Rendering;
 using SharpDX;
 using VolatileAIO.Organs.Brain.Utils;
 using Color = System.Drawing.Color;
+using Dash = EloBuddy.SDK.Events.Dash;
 using VPrediction = VolatileAIO.Organs.Brain.Utils.VPrediction;
 
 // ReSharper disable LocalizableElement
@@ -950,7 +951,7 @@ namespace VolatileAIO.Organs.Brain.Cars
         {
             var solis = GetActiveSoliders();
 
-            return !ene.IsDead && solis.Count != 0 && solis.Where(sol => !sol.IsMoving && !sol.IsDashing()).Any(sol => ene.Distance(sol, true) < AzirSoliderRange * AzirSoliderRange);
+            return !ene.IsDead && solis.Count != 0 && solis.Where(sol => !sol.IsMoving && !Dash.IsDashing(sol)).Any(sol => ene.Distance(sol, true) < AzirSoliderRange * AzirSoliderRange);
         }
 
         public static int SolidersAroundEnemy(Obj_AI_Base ene)

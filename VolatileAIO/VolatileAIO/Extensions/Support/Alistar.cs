@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Linq;
 using EloBuddy;
 using EloBuddy.SDK;
@@ -26,6 +27,14 @@ namespace VolatileAIO.Extensions.Support
         {
             InitializeMenu();
             InitializeSpells();
+            OnDraw += InitiateDrawMenu;
+        }
+
+        private void InitiateDrawMenu()
+        {
+            DrawManager.DrawMenu.AddGroupLabel(Player.ChampionName);
+            DrawManager.DrawMenu.Add("dwq", new CheckBox("Draw W/Q hitamount on enemies"));
+            DrawManager.DrawMenu.Add("dfq", new CheckBox("Draw FlashQ (HAP) hitamount"));
         }
 
         private static void InitializeMenu()
@@ -34,12 +43,16 @@ namespace VolatileAIO.Extensions.Support
 
             SpellMenu.AddGroupLabel("W/Q Settings");
             SpellMenu.Add("wqtc", new CheckBox("Use W/Q in Combo"));
+            SpellMenu.Add("wqhap", new CheckBox("W/Q Highest Amount Priority"));
+            SpellMenu.Add("awq", new CheckBox("Auto W/Q if can hit:", false));
+            SpellMenu.Add("awqa", new Slider("At Least", 4, 1, 5));
             SpellMenu.Add("qcd", new CheckBox("Use Q if W is on CD"));
             SpellMenu.Add("qth", new CheckBox("Use Q in Harass"));
-            SpellMenu.Add("qthcc", new CheckBox("Use Q in Harass only to chain cc"));
+            SpellMenu.Add("qthcc", new CheckBox("Use Q in Harass only to chain cc", false));
             SpellMenu.AddSeparator();
             SpellMenu.Add("flashq", new KeyBind("Flash Q (Target Priority)", false, KeyBind.BindTypes.HoldActive, 'T'));
-            SpellMenu.Add("flashqhap", new KeyBind("Flash Q (Highest Amount Priority)", false, KeyBind.BindTypes.HoldActive, 'Z'));
+            SpellMenu.Add("flashqhap",
+                new KeyBind("Flash Q (Highest Amount Priority)", false, KeyBind.BindTypes.HoldActive, 'Z'));
             SpellMenu.Add("fqamount", new Slider("Minimum enemies hit to Flash Q (HAP)", 2, 1, 5));
 
             SpellMenu.AddGroupLabel("E Settings");
@@ -57,19 +70,23 @@ namespace VolatileAIO.Extensions.Support
         {
             PlayerData.Spells = new Initialize().Spells(Initialize.Type.Active, Initialize.Type.Targeted,
                 Initialize.Type.Active, Initialize.Type.Active);
-            _q = (Spell.Active)PlayerData.Spells[0];
-            _w = (Spell.Targeted)PlayerData.Spells[1];
-            _e = (Spell.Active)PlayerData.Spells[2];
-            _r = (Spell.Active)PlayerData.Spells[3];
+            _q = (Spell.Active) PlayerData.Spells[0];
+            _w = (Spell.Targeted) PlayerData.Spells[1];
+            _e = (Spell.Active) PlayerData.Spells[2];
+            _r = (Spell.Active) PlayerData.Spells[3];
             _flash = EloBuddy.Player.Spells.FirstOrDefault(f => f.Name.ToLower() == "summonerflash");
         }
 
-        protected override void OnSpellCast(Spellbook sender, SpellbookCastSpellEventArgs args)
+        protected override void Volatile_ProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
-            if (Orbwalker.ActiveModesFlags != Orbwalker.ActiveModes.Combo || !_q.IsReady() || !sender.Owner.IsMe ||
-                args.Slot != SpellSlot.W || args.Process == false || !sender.Owner.IsMe) return;
+            if ((Orbwalker.ActiveModesFlags != Orbwalker.ActiveModes.Combo ||
+                 (SpellMenu["awq"].Cast<CheckBox>().CurrentValue &&
+                  QHits((AIHeroClient) args.Target) > SpellMenu["awqa"].Cast<Slider>().CurrentValue)) || !_q.IsReady() ||
+                !sender.IsMe ||
+                args.Slot != SpellSlot.W || args.Process == false)
+                return;
 
-            var qdelay = Math.Max(0, Player.Distance(args.Target) - 365)/1.2f - 25;
+            var qdelay = Math.Max(0, Player.Distance(args.Target) - 500) * 10 / 25 + 25;
             Core.DelayAction(() => _q.Cast(), (int) qdelay);
         }
 
@@ -132,8 +149,10 @@ namespace VolatileAIO.Extensions.Support
 
         private static void AutoCast()
         {
-            if (SpellMenu["user"].Cast<CheckBox>().CurrentValue && Player.CountEnemiesInRange(_w.Range) >= SpellMenu["ramount"].Cast<Slider>().CurrentValue
-                && (Player.Health / Player.MaxHealth) * 100 >= SpellMenu["rhealth"].Cast<Slider>().CurrentValue && TickManager.NoLag(4))
+            if (SpellMenu["user"].Cast<CheckBox>().CurrentValue &&
+                Player.CountEnemiesInRange(_w.Range) >= SpellMenu["ramount"].Cast<Slider>().CurrentValue
+                && (Player.Health/Player.MaxHealth)*100 >= SpellMenu["rhealth"].Cast<Slider>().CurrentValue &&
+                TickManager.NoLag(4))
             {
                 _r.Cast();
             }
@@ -143,6 +162,17 @@ namespace VolatileAIO.Extensions.Support
                 Orbwalker.ActiveModesFlags != Orbwalker.ActiveModes.Combo && !Player.IsRecalling() &&
                 !InFountain(Player) && TickManager.NoLag(3))
                 _e.Cast();
+            if (SpellMenu["awq"].Cast<CheckBox>().CurrentValue && _w.IsReady() && _q.IsReady())
+            {
+                var enemies = EntityManager.Heroes.Enemies;
+                var target = enemies.OrderByDescending(QHits).First();
+                if (QHits(target) > SpellMenu["awqa"].Cast<Slider>().CurrentValue && target.IsValidTarget(_w.Range * (float)0.95) &&
+                    Player.Mana > (ManaManager.GetMana(SpellSlot.Q) + ManaManager.GetMana(SpellSlot.W))
+                    && TickManager.NoLag(2))
+                {
+                    _w.Cast(target);
+                }
+            }
         }
 
         private static void Harass()
@@ -154,8 +184,8 @@ namespace VolatileAIO.Extensions.Support
             {
                 var targetcc = target.Buffs.Where(b => b.IsKnockup || b.IsRoot || b.IsStunOrSuppressed).ToList();
                 if (!targetcc.Any()) return;
-                var longest = (int)targetcc.Max(cc => cc.EndTime);
-                Core.DelayAction(() => StackCC_Part2(target), longest-(int)Game.Time);
+                var longest = (int) targetcc.Max(cc => cc.EndTime);
+                Core.DelayAction(() => StackCC_Part2(target), longest - (int) Game.Time);
                 _avoidSpam = true;
             }
             else
@@ -175,12 +205,27 @@ namespace VolatileAIO.Extensions.Support
         {
             if (_w.IsReady() && _q.IsReady() && SpellMenu["wqtc"].Cast<CheckBox>().CurrentValue)
             {
-                var target = TargetManager.Target(_w, DamageType.Magical);
-                if (target != null && target.IsValidTarget(_w.Range*(float)0.95) &&
-                    Player.Mana > (ManaManager.GetMana(SpellSlot.Q) + ManaManager.GetMana(SpellSlot.W))
-                    && TickManager.NoLag(2))
+                if (SpellMenu["wqhap"].Cast<CheckBox>().CurrentValue)
                 {
-                    _w.Cast(target);
+                    var enemies = EntityManager.Heroes.Enemies;
+                    var target = enemies.OrderByDescending(QHits).First();
+                    if (QHits(target) < 2) target = TargetManager.Target(_w, DamageType.Magical);
+                    if (target.IsValidTarget(_w.Range*(float) 0.95) &&
+                        Player.Mana > (ManaManager.GetMana(SpellSlot.Q) + ManaManager.GetMana(SpellSlot.W))
+                        && TickManager.NoLag(2))
+                    {
+                        _w.Cast(target);
+                    }
+                }
+                else
+                {
+                    var target = TargetManager.Target(_w, DamageType.Magical);
+                    if (target != null && ValidSpell(target) && target.IsValidTarget(_w.Range*(float) 0.95) &&
+                        Player.Mana > (ManaManager.GetMana(SpellSlot.Q) + ManaManager.GetMana(SpellSlot.W))
+                        && TickManager.NoLag(2))
+                    {
+                        _w.Cast(target);
+                    }
                 }
             }
             else if (SpellMenu["qcd"].Cast<CheckBox>().CurrentValue && _q.IsReady() && TickManager.NoLag(1))
@@ -188,7 +233,40 @@ namespace VolatileAIO.Extensions.Support
                 var target = TargetManager.Target(_q, DamageType.Magical);
                 if (target != null && target.IsValidTarget(_q.Range))
                     _q.Cast();
-            } 
+            }
+        }
+
+        private static int QHits(AIHeroClient target)
+        {
+            return EntityManager.Heroes.Enemies.Count(e => e.Distance(target) < 340 && ValidSpell(e));
+        }
+
+        protected override void Volative_OnDraw(EventArgs args)
+        {
+            if (Drawinit && DrawManager.DrawMenu["dwq"].Cast<CheckBox>().CurrentValue)
+            {
+                foreach (var enemy in EntityManager.Heroes.Enemies.Where(e => e.Distance(Player) < _w.Range))
+                {
+                    Drawing.DrawText(enemy.Position.WorldToScreen().X, enemy.Position.WorldToScreen().Y + 40,
+                        Color.White,
+                        "W/Q hits: : " + QHits(enemy));
+                }
+                foreach (
+                    var enemy in
+                        EntityManager.Heroes.Enemies.Where(
+                            e => e.Distance(Player) < _w.Range*1.6 && e.Distance(Player) > _w.Range))
+                {
+                    Drawing.DrawText(enemy.Position.WorldToScreen().X, enemy.Position.WorldToScreen().Y + 40, Color.Red,
+                        "W/Q hits: " + QHits(enemy));
+                }
+            }
+            if (Drawinit && DrawManager.DrawMenu["dfq"].Cast<CheckBox>().CurrentValue)
+            Drawing.DrawText(Player.Position.WorldToScreen().X - 75, Player.Position.WorldToScreen().Y + 40, Color.White,
+                "FlashQ (HAP) can hit: " +
+                CastManager.GetOptimizedCircleLocation(
+                    EntityManager.Heroes.Enemies.Where(e => e.IsValidTarget() && e.IsValid && e.Distance(Player) < 450)
+                        .Select(champ => Prediction.Position.PredictUnitPosition(champ, _q.CastDelay))
+                        .ToList(), _q.Range, _flash.SData.CastRange).ChampsHit);
         }
     }
 }
