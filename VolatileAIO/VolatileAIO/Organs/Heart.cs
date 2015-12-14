@@ -132,7 +132,7 @@ namespace VolatileAIO.Organs
             Drawinit = true;
             HackMenu = VolatileMenu.AddSubMenu("Hacks", "hacks", "Volatile Hacks");
             SkinManager.Initialize();
-            RecallTracker = new RecallTracker();
+            //RecallTracker = new RecallTracker();
             Activator = new Activator();
             _championProfiles = new ChampionProfiles();
             if (!AutoLeveler.PrioritiesAreSet() &&

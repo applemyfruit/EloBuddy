@@ -28,7 +28,7 @@ namespace VolatileAIO.Organs.Brain
             DrawMenu.AddGroupLabel("AIO Drawings");
             DrawMenu.Add("dmg", new CheckBox("Draw Volatile DamageIndicator"));
             DrawMenu.Add("rl", new CheckBox("Draw Volatile RangeLines(beta)"));
-            DrawMenu.Add("recall", new CheckBox("Draw Recalls"));
+            //DrawMenu.Add("recall", new CheckBox("Draw Recalls"));
             DrawMenu.Add("targ", new CheckBox("Draw Current Target"));
             //_drawMenu.Add("ss", new CheckBox("Draw Enemy Skillshots"));
         }
@@ -141,8 +141,8 @@ namespace VolatileAIO.Organs.Brain
             }
             if (DrawMenu["dmg"].Cast<CheckBox>().CurrentValue)
                 DrawDamageIndicator();
-            if (DrawMenu["recall"].Cast<CheckBox>().CurrentValue)
-                DrawRecalls();
+            //if (DrawMenu["recall"].Cast<CheckBox>().CurrentValue)
+               // DrawRecalls();
             if (VolatileMenu["debug"].Cast<CheckBox>().CurrentValue)
             {
                 DrawDebug();
