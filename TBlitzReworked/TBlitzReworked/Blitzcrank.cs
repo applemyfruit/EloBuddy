@@ -5,6 +5,7 @@ using EloBuddy.SDK;
 using EloBuddy.SDK.Enumerations;
 using EloBuddy.SDK.Menu;
 using EloBuddy.SDK.Menu.Values;
+using EloBuddy.SDK.Rendering;
 using Color = System.Drawing.Color;
 
 namespace TBlitzReworked
@@ -186,7 +187,7 @@ namespace TBlitzReworked
                     }
                     break;
                 case 2:
-                    Drawing.DrawCircle(Player.Position, Q.Range, Color.LawnGreen);
+                    new Circle { Color = Color.Chartreuse, Radius = Q.Range, BorderWidth = 2f }.Draw(Player.Position);
                     break;
             }
             if (DrawingsMenu["drawhc"].Cast<CheckBox>().CurrentValue)

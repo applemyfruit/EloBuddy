@@ -77,19 +77,19 @@ namespace VolatileAIO.Extensions.Support
             _flash = EloBuddy.Player.Spells.FirstOrDefault(f => f.Name.ToLower() == "summonerflash");
         }
 
-        protected override void Volatile_ProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
+        protected override void OnSpellCast(Spellbook sender, SpellbookCastSpellEventArgs args)
         {
             if ((Orbwalker.ActiveModesFlags != Orbwalker.ActiveModes.Combo ||
-                 (SpellMenu["awq"].Cast<CheckBox>().CurrentValue &&
-                  QHits((AIHeroClient) args.Target) > SpellMenu["awqa"].Cast<Slider>().CurrentValue)) || !_q.IsReady() ||
-                !sender.IsMe ||
-                args.Slot != SpellSlot.W || args.Process == false)
+                    (SpellMenu["awq"].Cast<CheckBox>().CurrentValue &&
+                     QHits((AIHeroClient)args.Target) > SpellMenu["awqa"].Cast<Slider>().CurrentValue)) || !_q.IsReady() ||
+                   !sender.Owner.IsMe ||
+                   args.Slot != SpellSlot.W || args.Process == false)
                 return;
 
-            var qdelay = Math.Max(0, Player.Distance(args.Target) - 500) * 10 / 25 + 25;
-            Core.DelayAction(() => _q.Cast(), (int) qdelay);
+            var qdelay = Math.Max(0, Player.Distance(args.Target) - 500) * 10 / 25;
+            //qdelay = Math.Max(0, Player.Distance(args.Target) - 365) / 1.5f;
+            Core.DelayAction(() => _q.Cast(), (int)qdelay);
         }
-
         protected override void Volatile_OnHeartBeat(EventArgs args)
         {
             FlashQ();
@@ -117,8 +117,8 @@ namespace VolatileAIO.Extensions.Support
             if (SpellMenu["flashq"].Cast<KeyBind>().CurrentValue)
             {
                 EloBuddy.Player.IssueOrder(GameObjectOrder.MoveTo, Game.CursorPos);
-                var target = TargetManager.Target((int) _flash.SData.CastRange, DamageType.Magical);
-                if (target == null || !target.IsValidTarget((int) _flash.SData.CastRange) || !TickManager.NoLag(1) ||
+                var target = TargetManager.Target(450, DamageType.Magical);
+                if (target == null || !target.IsValidTarget((int) _flash.SData.CastRange) || target.Distance(Player)<450|| !TickManager.NoLag(1) ||
                     !_q.IsReady() || _flash == null) return;
                 var champs =
                     EntityManager.Heroes.Enemies.Where(e => e.Distance(target) < _q.Range)
@@ -210,7 +210,7 @@ namespace VolatileAIO.Extensions.Support
                     var enemies = EntityManager.Heroes.Enemies;
                     var target = enemies.OrderByDescending(QHits).First();
                     if (QHits(target) < 2) target = TargetManager.Target(_w, DamageType.Magical);
-                    if (target.IsValidTarget(_w.Range*(float) 0.95) &&
+                    if (target.IsValidTarget(_w.Range*(float) 0.95) && ValidSpell(target) &&
                         Player.Mana > (ManaManager.GetMana(SpellSlot.Q) + ManaManager.GetMana(SpellSlot.W))
                         && TickManager.NoLag(2))
                     {
