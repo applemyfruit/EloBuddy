@@ -235,6 +235,8 @@ namespace VolatileAIO.Extensions.Top
 
         protected override void Volatile_ProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
+            if (sender == Player && args.Slot == SpellSlot.E)
+                _lastE = Now;
             if (sender.Type != Player.Type || !W.IsReady() || !sender.IsEnemy ||
                 !SpellMenu["wtd"].Cast<CheckBox>().CurrentValue)
                 return;
@@ -277,13 +279,6 @@ namespace VolatileAIO.Extensions.Top
                 Chat.Print("Last E: " + _lastE);
                 E.Cast();
             }
-        }
-
-        protected override void OnSpellCast(Spellbook sender, SpellbookCastSpellEventArgs args)
-        {
-            if (sender.Owner == Player && args.Slot == SpellSlot.E)
-                _lastE = Now;
-
         }
 
         private static void Killsteal()
