@@ -52,8 +52,8 @@ namespace VolatileAIO.Extensions.Top
             SpellMenu.Add("etl", new CheckBox("Use E to Laneclear"));
             SpellMenu.Add("eath", new CheckBox("Use E in Auto Harass"));
             SpellMenu.Add("etks", new CheckBox("Use E to Killsteal"));
-            SpellMenu.Add("autostack", new CheckBox("Auto Stack", false));
-            SpellMenu.Add("autostackhp", new Slider("Minimum Automatic E Stack HP", 25));
+            //SpellMenu.Add("autostack", new CheckBox("Auto Stack", false));
+            //SpellMenu.Add("autostackhp", new Slider("Minimum Automatic E Stack HP", 25));
 
             SpellMenu.AddGroupLabel("R Settings");
             SpellMenu.Add("rtc", new CheckBox("Use R in Combo"));
