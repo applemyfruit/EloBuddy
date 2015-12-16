@@ -19,7 +19,7 @@ namespace VolatileAIO.Extensions.Top
         private static Spell.Targeted Q;
         private static Spell.Skillshot R;
         private static bool _avoidSpam;
-        private static int _lastE;
+        private int _lastE;
         public static Menu SpellMenu;
 
         public Vladimir()
@@ -235,7 +235,7 @@ namespace VolatileAIO.Extensions.Top
 
         protected override void Volatile_ProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
-            if (sender == Player && args.Slot == SpellSlot.E)
+            if (sender.NetworkId == Player.NetworkId && args.Slot == SpellSlot.E)
                 _lastE = Now;
             if (sender.Type != Player.Type || !W.IsReady() || !sender.IsEnemy ||
                 !SpellMenu["wtd"].Cast<CheckBox>().CurrentValue)
