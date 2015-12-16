@@ -236,7 +236,10 @@ namespace VolatileAIO.Extensions.Top
         protected override void Volatile_ProcessSpellCast(Obj_AI_Base sender, GameObjectProcessSpellCastEventArgs args)
         {
             if (sender.NetworkId == Player.NetworkId && args.Slot == SpellSlot.E)
+            {
+                Chat.Print("Hi Bloodimir thanks for casting E :^)");
                 _lastE = Now;
+            }
             if (sender.Type != Player.Type || !W.IsReady() || !sender.IsEnemy ||
                 !SpellMenu["wtd"].Cast<CheckBox>().CurrentValue)
                 return;
