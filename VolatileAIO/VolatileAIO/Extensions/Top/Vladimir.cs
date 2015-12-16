@@ -19,7 +19,7 @@ namespace VolatileAIO.Extensions.Top
         private static Spell.Targeted Q;
         private static Spell.Skillshot R;
         private static bool _avoidSpam;
-        private int _lastE;
+        public int LastE;
         public static Menu SpellMenu;
 
         public Vladimir()
@@ -237,8 +237,9 @@ namespace VolatileAIO.Extensions.Top
         {
             if (sender.NetworkId == Player.NetworkId && args.Slot == SpellSlot.E)
             {
-                Chat.Print("Hi Bloodimir thanks for casting E :^)");
-                _lastE = Now;
+                LastE = Now;
+                Chat.Print("Now: " + Now);
+                Chat.Print("Last E: " + LastE);
             }
             if (sender.Type != Player.Type || !W.IsReady() || !sender.IsEnemy ||
                 !SpellMenu["wtd"].Cast<CheckBox>().CurrentValue)
@@ -275,11 +276,9 @@ namespace VolatileAIO.Extensions.Top
             }
               // Now - LastCast
               var stackHp = SpellMenu["autostackhp"].Cast<Slider>().CurrentValue;
-            if (Now - _lastE >= 9900 && E.IsReady() &&
+            if (Now - LastE >= 9900 && E.IsReady() &&
                 (Player.Health/Player.MaxHealth) * 100 >= stackHp)
             {
-                Chat.Print("Now: " + Now);
-                Chat.Print("Last E: " + _lastE);
                 E.Cast();
             }
         }
