@@ -238,7 +238,7 @@ namespace VolatileAIO.Extensions.Support
                     (!SpellMenu["dontgrab" + target.ChampionName.ToLower()].Cast<CheckBox>().CurrentValue ||
                      (SpellMenu["dontgrab" + target.ChampionName.ToLower()].Cast<CheckBox>().CurrentValue &&
                       TargetManager.ChosenTarget == target)) && Player.Distance(target) > Player.GetAutoAttackRange())
-                    CastManager.Cast.Line.SingleTargetHero(Q, DamageType.Magical);
+                    CastManager.Cast.Line.SingleTargetHero(Q, DamageType.Magical, 0, QChance);
 
             if (SpellMenu["wtc"].Cast<CheckBox>().CurrentValue && W.IsReady() && TickManager.NoLag(2))
             {

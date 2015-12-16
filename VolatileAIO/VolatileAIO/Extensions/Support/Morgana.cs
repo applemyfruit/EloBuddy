@@ -224,7 +224,7 @@ namespace VolatileAIO.Extensions.Support
             if (SpellMenu["qth"].Cast<CheckBox>().CurrentValue &&
                 !SpellMenu["dontbind" + target.ChampionName.ToLower()].Cast<CheckBox>().CurrentValue &&
                 Player.Distance(target) > Player.GetAutoAttackRange())
-                CastManager.Cast.Line.SingleTargetHero(Q, DamageType.Magical);
+                CastManager.Cast.Line.SingleTargetHero(Q, DamageType.Magical, 0, QChance);
         }
 
         private static void AutoCast()
@@ -269,7 +269,7 @@ namespace VolatileAIO.Extensions.Support
                     (!SpellMenu["dontbind" + target.ChampionName.ToLower()].Cast<CheckBox>().CurrentValue ||
                      (SpellMenu["dontbind" + target.ChampionName.ToLower()].Cast<CheckBox>().CurrentValue &&
                       TargetManager.ChosenTarget == target)) && Player.Distance(target) > Player.GetAutoAttackRange())
-                    CastManager.Cast.Line.SingleTargetHero(Q, DamageType.Magical);
+                    CastManager.Cast.Line.SingleTargetHero(Q, DamageType.Magical, 0, QChance);
             {
                 if (SpellMenu["rcmode"].Cast<Slider>().CurrentValue == 0 &&
                     EntityManager.Heroes.Enemies.Count(e => Player.Distance(e) < R.Range) >=

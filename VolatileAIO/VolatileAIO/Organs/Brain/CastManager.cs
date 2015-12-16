@@ -36,7 +36,7 @@ namespace VolatileAIO.Organs.Brain
             internal class Line
             {
                 internal static void SingleTargetHero(Spell.Skillshot spell, DamageType damageType,
-                    int range = 0, HitChance hitChance = HitChance.Medium, AIHeroClient targetHero = null)
+                    int range = 0, HitChance? hitChance = HitChance.Medium, AIHeroClient targetHero = null)
                 {
                     if ((spell.Slot != SpellSlot.Q || !TickManager.NoLag(1)) &&
                         (spell.Slot != SpellSlot.W || !TickManager.NoLag(2)) &&
@@ -180,7 +180,7 @@ namespace VolatileAIO.Organs.Brain
                 }
 
                 internal static void Optimized(Spell.Skillshot spell, DamageType damageType,
-                    int range = 0, int minHit = 1, HitChance hitChance = HitChance.Medium,
+                    int range = 0, int minHit = 1, HitChance? hitChance = HitChance.Medium,
                     AIHeroClient targetHero = null)
                 {
                     if ((spell.Slot != SpellSlot.Q || !TickManager.NoLag(1)) &&
@@ -288,6 +288,158 @@ namespace VolatileAIO.Organs.Brain
                 collection.Add(combination);
             }
             return collection;
+        }
+
+        public static void MenuInit()
+        {
+            CastMenu = VolatileMenu.AddSubMenu("Cast Manager", "castmenu", "Volatile CastManager");
+            CastMenu.AddGroupLabel("Target Manager");
+            CastMenu.Add("chosenignores", new CheckBox("Ignore all other champions if Selected Target", false));
+            CastMenu.AddGroupLabel("HitChance Settings");
+            if (QChance != null) CastMenu.Add("q", new Slider("Q", 1, 0, 2)).OnValueChange += OnSliderChange; 
+            if (WChance != null) CastMenu.Add("w", new Slider("W", 1, 0, 2)).OnValueChange += OnSliderChange;
+            if (EChance != null) CastMenu.Add("e", new Slider("E", 1, 0, 2)).OnValueChange += OnSliderChange;
+            if (RChance != null) CastMenu.Add("r", new Slider("R", 1, 0, 2)).OnValueChange += OnSliderChange;
+            UpdateSliders();
+        }
+
+        private static void OnSliderChange(ValueBase<int> sender, ValueBase<int>.ValueChangeArgs args)
+        {
+            UpdateSliders();
+        }
+
+        private static void UpdateSliders()
+        {
+            if (QChance != null)
+            {
+                switch (CastMenu["q"].Cast<Slider>().CurrentValue)
+                {
+                    case 0:
+                        QChance = HitChance.Low;
+                        CastMenu["q"].Cast<Slider>().DisplayName = "Q Hitchance: Fast (but less accurate)";
+                        break;
+                    case 1:
+                        QChance = HitChance.Medium;
+                        CastMenu["q"].Cast<Slider>().DisplayName = "Q Hitchance: Balanced";
+                        break;
+                    case 2:
+                        QChance = HitChance.High;
+                        CastMenu["q"].Cast<Slider>().DisplayName = "Q Hitchance: Slow (but more accurate)";
+                        break;
+                }
+                if (Profileinit)
+                {
+                    if (ChampionProfiles.Options.Any(o => o.Id == "q"))
+                    {
+                        ChampionProfiles.Options.Add(
+                            new ChampionProfiles.ProfileOption(ChampionProfiles.MenuType.Castmanager, "q",
+                                ChampionProfiles.OptionType.Slider, CastMenu["q"].Cast<Slider>().CurrentValue.ToString()));
+                    }
+                    else
+                    {
+                        ChampionProfiles.Options.Remove(ChampionProfiles.Options.Find(o => o.Id != "q"));
+                        ChampionProfiles.Options.Add(
+                            new ChampionProfiles.ProfileOption(ChampionProfiles.MenuType.Castmanager, "q",
+                                ChampionProfiles.OptionType.Slider, CastMenu["q"].Cast<Slider>().CurrentValue.ToString()));
+                    }
+                }
+            }
+            if (WChance != null)
+            {
+                switch (CastMenu["w"].Cast<Slider>().CurrentValue)
+                {
+                    case 0:
+                        WChance = HitChance.Low;
+                        CastMenu["w"].Cast<Slider>().DisplayName = "W Hitchance: Fast (but less accurate)";
+                        break;
+                    case 1:
+                        WChance = HitChance.Medium;
+                        CastMenu["w"].Cast<Slider>().DisplayName = "W Hitchance: Balanced";
+                        break;
+                    case 2:
+                        WChance = HitChance.High;
+                        CastMenu["w"].Cast<Slider>().DisplayName = "W Hitchance: Slow (but more accurate)";
+                        break;
+                }
+                if (Profileinit)
+                {
+                    if (ChampionProfiles.Options.All(o => o.Id != "w"))
+                        ChampionProfiles.Options.Add(
+                            new ChampionProfiles.ProfileOption(ChampionProfiles.MenuType.Castmanager, "w",
+                                ChampionProfiles.OptionType.Slider, CastMenu["w"].Cast<Slider>().CurrentValue.ToString()));
+                    else
+                    {
+                        ChampionProfiles.Options.Remove(ChampionProfiles.Options.Find(o => o.Id != "w"));
+                        ChampionProfiles.Options.Add(
+                            new ChampionProfiles.ProfileOption(ChampionProfiles.MenuType.Castmanager, "w",
+                                ChampionProfiles.OptionType.Slider, CastMenu["w"].Cast<Slider>().CurrentValue.ToString()));
+                    }
+                }
+            }
+            if (EChance != null)
+            {
+                switch (CastMenu["e"].Cast<Slider>().CurrentValue)
+                {
+                    case 0:
+                        EChance = HitChance.Low;
+                        CastMenu["e"].Cast<Slider>().DisplayName = "E Hitchance: Fast (but less accurate)";
+                        break;
+                    case 1:
+                        EChance = HitChance.Medium;
+                        CastMenu["e"].Cast<Slider>().DisplayName = "E Hitchance: Balanced";
+                        break;
+                    case 2:
+                        EChance = HitChance.High;
+                        CastMenu["e"].Cast<Slider>().DisplayName = "E Hitchance: Slow (but more accurate)";
+                        break;
+                }
+                if (Profileinit)
+                {
+                    if (ChampionProfiles.Options.All(o => o.Id != "e"))
+                        ChampionProfiles.Options.Add(
+                            new ChampionProfiles.ProfileOption(ChampionProfiles.MenuType.Castmanager, "e",
+                                ChampionProfiles.OptionType.Slider, CastMenu["e"].Cast<Slider>().CurrentValue.ToString()));
+                    else
+                    {
+                        ChampionProfiles.Options.Remove(ChampionProfiles.Options.Find(o => o.Id != "e"));
+                        ChampionProfiles.Options.Add(
+                            new ChampionProfiles.ProfileOption(ChampionProfiles.MenuType.Castmanager, "e",
+                                ChampionProfiles.OptionType.Slider, CastMenu["e"].Cast<Slider>().CurrentValue.ToString()));
+                    }
+                }
+            }
+            if (RChance != null)
+            {
+                switch (CastMenu["r"].Cast<Slider>().CurrentValue)
+                {
+                    case 0:
+                        RChance = HitChance.Low;
+                        CastMenu["r"].Cast<Slider>().DisplayName = "R Hitchance: Fast (but less accurate)";
+                        break;
+                    case 1:
+                        RChance = HitChance.Medium;
+                        CastMenu["r"].Cast<Slider>().DisplayName = "R Hitchance: Balanced";
+                        break;
+                    case 2:
+                        RChance = HitChance.High;
+                        CastMenu["r"].Cast<Slider>().DisplayName = "R Hitchance: Slow (but more accurate)";
+                        break;
+                }
+                if (Profileinit)
+                {
+                    if (ChampionProfiles.Options.All(o => o.Id != "r"))
+                        ChampionProfiles.Options.Add(
+                            new ChampionProfiles.ProfileOption(ChampionProfiles.MenuType.Castmanager, "r",
+                                ChampionProfiles.OptionType.Slider, CastMenu["r"].Cast<Slider>().CurrentValue.ToString()));
+                    else
+                    {
+                        ChampionProfiles.Options.Remove(ChampionProfiles.Options.Find(o => o.Id != "r"));
+                        ChampionProfiles.Options.Add(
+                            new ChampionProfiles.ProfileOption(ChampionProfiles.MenuType.Castmanager, "r",
+                                ChampionProfiles.OptionType.Slider, CastMenu["r"].Cast<Slider>().CurrentValue.ToString()));
+                    }
+                }
+            }
         }
     }
 }

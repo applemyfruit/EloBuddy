@@ -37,7 +37,7 @@ namespace VolatileAIO.Organs.Brain
         public static AIHeroClient Target(Spell.SpellBase spell, DamageType damageType)
         {
             TargetSelector.ActiveMode = TargetSelectorMode.Auto;
-            if (TargetMenu["chosenignores"].Cast<CheckBox>().CurrentValue && ChosenTarget != null)
+            if (CastMenu["chosenignores"].Cast<CheckBox>().CurrentValue && ChosenTarget != null)
                 return ChosenTarget;
 
             if (ChosenTarget != null && ChosenTarget.Distance(Player) < spell.Range*1.2) return ChosenTarget;
@@ -47,7 +47,7 @@ namespace VolatileAIO.Organs.Brain
         public static AIHeroClient Target(int range, DamageType damageType)
         {
             TargetSelector.ActiveMode = TargetSelectorMode.Auto;
-            if (TargetMenu["chosenignores"].Cast<CheckBox>().CurrentValue && ChosenTarget != null)
+            if (CastMenu["chosenignores"].Cast<CheckBox>().CurrentValue && ChosenTarget != null)
                 return ChosenTarget;
 
             if (ChosenTarget != null && ChosenTarget.Distance(Player) < range * 1.2) return ChosenTarget;

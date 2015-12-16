@@ -11,6 +11,7 @@ using SharpDX;
 using VolatileAIO.Organs;
 using VolatileAIO.Organs.Brain;
 using VolatileAIO.Organs.Brain.Data;
+// ReSharper disable PossibleInvalidOperationException
 
 namespace VolatileAIO.Extensions.Mid
 {
@@ -268,10 +269,10 @@ namespace VolatileAIO.Extensions.Mid
                         e =>
                             e.IsValidTarget(R.Range));
                 if (enemy != null)
-                    CastManager.Cast.Circle.Optimized(R, DamageType.Magical, (int) R.Range, 1, HitChance.High, enemy);
+                    CastManager.Cast.Circle.Optimized(R, DamageType.Magical, (int) R.Range, 1, RChance, enemy);
                 else if (Player.HealthPercent <= 15)
                     if (emergency != null)
-                        CastManager.Cast.Circle.Optimized(R, DamageType.Magical, (int) R.Range, 1, HitChance.High,
+                        CastManager.Cast.Circle.Optimized(R, DamageType.Magical, (int) R.Range, 1, RChance,
                             emergency);
                 else if (Player.HasBuff("pyromania_particle"))
                 {

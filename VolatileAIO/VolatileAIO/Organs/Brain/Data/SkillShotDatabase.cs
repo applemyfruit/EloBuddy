@@ -3689,6 +3689,27 @@ namespace VolatileAIO.Organs.Brain.Data
 
             #endregion Viktor
 
+            #region Vladimir
+
+            Spells.Add(
+                new SkillShot
+                {
+                    ChampionName = "Vladimir",
+                    SpellName = "VladimirHemoplague",
+                    Slot = SpellSlot.R,
+                    Type = SkillShotType.Circular,
+                    Delay = 250,
+                    Range = 700,
+                    Radius = 375,
+                    MissileSpeed = int.MaxValue,
+                    FixedRange = false,
+                    AddHitbox = true,
+                    DangerValue = 3,
+                    IsDangerous = true
+                });
+
+            #endregion Vladimir
+
             #region Xerath
 
             Spells.Add(

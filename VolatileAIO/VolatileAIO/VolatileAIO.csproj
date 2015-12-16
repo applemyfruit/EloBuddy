@@ -73,6 +73,7 @@
     <Compile Include="Extensions\Support\Alistar.cs" />
     <Compile Include="Extensions\Support\Blitzcrank.cs" />
     <Compile Include="Extensions\Support\Morgana.cs" />
+    <Compile Include="Extensions\Top\Vladimir.cs" />
     <Compile Include="Organs\Brain\Activator.cs" />
     <Compile Include="Organs\Brain\Utils\VPrediction.cs" />
     <Compile Include="Organs\Brain\ChampionProfiles.cs" />

@@ -132,7 +132,7 @@ namespace VolatileAIO.Extensions.Mid
                     Q.Cast(EntityManager.MinionsAndMonsters.Monsters.Where(
                         m =>
                             m.Distance(Player) < Q.Range && m.HasBuff("brandablaze") &&
-                            Q.GetPrediction(m).HitChance > HitChance.High).OrderByDescending(m => m.MinionLevel).First());
+                            Q.GetPrediction(m).HitChance > QChance).OrderByDescending(m => m.MinionLevel).First());
                 }
             }
             if (SpellMenu["wtj"].Cast<CheckBox>().CurrentValue && TickManager.NoLag(2))

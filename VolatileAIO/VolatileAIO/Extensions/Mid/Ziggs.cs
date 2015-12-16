@@ -46,38 +46,6 @@ namespace VolatileAIO.Extensions.Mid
             SpellMenu.Add("rtc", new CheckBox("Use R in Combo"));
             SpellMenu.Add("autoult", new CheckBox("Auto Ult"));
             SpellMenu.Add("auamount", new Slider("Minimum enemies hit to Auto R", 3, 1, 5));
-
-            SpellMenu.AddGroupLabel("Prediction Settings");
-            SpellMenu.AddGroupLabel("Q Hitchance");
-            var qslider = SpellMenu.Add("hQ", new Slider("Q HitChance", 2, 0, 2));
-            var qMode = new[] {"Low (Fast Casting)", "Medium", "High (Slow Casting)"};
-            qslider.DisplayName = qMode[qslider.CurrentValue];
-
-            qslider.OnValueChange +=
-                delegate(ValueBase<int> sender, ValueBase<int>.ValueChangeArgs changeArgs)
-                {
-                    sender.DisplayName = qMode[changeArgs.NewValue];
-                };
-            SpellMenu.AddGroupLabel("W Hitchance");
-            var wslider = SpellMenu.Add("hW", new Slider("W HitChance", 1, 0, 2));
-            var wMode = new[] {"Low (Fast Casting)", "Medium", "High (Slow Casting)"};
-            wslider.DisplayName = wMode[wslider.CurrentValue];
-
-            wslider.OnValueChange +=
-                delegate(ValueBase<int> sender, ValueBase<int>.ValueChangeArgs changeArgs)
-                {
-                    sender.DisplayName = wMode[changeArgs.NewValue];
-                };
-            SpellMenu.AddGroupLabel("E Hitchance");
-            var eslider = SpellMenu.Add("hE", new Slider("E HitChance", 2, 0, 2));
-            var eMode = new[] { "Low (Fast Casting)", "Medium", "High (Slow Casting)" };
-            eslider.DisplayName = eMode[eslider.CurrentValue];
-
-            eslider.OnValueChange +=
-                delegate (ValueBase<int> sender, ValueBase<int>.ValueChangeArgs changeArgs)
-                {
-                    sender.DisplayName = eMode[changeArgs.NewValue];
-                };
         }
 
         public void InitializeSpells()
@@ -114,13 +82,13 @@ namespace VolatileAIO.Extensions.Mid
         private static void Harass()
         {
             var target = TargetManager.Target(Q, DamageType.Magical);
-            var qpredvalue = Q.GetPrediction(target).HitChance >= PredQ();
+            var qpredvalue = Q.GetPrediction(target).HitChance >= QChance;
             if (!Q.IsReady() || !TickManager.NoLag(1) || !SpellMenu["qth"].Cast<CheckBox>().CurrentValue ||
                 target == null || !target.IsValidTarget(Q.Range) || qpredvalue)
                 return;
             if (SpellMenu["qth"].Cast<CheckBox>().CurrentValue)
             {
-                CastManager.Cast.Circle.Optimized(Q, DamageType.Magical, (int) Q.Range, 1, PredQ(), target);
+                CastManager.Cast.Circle.Optimized(Q, DamageType.Magical, (int) Q.Range, 1, QChance, target);
             }
         }
 
@@ -133,7 +101,7 @@ namespace VolatileAIO.Extensions.Mid
                         e.IsValidTarget(Q.Range) &&
                         Player.GetSpellDamage(e, SpellSlot.Q) >= Prediction.Health.GetPrediction(e, Q.CastDelay));
             if (enemy != null)
-                CastManager.Cast.Circle.Optimized(Q, DamageType.Magical, (int) Q.Range, 1, PredQ(), enemy);
+                CastManager.Cast.Circle.Optimized(Q, DamageType.Magical, (int) Q.Range, 1, QChance, enemy);
         }
 
         private static void AutoR()
@@ -306,11 +274,11 @@ namespace VolatileAIO.Extensions.Mid
             }
             if (SpellMenu["etc"].Cast<CheckBox>().CurrentValue)
             {
-                CastManager.Cast.Circle.Optimized(E, DamageType.Magical, (int) E.Range, 1, PredE());
+                CastManager.Cast.Circle.Optimized(E, DamageType.Magical, (int) E.Range, 1, EChance);
             }
             if (SpellMenu["wtc"].Cast<CheckBox>().CurrentValue)
             {
-                CastManager.Cast.Circle.Optimized(W, DamageType.Magical, (int) W.Range, 1, PredW());
+                CastManager.Cast.Circle.Optimized(W, DamageType.Magical, (int) W.Range, 1, WChance);
             }
             if (SpellMenu["rtc"].Cast<CheckBox>().CurrentValue)
             {
@@ -322,59 +290,14 @@ namespace VolatileAIO.Extensions.Mid
                 if (enemy != null)
                 {
                     R.CastDelay = 1900 + 1500*(int) Player.Distance(target)/5300;
-                    CastManager.Cast.Circle.Optimized(R, DamageType.Magical, (int) R.Range, 1, HitChance.High, enemy);
+                    CastManager.Cast.Circle.Optimized(R, DamageType.Magical, (int) R.Range, 1, RChance, enemy);
                 }
             }
         }
 
-        private static HitChance PredQ()
+        public enum AttackSpell
         {
-            var mode = SpellMenu["hQ"].DisplayName;
-            switch (mode)
-            {
-                case "Low (Fast Casting)":
-                    return HitChance.Low;
-                case "Medium":
-                    return HitChance.Medium;
-                case "High (Slow Casting)":
-                    return HitChance.High;
-            }
-            return HitChance.Medium;
-        }
-
-        private static HitChance PredE()
-        {
-            var mode = SpellMenu["hE"].DisplayName;
-            switch (mode)
-            {
-                case "Low (Fast Casting)":
-                    return HitChance.Low;
-                case "Medium":
-                    return HitChance.Medium;
-                case "High (Slow Casting)":
-                    return HitChance.High;
-            }
-            return HitChance.Medium;
-        }
-
-        private static HitChance PredW()
-        {
-            var mode = SpellMenu["hW"].DisplayName;
-            switch (mode)
-            {
-                case "Low (Fast Casting)":
-                    return HitChance.Low;
-                case "Medium":
-                    return HitChance.Medium;
-                case "High (Slow Casting)":
-                    return HitChance.High;
-            }
-            return HitChance.Medium;
-        }
+            Q
+        };
     }
-
-    public enum AttackSpell
-    {
-        Q
-    };
 }

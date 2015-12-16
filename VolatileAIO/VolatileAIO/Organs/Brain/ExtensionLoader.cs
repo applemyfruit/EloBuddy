@@ -8,6 +8,7 @@ using VolatileAIO.Extensions.ADC;
 using VolatileAIO.Extensions.Jungle;
 using VolatileAIO.Extensions.Mid;
 using VolatileAIO.Extensions.Support;
+using VolatileAIO.Extensions.Top;
 
 namespace VolatileAIO.Organs.Brain
 {
@@ -26,6 +27,7 @@ namespace VolatileAIO.Organs.Brain
                 new Champion("Ezreal", State.FullyDeveloped, "turkey"),
                 new Champion("Morgana", State.FullyDeveloped, "Bloodimir"),
                 new Champion("Tristana", State.FullyDeveloped, "turkey"),
+                new Champion("Vladimir", State.FullyDeveloped, "Bloodimir"),
                 new Champion("Ziggs", State.FullyDeveloped, "Bloodimir")
             };
 
@@ -109,6 +111,10 @@ namespace VolatileAIO.Organs.Brain
                     break;
                 case "tristana":
                     new Tristana();
+                    _loaded = true;
+                    break;
+                case "vladimir":
+                    new Vladimir();
                     _loaded = true;
                     break;
                 case "ziggs":

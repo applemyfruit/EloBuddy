@@ -8,6 +8,7 @@ using System.Security.Permissions;
 using EloBuddy;
 using EloBuddy.SDK;
 using EloBuddy.SDK.Constants;
+using EloBuddy.SDK.Enumerations;
 using EloBuddy.SDK.Events;
 using EloBuddy.SDK.Menu;
 using EloBuddy.SDK.Menu.Values;
@@ -22,9 +23,10 @@ namespace VolatileAIO.Organs
     internal class Heart
     {
         protected static readonly AIHeroClient Player = ObjectManager.Player;
+        protected static HitChance? QChance = null, WChance = null, EChance = null, RChance = null;
         public static Menu VolatileMenu;
         protected static Menu HackMenu;
-        protected static Menu TargetMenu;
+        protected static Menu CastMenu;
         protected static Volkswagen Golf;
         public static ExtensionLoader ExtensionLoader;
         public static AutoLeveler AutoLeveler;
@@ -32,8 +34,9 @@ namespace VolatileAIO.Organs
         public static DrawManager DrawManager;
         public static RecallTracker RecallTracker;
         public static Activator Activator;
-        private static ChampionProfiles _championProfiles;
+        internal static ChampionProfiles ChampionProfiles;
         protected static bool UsingVorb;
+        protected static bool Profileinit;
         protected static bool Drawinit;
 
         protected Heart()
@@ -120,21 +123,21 @@ namespace VolatileAIO.Organs
                 Secret_OnValueChange;
             VolatileMenu.AddLabel(
                 "*Orbwalker requires reload. Press f5 to reload, and please turn off EB Orbwalker Drawings");
-            //VolatileMenu.Add("vpred2", new Slider("Super Ultra Secret Dont Even Look", 0, 0, 2));
             OrbHandler();
             if (!ExtensionLoader.IncludesChampion(Player.ChampionName)) return;
-            TargetMenu = VolatileMenu.AddSubMenu("Target Manager", "targetmenu", "Volatile TargetManager");
-            TargetMenu.Add("chosenignores", new CheckBox("Ignore all other champions if Selected Target", false));
+            CastManager.MenuInit();
             ManaManager = new ManaManager();
             AutoLeveler = new AutoLeveler();
             DrawManager = new DrawManager();
+            // ReSharper disable once UseNullPropagation
             if (OnDraw != null) OnDraw.Invoke();
             Drawinit = true;
             HackMenu = VolatileMenu.AddSubMenu("Hacks", "hacks", "Volatile Hacks");
             SkinManager.Initialize();
             //RecallTracker = new RecallTracker();
+            ChampionProfiles = new ChampionProfiles();
+            Profileinit = true;
             Activator = new Activator();
-            _championProfiles = new ChampionProfiles();
             if (!AutoLeveler.PrioritiesAreSet() &&
                 AutoLeveler.AutoLevelMenu["autolevel"].Cast<CheckBox>().CurrentValue)
                 Chat.Print("Auto-Leveler: Priorities not Set!");

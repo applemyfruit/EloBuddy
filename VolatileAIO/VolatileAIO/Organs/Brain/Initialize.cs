@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EloBuddy;
 using EloBuddy.SDK;
+using EloBuddy.SDK.Enumerations;
 using VolatileAIO.Organs.Brain.Data;
 
 namespace VolatileAIO.Organs.Brain
@@ -61,6 +62,7 @@ namespace VolatileAIO.Organs.Brain
                 case Type.Skillshot:
                     qBase = new Spell.Skillshot(SpellSlot.Q, Convert.ToUInt32(qData2.Range * 0.95), qData2.Type, qData2.Delay,
                         qData2.MissileSpeed, qData2.Radius);
+                    QChance = HitChance.Medium;
                     break;
                 case Type.Targeted:
                     qBase = new Spell.Targeted(SpellSlot.Q, (uint) qData.CastRange);
@@ -75,6 +77,7 @@ namespace VolatileAIO.Organs.Brain
                 case Type.Skillshot:
                     wBase = new Spell.Skillshot(SpellSlot.W, Convert.ToUInt32(wData2.Range * 0.95), wData2.Type, wData2.Delay,
                         wData2.MissileSpeed, wData2.Radius);
+                    WChance = HitChance.Medium;
                     break;
                 case Type.Targeted:
                     wBase = new Spell.Targeted(SpellSlot.W, (uint) wData.CastRange);
@@ -89,6 +92,7 @@ namespace VolatileAIO.Organs.Brain
                 case Type.Skillshot:
                     eBase = new Spell.Skillshot(SpellSlot.E, Convert.ToUInt32(eData2.Range*0.95), eData2.Type, eData2.Delay,
                         eData2.MissileSpeed, eData2.Radius);
+                    EChance = HitChance.Medium;
                     break;
                 case Type.Targeted:
                     eBase = new Spell.Targeted(SpellSlot.E, (uint) eData.CastRange);
@@ -103,11 +107,14 @@ namespace VolatileAIO.Organs.Brain
                 case Type.Skillshot:
                     rBase = new Spell.Skillshot(SpellSlot.R, Convert.ToUInt32(rData2.Range * 0.95), rData2.Type, rData2.Delay,
                         rData2.MissileSpeed, rData2.Radius);
+                    RChance = HitChance.Medium;
                     break;
                 case Type.Targeted:
                     rBase = new Spell.Targeted(SpellSlot.R, (uint) rData.CastRange);
                     break;
             }
+
+
 
             return new List<Spell.SpellBase>
             {

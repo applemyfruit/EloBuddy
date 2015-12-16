@@ -9,7 +9,7 @@ namespace VolatileAIO.Organs.Brain.Data
                 "ShenShadowDash", "Pulverize", "GragasE", "FizzPiercingStrike", "reksaiqburrowed",
                 "RunePrison", "Fling", "NocturneUnspeakableHorror", "SejuaniArcticAssault", "ShyvanaTransformCast",
                 "PantheonW", "Ice Blast", "Terrify", "GalioIdolOfDurand", "GnarR", "JaxCounterStrike", "BlindMonkRKick",
-                "UFSlash", "JayceThunderingBlow", "ZacR", "StaticField", "GarenQ", "TalonCutthroat", "ViR"
+                "UFSlash", "JayceThunderingBlow", "ZacR", "StaticField", "GarenQ", "TalonCutthroat", "ViR", "LissandraR", "CurseoftheSadMummy" , "OrianaDetonateCommand"
             };
 
         static readonly string[] _skillShots =
@@ -21,16 +21,16 @@ namespace VolatileAIO.Organs.Brain.Data
                 "JannaQ", "JarvanIVEQ", "BandageToss", "CaitlynEntrapment", "PhosphorusBomb", "MissileBarrage2",
                 "DariusAxeGrabCone", "DianaArc", "DianaArcArc", "InfectedCleaverMissileCast", "DravenDoubleShot",
                 "EkkoQ", "EkkoW", "EkkoR", "EliseHumanE", "GalioResoluteSmite", "GalioRighteousGust",
-                "GalioIdolOfDurand", "CurseoftheSadMummy", "FlashFrost", "EvelynnR", "QuinnQ", "yasuoq3w",
+                "FlashFrost", "EvelynnR", "QuinnQ", "yasuoq3w",
                 "RengarEFinal", "ZiggsW", "ZyraGraspingRoots", "ZyraBrambleZone", "Dazzle", "FiddlesticksDarkWind",
                 "FeralScream", "ZiggsW", "ViktorChaosStorm", "AlZaharCalloftheVoid",
-                "RumbleCarpetBombMissile", "ThreshQ", "ThreshE", "NamiQ", "DarkBindingMissile", "OrianaDetonateCommand",
+                "RumbleCarpetBombMissile", "ThreshQ", "ThreshE", "NamiQ", "DarkBindingMissile",
                 "NautilusAnchorDrag",
                 "SejuaniGlacialPrisonCast", "SonaR", "VarusR", "rivenizunablade", "EnchantedCrystalArrow", "BardR",
                 "InfernalGuardian",
                 "CassiopeiaPetrifyingGaze",
                 "BraumRWrapper", "FizzMarinerDoomMissile", "ViktorDeathRay", "ViktorDeathRay3", "XerathMageSpear",
-                "GragasR", "HecarimUlt", "LeonaSolarFlare", "LissandraR", "LuxLightBinding", "LuxMaliceCannon", "JinxW",
+                "GragasR", "HecarimUlt", "LeonaSolarFlare", "LuxLightBinding", "LuxMaliceCannon", "JinxW",
                 "LuxLightStrikeKugel"
             };
 
