@@ -92,7 +92,7 @@ namespace VolatileAIO.Extensions.Top
         {
             Killsteal();
             if (SpellMenu["ahs"].Cast<CheckBox>().CurrentValue) AutoHarass();
-            if (SpellMenu["autostack"].Cast<CheckBox>().CurrentValue) KeepEUp();
+            //if (SpellMenu["autostack"].Cast<CheckBox>().CurrentValue) KeepEUp();
             if (SpellMenu["autor"].Cast<CheckBox>().CurrentValue) AutoR();
             if (ComboActive()) Combo();
             if (HarassActive()) Harass();
@@ -268,7 +268,7 @@ namespace VolatileAIO.Extensions.Top
         {
             get { return (int)DateTime.Now.TimeOfDay.TotalMilliseconds; }
         }
-        public  void KeepEUp()
+        public  void KeepEUp()  
         {
             if (Player.IsRecalling() || MenuGUI.IsChatOpen)
             {
