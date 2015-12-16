@@ -273,6 +273,8 @@ namespace VolatileAIO.Extensions.Top
             if (Now - _lastE >= 9900 && E.IsReady() &&
                 (Player.Health/Player.MaxHealth) * 100 >= stackHp)
             {
+                Chat.Print("Now: " + Now);
+                Chat.Print("Last E: " + _lastE);
                 E.Cast();
             }
         }
