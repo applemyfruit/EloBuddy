@@ -103,7 +103,7 @@ namespace VolatileAIO.Organs.Brain
                         Unit = target,
                         Type = coreType2
                     };
-                    var poutput2 = VPrediction.GetPrediction(predInput2);
+                    var poutput2 = Utils.VPrediction.GetPrediction(predInput2);
                     //var poutput2 = spell.GetPrediction(target);
                     Chat.Print(spell.Slot + " " + predInput2.Collision + poutput2.Hitchance);
                     if (spell.Speed < float.MaxValue && CollisionYasuo(Player.ServerPosition, poutput2.CastPosition))

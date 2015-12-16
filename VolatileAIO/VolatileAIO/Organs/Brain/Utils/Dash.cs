@@ -37,29 +37,29 @@ namespace VolatileAIO.Organs.Brain.Utils
                 {
                     DetectedDashes.Add(hero.NetworkId, new DashArgs());
                 }
-                    var path = new List<Vector2> { hero.ServerPosition.To2D() };
-                    path.AddRange(e.Path.ToList());
+                var path = new List<Vector2> {hero.ServerPosition.To2D()};
+                path.AddRange(e.Path.ToList());
 
-                    DetectedDashes[hero.NetworkId] = new DashArgs
-                    {
-                        StartTick = (int)((Game.Time * 1000) - (Game.Ping / 2)),
-                        Speed = e.Speed,
-                        StartPos = hero.ServerPosition.To2D(),
-                        Unit = sender,
-                        Path = path,
-                        EndPos = DetectedDashes[hero.NetworkId].Path.LastOrDefault(),
-                        EndTick =
-                                                                 DetectedDashes[hero.NetworkId].StartTick
-                                                                 + (int)
-                                                                   (1000
-                                                                    * (DetectedDashes[hero.NetworkId].EndPos.Distance(
-                                                                        DetectedDashes[hero.NetworkId].StartPos)
-                                                                       / DetectedDashes[hero.NetworkId].Speed)),
-                        Duration =
-                                                                 DetectedDashes[hero.NetworkId].EndTick
-                                                                 - DetectedDashes[hero.NetworkId].StartTick
-                    };
-                
+                DetectedDashes[hero.NetworkId] = new DashArgs
+                {
+                    StartTick = (int) ((Game.Time*1000) - (Game.Ping/2)),
+                    Speed = e.Speed,
+                    StartPos = hero.ServerPosition.To2D(),
+                    Unit = sender,
+                    Path = path,
+                    EndPos = DetectedDashes[hero.NetworkId].Path.LastOrDefault(),
+                    EndTick =
+                        DetectedDashes[hero.NetworkId].StartTick
+                        + (int)
+                            (1000
+                             *(DetectedDashes[hero.NetworkId].EndPos.Distance(
+                                 DetectedDashes[hero.NetworkId].StartPos)
+                               /DetectedDashes[hero.NetworkId].Speed)),
+                    Duration =
+                        DetectedDashes[hero.NetworkId].EndTick
+                        - DetectedDashes[hero.NetworkId].StartTick
+                };
+
             }
         }
 
@@ -125,7 +125,7 @@ namespace VolatileAIO.Organs.Brain.Utils
         #endregion
 
         #region Methods
-        
+
         /// <summary>
         ///     New Path subscribed event function.
         /// </summary>

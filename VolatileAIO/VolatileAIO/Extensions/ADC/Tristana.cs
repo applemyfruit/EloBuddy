@@ -12,6 +12,7 @@ using VolatileAIO.Organs;
 using VolatileAIO.Organs.Brain;
 using VolatileAIO.Organs.Brain.Cars;
 using VolatileAIO.Organs.Brain.Data;
+using VolatileAIO.Organs.Brain.Utils;
 
 namespace VolatileAIO.Extensions.ADC
 {
@@ -53,6 +54,9 @@ namespace VolatileAIO.Extensions.ADC
             SpellMenu.Add("qtl", new CheckBox("Use Q in Laneclear"));
             SpellMenu.Add("qtj", new CheckBox("Use Q in Jungleclear"));
 
+            SpellMenu.AddGroupLabel("W Settings");
+            SpellMenu.Add("agc2", new CheckBox("Anti-Gapcloser if R isnt Ready"));
+
             SpellMenu.AddGroupLabel("E Settings");
             SpellMenu.Add("etc", new CheckBox("Use E in Combo"));
             SpellMenu.Add("eth", new CheckBox("Use E in Harass"));
@@ -81,17 +85,35 @@ namespace VolatileAIO.Extensions.ADC
 
         protected override void Volatile_OnHeartBeat(EventArgs args)
         {
-            if (ComboActive() || HarassActive())
+
+            var minionlist = EntityManager.MinionsAndMonsters.EnemyMinions.Where(
+                m => m.Distance(Player) < E.Range).ToList();
+            if ((ComboActive() || HarassActive()) && SpellMenu["focuse"].Cast<CheckBox>().CurrentValue &&
+                EntityManager.Heroes.Enemies.Any(
+                    e => e.IsValidTarget(Player.Distance(e)) && e.HasBuff("TristanaECharge")))
             {
-                if (SpellMenu["focuse"].Cast<CheckBox>().CurrentValue)
+                var target =
+                    EntityManager.Heroes.Enemies.Find(
+                        e => e.IsValidTarget(Player.Distance(e)) && e.HasBuff("TristanaECharge"));
+                Orbwalker.ForcedTarget = target;
+                Volkswagen.ForcedTarget = target;
+            }
+            else if (LaneClearActive() && minionlist.Any(x => x.HasBuff("TristanaECharge") && x.IsValidTarget()))
+            {
+                var eminion =
+                    minionlist.FirstOrDefault(x => x.HasBuff("TristanaECharge") && x.IsValidTarget());
+                if (eminion != null)
                 {
-                    var target =
-                        EntityManager.Heroes.Enemies.FirstOrDefault(
-                            e => e.IsValidTarget(Player.Distance(e)) && e.HasBuff("TristanaECharge"));
-                    Orbwalker.ForcedTarget = target;
-                    Volkswagen.ForcedTarget = target;
+                    Orbwalker.ForcedTarget = eminion;
+                    Volkswagen.ForcedTarget = null;
                 }
             }
+            else
+            {
+                Orbwalker.ForcedTarget = null;
+                Volkswagen.ForcedTarget = null;
+            }
+
             if (ComboActive())
                 Combo();
             if (HarassActive())
@@ -104,6 +126,14 @@ namespace VolatileAIO.Extensions.ADC
             {
                 E.Range = 625 + 9*((uint) Player.Level - 1);
                 R.Range = 517 + 9*((uint) Player.Level - 1);
+            }
+        }
+
+        protected override void Volatile_OnPostAttack(AttackableUnit target, EventArgs args)
+        {
+            if (EntityManager.Turrets.Enemies.Any(t => t.NetworkId == target.NetworkId) && E.IsReady())
+            {
+                E.Cast(target as Obj_AI_Base);
             }
         }
 
@@ -157,12 +187,6 @@ namespace VolatileAIO.Extensions.ADC
                 }
             }
 
-            var eminion =
-                minionlist.FirstOrDefault(x => x.HasBuff("TristanaECharge") && x.IsValidTarget());
-            if (eminion != null)
-            {
-                Orbwalker.ForcedTarget = eminion;
-            }
 
             if (Q.IsReady() && SpellMenu["qtl"].Cast<CheckBox>().CurrentValue)
             {
@@ -177,7 +201,7 @@ namespace VolatileAIO.Extensions.ADC
         private static void Harass()
         {
             var target = TargetSelector.GetTarget(E.Range, DamageType.Physical);
-            if (target == null || !target.IsValidTarget())
+            if (target == null || !target.IsValidTarget() || !ValidSpell(target))
             {
                 return;
             }
@@ -197,7 +221,7 @@ namespace VolatileAIO.Extensions.ADC
                 }
             }
 
-            if (E.IsReady() && SpellMenu["eth"].Cast<CheckBox>().CurrentValue && TickManager.NoLag(3))
+            if (E.IsReady() && SpellMenu["eth"].Cast<CheckBox>().CurrentValue && TickManager.NoLag(3) && !CastManager.IsAutoAttacking)
             {
                 if (SpellMenu["e" + target.ChampionName].Cast<CheckBox>().CurrentValue)
                     E.Cast(target);
@@ -256,7 +280,7 @@ namespace VolatileAIO.Extensions.ADC
             if (R.IsReady() && SpellMenu["rks"].Cast<CheckBox>().CurrentValue && TickManager.NoLag(4))
             {
                 if ((GetEDamage(target) + Player.GetSpellDamage(target, SpellSlot.R)) >
-                    Prediction.Health.GetPrediction(target, R.CastDelay))
+                    target.Health)
                 {
                     R.Cast(target);
                 }
@@ -265,10 +289,14 @@ namespace VolatileAIO.Extensions.ADC
 
         protected override void Volatile_AntiGapcloser(AIHeroClient sender, Gapcloser.GapcloserEventArgs e)
         {
-            if (!SpellMenu["agc"].Cast<CheckBox>().CurrentValue) return;
-            if (sender.IsValidTarget(R.Range) && R.IsReady())
+            if (!SpellMenu["agc"].Cast<CheckBox>().CurrentValue || !sender.IsValidTarget(R.Range)) return;
+            if (R.IsReady())
             {
                 R.Cast(sender);
+            }
+            else if (W.IsReady() && Player.Position.Extend(Game.CursorPos, W.Range).To3D().CountEnemiesInRange(400) < 2)
+            {
+                W.Cast(Player.Position.Extend(Game.CursorPos, W.Range).To3D());
             }
         }
 

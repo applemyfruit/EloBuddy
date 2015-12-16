@@ -87,7 +87,7 @@ namespace VolatileAIO.Extensions.Support
                 return;
 
             var qdelay = Math.Max(0, Player.Distance(args.Target) - 500) * 10 / 25;
-            //qdelay = Math.Max(0, Player.Distance(args.Target) - 365) / 1.5f;
+            qdelay = Math.Max(0, Player.Distance(args.Target) - 365) / 1.5f;
             Core.DelayAction(() => _q.Cast(), (int)qdelay);
         }
         protected override void Volatile_OnHeartBeat(EventArgs args)

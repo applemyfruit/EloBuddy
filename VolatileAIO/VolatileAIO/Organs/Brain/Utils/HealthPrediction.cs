@@ -468,17 +468,19 @@ namespace VolatileAIO.Organs.Brain.Utils
         private static void OnCreate(GameObject sender, EventArgs args)
         {
             //most likely AA
-            if (sender is MissileClient)
+            var client = sender as MissileClient;
+            if (client != null)
             {
-                var mis = (MissileClient) sender;
-                if (mis.Target is Obj_AI_Base)
+                var mis = client;
+                var @in = mis.Target as Obj_AI_Base;
+                if (@in != null)
                 {
                     var dMake = new DamageMaker(mis.SpellCaster,
-                        (Obj_AI_Base) mis.Target,
+                        @in,
                         mis,
                         mis.SData);
 
-                    ActiveDamageMakers.Add(mis.NetworkId, dMake);
+                    if (!ActiveDamageMakers.ContainsKey(mis.NetworkId)) ActiveDamageMakers.Add(mis.NetworkId, dMake);
                 }
             }
         }
@@ -862,7 +864,8 @@ namespace VolatileAIO.Organs.Brain.Utils
                 else
                 {
                     Cycle = 0;
-                    if (Source is AIHeroClient)
+                    var client = Source as AIHeroClient;
+                    if (client != null)
                     {
                         var tSpell = TargetSpellDatabase.GetByName(SData.Name);
                         if (tSpell == null)
@@ -875,7 +878,7 @@ namespace VolatileAIO.Organs.Brain.Utils
                             try
                             {
 
-                                DealDamage = (float) ((AIHeroClient) Source).GetSpellDamage(Target, tSpell.Spellslot);
+                                DealDamage = (float) client.GetSpellDamage(Target, tSpell.Spellslot);
                             }
                             catch (Exception)
                             {
